@@ -1,0 +1,25 @@
+{
+  "id": "u1-l09",
+  "unit": "u1",
+  "group": "ve-dich",
+  "order": 9,
+  "slug": "luyen-phim-yeu",
+  "title": "Luyện phím yếu",
+  "summary": "Nội dung sinh riêng cho bạn từ những phím bạn hay sai nhất.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u"],
+  "minAccuracy": 80,
+  "estMinutes": 2,
+  "inputMode": "ascii",
+  "intro": "Bài này không có nội dung cố định. Nó được sinh ra từ những phím bạn hay sai nhất trong tám bài vừa rồi, và chỉ dùng các phím đã học.",
+  "congrats": "Phím yếu chỉ hết yếu khi được gõ nhiều hơn phím khác. Mẹo cần nhớ: gặp phím hay sai thì chậm lại nửa nhịp và nhìn chữ trên màn hình chứ đừng nhìn tay — nhìn tay là cách nhanh nhất để giữ mãi thói quen sai.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 120,
+      "source": "weak-keys",
+      "minKeys": 2,
+      "text": "Bạn có 2 phút. Nội dung được sinh từ những phím bạn hay sai nhất, giới hạn trong các phím đã học."
+    }
+  ]
+}

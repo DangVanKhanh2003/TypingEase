@@ -21,153 +21,79 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="keyboard.css" />
-    <style>
-      .daily-goal{display:grid;grid-template-columns:1.1fr 1fr auto;gap:18px;align-items:center;margin:-5px 0 22px;padding:15px 18px;border:1px solid #d5e8dd;border-radius:9px;background:#fff}.daily-goal p{margin:0}.daily-goal-copy>p:first-child{color:var(--green);font-size:10px;font-weight:800}.daily-goal h3{margin:4px 0;color:var(--ink);font-size:20px;letter-spacing:-.7px}.daily-goal-copy>p:last-child,.daily-goal-progress p{color:#6d877b;font-size:10px}.daily-progress-track{height:8px;overflow:hidden;border-radius:999px;background:#e4efe9}.daily-progress-track i{display:block;width:var(--daily-progress,0%);height:100%;border-radius:inherit;background:var(--green)}.daily-goal-progress p{margin-top:6px}.daily-goal-options{display:flex;gap:5px}.daily-goal-options button{border:1px solid #d5e6dd;border-radius:5px;padding:7px 8px;background:#fff;color:#6d877b;font-size:10px;font-weight:800}.daily-goal-options button.selected{border-color:var(--green);background:#e5f5df;color:var(--green)}@media(max-width:750px){.daily-goal{grid-template-columns:1fr;gap:12px;margin-bottom:18px}.daily-goal-options{display:grid;grid-template-columns:repeat(4,1fr)}.daily-goal-options button{padding:9px 4px}}
-    </style>
+    <link rel="stylesheet" href="hands.css" />
+    <link rel="stylesheet" href="home.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#">Typing<span>Ease</span></a>
+      <a class="brand" href="./">Typing<span>Ease</span></a>
       <nav aria-label="Điều hướng chính">
         <a class="active" href="#luyen-go">Luyện gõ</a>
-        <a href="#huong-dan">Hướng dẫn</a>
-        <a href="#bang-xep-hang">Thành tích</a>
+        <a href="./bai-hoc/">Lộ trình</a>
+        <a href="./tien-do/">Tiến độ</a>
+        <a href="./kiem-tra-toc-do-go/">Kiểm tra tốc độ</a>
       </nav>
-      <div class="header-actions"><label class="language-select"><span class="sr-only">Ngôn ngữ</span><select id="language" aria-label="Chọn ngôn ngữ"><option value="vi">Tiếng Việt</option><option value="en">English</option><option value="zh">中文</option><option value="ja">日本語</option><option value="ru">Русский</option><option value="pt">Português</option><option value="pt-BR">Português (Brasil)</option><option value="ar">العربية (مصر)</option><option value="ms">Bahasa Melayu</option></select></label></div>
+      <div class="header-actions"><label class="language-select"><span class="sr-only">Ngôn ngữ</span><select id="language" aria-label="Chọn ngôn ngữ"><option value="vi">Tiếng Việt</option><option value="en">English</option><option value="ja">日本語</option></select></label></div>
     </header>
 
     <main>
+      <!-- Hero có hai mặt: ô gõ thử cho người mới, continue card cho người đã học ở đây.
+           script.js quyết định mặt nào, taster.js chỉ dựng widget khi không phải người quay lại. -->
       <section class="hero" id="luyen-go">
         <div class="hero-copy">
-          <p class="eyebrow"><i></i> Luyện gõ mỗi ngày</p>
           <h1>Luyện gõ 10 ngón<br /><em>online miễn phí.</em></h1>
-          <p class="intro">Cải thiện kỹ năng gõ 10 ngón với những bài tập ngắn, rõ ràng và hoàn toàn miễn phí.</p>
-          <div class="hero-actions">
-            <button class="primary-button start-button" type="button">Bắt đầu bài 1 <span>→</span></button>
-            <a class="secondary-button" href="./kiem-tra-toc-do-go/">Kiểm tra tốc độ 60 giây <span>→</span></a>
-            <button class="continue-button" id="continue-lesson" type="button" hidden></button>
-          </div>
-          <div class="trust-row">
-            <p>Luyện gõ miễn phí, không cần đăng ký.</p>
-          </div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="circle c1"></div><div class="circle c2"></div><div class="circle c3"></div>
-          <div class="visual-card">
-            <div class="mini-top"><span>Bài học hôm nay</span><b>03 / 10</b></div>
-            <div class="progress"><i></i></div>
-            <p>Gõ đúng nhịp, từng phím một</p>
-            <div class="keys"><span>F</span><span>J</span><span>K</span><span>L</span></div>
-            <div class="spark">✦</div>
+          <p class="intro">Luyện gõ 10 ngón online miễn phí — bắt đầu ngay, không cần đăng ký.</p>
+          <div class="taster" id="taster"></div>
+          <div class="continue-card" id="continue-card" hidden>
+            <div class="continue-top"><p class="continue-kicker" id="continue-kicker">TIẾP TỤC</p><span class="continue-streak" id="continue-streak" hidden></span></div>
+            <p class="continue-name" id="continue-name"></p>
+            <div class="continue-track" id="continue-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+            <p class="continue-count" id="continue-count"></p>
+            <div class="continue-actions"><button class="primary-button continue-go" id="continue-go" type="button">▶ Tiếp tục (Enter)</button><a class="continue-redo" id="continue-redo" href="./hoc/" hidden>↻ Làm lại bài</a><a class="continue-map" id="continue-map" href="./bai-hoc/">Xem lộ trình</a></div>
+            <p class="continue-coach" id="continue-coach" hidden></p>
+            <p class="continue-legacy" id="continue-legacy" hidden></p>
           </div>
         </div>
       </section>
 
-      <section class="practice" aria-labelledby="practice-title">
+      <section class="home-roadmap" id="lo-trinh" aria-labelledby="roadmap-title">
         <div class="section-heading">
-          <div><p class="eyebrow"><i></i> Sẵn sàng chưa?</p><h2 id="practice-title">Luyện ngay bây giờ</h2></div>
-          <div class="mode-switch" role="group" aria-label="Chọn chế độ">
-            <button class="selected" type="button">Bài cơ bản</button><button type="button">Tự do</button><button type="button">Trò chơi</button>
+          <div>
+            <p class="eyebrow" id="roadmap-kicker"><i></i> Giáo trình 35 bài · 4 unit</p>
+            <h2 id="roadmap-title">Unit 1 · Hàng phím cơ sở</h2>
           </div>
+          <div class="roadmap-aside"><p class="roadmap-count" id="roadmap-count">0/10 bài ✓</p><a class="roadmap-all" id="roadmap-all" href="./bai-hoc/">Xem tất cả 35 bài →</a></div>
         </div>
-        <section class="daily-goal" aria-labelledby="daily-goal-title">
-          <div class="daily-goal-copy"><p id="daily-goal-kicker">Mục tiêu hôm nay</p><h3 id="daily-goal-title">0 / 10 phút</h3><p id="daily-goal-status">🔥 0 ngày liên tục</p></div>
-          <div class="daily-goal-progress"><div class="daily-progress-track" id="daily-progress" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><i></i></div><p id="daily-best-streak">Kỷ lục: 0 ngày</p></div>
-          <div class="daily-goal-options" role="group" aria-label="Chọn mục tiêu mỗi ngày"><button type="button" data-daily-goal="5" aria-pressed="false">5 phút</button><button type="button" data-daily-goal="10" aria-pressed="true" class="selected">10 phút</button><button type="button" data-daily-goal="15" aria-pressed="false">15 phút</button><button type="button" data-daily-goal="20" aria-pressed="false">20 phút</button></div>
-        </section>
-        <div class="lesson-path" aria-label="Lộ trình bài học">
-          <div class="path-title"><strong>Lộ trình 10 ngón</strong><span id="lesson-progress">Bài 1 / 30</span></div>
-          <div class="lesson-levels" id="lesson-levels"><button class="level active" type="button" data-level="0"><b>01</b>Hàng phím cơ sở</button><button class="level" type="button" data-level="1"><b>02</b>Đổi tay</button><button class="level" type="button" data-level="2"><b>03</b>Ngón trỏ trái</button><button class="level" type="button" data-level="3"><b>04</b>Ngón trỏ phải</button><button class="level" type="button" data-level="4"><b>05</b>Hai ngón trỏ</button><button class="level" type="button" data-level="5"><b>06</b>Ngón giữa</button><button class="level" type="button" data-level="6"><b>07</b>Ngón áp út</button><button class="level" type="button" data-level="7"><b>08</b>Ngón út</button><button class="level" type="button" data-level="8"><b>09</b>Hàng cơ sở dài</button><button class="level" type="button" data-level="9"><b>10</b>Từ đơn giản</button></div>
-          <button class="toggle-lessons" id="toggle-lessons" type="button" aria-expanded="false" aria-controls="lesson-levels">Xem toàn bộ 30 bài</button>
-        </div>
-        <div class="practice-grid">
-          <article class="typing-card">
-            <div class="stats">
-              <div><span>Tốc độ</span><strong id="wpm">0 <small>WPM</small></strong></div>
-              <div><span>Độ chính xác</span><strong id="accuracy">--<small>%</small></strong></div>
-              <div><span>Thời gian</span><strong id="timer">00:00</strong></div>
-              <button class="reset" id="reset" type="button" title="Làm lại">↻</button>
-            </div>
-            <div class="lesson-label"><span id="lesson-number">01</span> <span id="lesson-title">Hàng phím cơ sở</span></div>
-            <p class="prompt" id="prompt" aria-label="Đoạn văn cần gõ"></p>
-            <label class="typing-label" for="typing-input">Bắt đầu gõ tại đây</label>
-            <textarea id="typing-input" rows="2" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Nhấn vào đây và bắt đầu gõ..."></textarea>
-            <p class="feedback" id="feedback" aria-live="polite">Giữ các ngón tay ở hàng phím cơ sở nhé.</p>
-            <div class="lesson-result" id="lesson-result" aria-live="polite">
-              <div><span>Tốc độ</span><strong id="result-wpm">0 WPM</strong></div>
-              <div><span>Chính xác</span><strong id="result-accuracy">--%</strong></div>
-              <div><span>Số lỗi</span><strong id="result-errors">0</strong></div>
-              <div><span>Thời gian</span><strong id="result-time">00:00</strong></div>
-            </div>
-            <section class="weak-keys-result" id="weak-keys-result" aria-labelledby="weak-keys-title">
-              <h3 id="weak-keys-title">Phím cần luyện thêm</h3>
-              <p id="weak-keys-empty">Bạn chưa có phím yếu nổi bật trong bài này.</p>
-              <div class="weak-keys-list" id="weak-keys-list"></div>
-              <button class="practice-weak-keys" id="practice-weak-keys" type="button" hidden>Luyện phím yếu</button>
-            </section>
-            <button class="next-lesson" id="next-lesson" type="button">Bài tiếp theo →</button>
-            <button class="retry-lesson" id="retry-lesson" type="button">↻ Làm lại bài này</button>
-            <section class="free-practice" id="free-practice" aria-label="Luyện gõ tự do">
-              <div class="free-intro"><strong>Luyện gõ tự do</strong><span>Chọn một đoạn văn của bạn hoặc tạo đề ngẫu nhiên.</span></div>
-              <textarea id="custom-text" rows="3" placeholder="Dán hoặc nhập đoạn văn bạn muốn luyện tại đây..."></textarea>
-              <div class="free-actions"><button class="use-text" id="use-text" type="button">Dùng đoạn văn này</button><button class="random-text" id="random-text" type="button">↻ Đoạn văn ngẫu nhiên</button></div>
-              <div class="free-stats"><span>Tốc độ <b id="free-wpm">0 WPM</b></span><span>Chính xác <b id="free-accuracy">--%</b></span><span>Thời gian <b id="free-timer">00:00</b></span></div>
-              <p class="free-sample" id="free-sample">Hãy chọn một đoạn văn để bắt đầu luyện gõ.</p>
-              <label class="typing-label" for="free-input">Gõ lại đoạn văn phía trên</label>
-              <textarea id="free-input" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Bắt đầu gõ tại đây..."></textarea>
-              <p class="feedback" id="free-feedback" aria-live="polite">Bạn có thể dán nội dung riêng hoặc tạo đoạn ngẫu nhiên.</p>
-            </section>
-            <section class="game-practice" id="game-practice" aria-label="Trò chơi thi đấu">
-              <div class="game-top"><div><p class="game-kicker">THỬ THÁCH 30 GIÂY</p><h3>Đấu tốc độ</h3><p>Gõ càng đúng và nhanh, điểm thành tích càng cao.</p></div><div class="game-trophy">★</div></div>
-              <div class="game-scoreboard"><div><span>Thời gian</span><b id="game-time">30</b></div><div><span>Điểm</span><b id="game-score">0</b></div><div><span>Kỷ lục</span><b id="game-best">0</b></div></div>
-              <p class="game-sample" id="game-sample">Nhấn bắt đầu để nhận thử thách.</p>
-              <textarea id="game-input" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Gõ tại đây khi thử thách bắt đầu..." disabled></textarea>
-              <div class="game-actions"><button class="game-start" id="game-start" type="button">Bắt đầu thử thách</button><p id="game-status">Mỗi lượt thi kéo dài 30 giây.</p></div>
-            </section>
-          </article>
-          <aside class="tip-card">
-            <div class="tip-icon">⌨</div>
-            <p class="tip-number">MẸO NHỎ</p>
-            <h3>Đừng nhìn bàn phím</h3>
-            <p>Đặt ngón trỏ lên phím F và J. Hai chấm nổi sẽ giúp bạn luôn tìm đúng vị trí.</p>
-            <div class="finger-guide"><span>Út</span><span>Áp út</span><span>Giữa</span><span>Trỏ</span></div>
-          </aside>
-        </div>
-        <section class="keyboard-lab" aria-labelledby="keyboard-title">
-          <div class="keyboard-copy">
-            <p class="eyebrow"><i></i> Quan sát vị trí tay</p>
-            <h3 id="keyboard-title">Bàn phím &amp; ngón tay</h3>
-            <p>Phím cần gõ sẽ sáng màu xanh. Màu tương ứng trên bàn tay cho biết bạn nên dùng ngón nào.</p>
-            <div class="finger-legend"><span class="pinky">Út</span><span class="ring">Áp út</span><span class="middle">Giữa</span><span class="index">Trỏ</span><span class="thumb">Cái</span></div>
-          </div>
-          <div class="keyboard-demo">
-            <div class="hand-row" aria-label="Minh hoạ hai bàn tay">
-              <div class="hand left-hand"><b data-finger="LP">Út</b><b data-finger="LR">Áp út</b><b data-finger="LM">Giữa</b><b data-finger="LI">Trỏ</b><b data-finger="LT">Cái</b><span>Bàn tay trái</span></div>
-              <div class="hand right-hand"><b data-finger="RT">Cái</b><b data-finger="RI">Trỏ</b><b data-finger="RM">Giữa</b><b data-finger="RR">Áp út</b><b data-finger="RP">Út</b><span>Bàn tay phải</span></div>
-            </div>
-            <div class="keyboard" id="keyboard" aria-label="Bàn phím chuẩn US"><div class="key-row"><span class="key">`</span><span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span><span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key">0</span><span class="key">-</span><span class="key">=</span><span class="key wide">Back</span></div><div class="key-row"><span class="key wide">Tab</span><span class="key">Q</span><span class="key">W</span><span class="key">E</span><span class="key">R</span><span class="key">T</span><span class="key">Y</span><span class="key">U</span><span class="key">I</span><span class="key">O</span><span class="key">P</span><span class="key">[</span><span class="key">]</span><span class="key">\</span></div><div class="key-row"><span class="key wide">Caps</span><span class="key">A</span><span class="key">S</span><span class="key">D</span><span class="key home">F</span><span class="key">G</span><span class="key">H</span><span class="key home">J</span><span class="key">K</span><span class="key">L</span><span class="key">;</span><span class="key">'</span><span class="key wide">Enter</span></div><div class="key-row"><span class="key wide">Shift</span><span class="key">Z</span><span class="key">X</span><span class="key">C</span><span class="key">V</span><span class="key">B</span><span class="key">N</span><span class="key">M</span><span class="key">,</span><span class="key">.</span><span class="key">/</span><span class="key wide">Shift</span></div><div class="key-row"><span class="key wide">Ctrl</span><span class="key wide">Alt</span><span class="key space">Space</span><span class="key wide">Alt</span><span class="key wide">Ctrl</span></div></div>
-          </div>
-        </section>
+        <p class="roadmap-summary" id="roadmap-summary">Tám phím hàng giữa, rồi G H, E I, R U — đủ để gõ từ tiếng Việt không dấu.</p>
+        <div class="unit-rail" id="unit-rail"></div>
+        <p class="rail-note" id="rail-note" hidden></p>
+        <ul class="unit-teasers" id="unit-teasers"></ul>
       </section>
 
-      <section class="results" id="bang-xep-hang" aria-labelledby="results-title">
-        <div class="results-heading"><div><p class="eyebrow"><i></i> Tiến bộ của bạn</p><h2 id="results-title">Thành tích bài học</h2><p>Điểm tốt nhất được lưu trên thiết bị này.</p></div><button class="clear-results" id="clear-results" type="button">Xoá lịch sử</button></div>
-        <div class="results-summary"><div><span>Đã hoàn thành</span><strong id="completed-count">0 / 30</strong></div><div><span>Tốc độ cao nhất (100%)</span><strong id="best-wpm">0 WPM</strong></div><div><span>Thời gian nhanh nhất (100%)</span><strong id="best-time">--:--</strong></div></div>
-        <div class="results-table-wrap"><table class="results-table"><thead><tr><th>Bài học</th><th>Tốc độ tốt nhất</th><th>Chính xác</th><th>Thời gian nhanh nhất</th></tr></thead><tbody id="results-body"></tbody></table></div>
-      </section>
-
-      <section class="benefits" id="huong-dan">
-        <div><p class="eyebrow"><i></i> Đơn giản mà hiệu quả</p><h2>Tiến bộ từng<br /><em>phím bấm.</em></h2></div>
-        <div class="benefit-list">
-          <article><span>01</span><div><h3>Học đúng tư thế</h3><p>Làm quen vị trí các ngón tay trước khi tăng tốc độ.</p></div></article>
-          <article><span>02</span><div><h3>Luyện tập có nhịp</h3><p>Các bài học ngắn giúp bạn duy trì sự tập trung.</p></div></article>
-          <article><span>03</span><div><h3>Theo dõi tiến bộ</h3><p>Biết tốc độ và độ chính xác của mình sau mỗi bài gõ.</p></div></article>
+      <section class="home-shortcuts" aria-labelledby="shortcuts-title">
+        <h2 class="shortcuts-title" id="shortcuts-title">Luyện thêm</h2>
+        <div class="shortcut-grid">
+          <a class="shortcut-card" id="sc-test" href="./kiem-tra-toc-do-go/">
+            <b aria-hidden="true">⏱</b>
+            <span class="sc-title">Kiểm tra tốc độ</span>
+            <span class="sc-text">Đo WPM và độ chính xác trong 15 · 30 · 60 · 120 giây.</span>
+          </a>
+          <a class="shortcut-card" id="sc-weak" href="./luyen-phim-yeu/">
+            <b aria-hidden="true">★</b>
+            <span class="sc-title">Luyện phím yếu</span>
+            <span class="sc-text">Bài tập sinh riêng từ những phím bạn hay sai nhất.</span>
+          </a>
+          <a class="shortcut-card" id="sc-free" href="./luyen-tu-do/">
+            <b aria-hidden="true">✎</b>
+            <span class="sc-title">Luyện tự do</span>
+            <span class="sc-text">Dán đoạn văn của bạn và gõ lại theo cách bạn muốn.</span>
+          </a>
         </div>
       </section>
 
       <section class="explore" aria-labelledby="explore-title">
         <div class="explore-heading">
-          <p class="eyebrow"><i></i> Tài nguyên TypingEase</p>
+          <p class="eyebrow" id="explore-kicker"><i></i> Tài nguyên TypingEase</p>
           <h2 id="explore-title">Khám phá TypingEase</h2>
         </div>
         <div class="explore-grid">
@@ -189,7 +115,12 @@
         </div>
       </section>
     </main>
-    <footer><a class="brand" href="#">Typing<span>Ease</span></a><nav class="footer-links" aria-label="Tài nguyên TypingEase"><a href="./cach-go-10-ngon/">Cách gõ 10 ngón</a><a href="./kiem-tra-toc-do-go/">Kiểm tra tốc độ đánh máy</a><a href="./wpm-la-gi/">WPM là gì</a><a href="./en/" lang="en" hreflang="en">English</a></nav><p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p><span>© 2024 TypingEase</span></footer>
+    <footer><a class="brand" href="./">Typing<span>Ease</span></a><nav class="footer-links" aria-label="Tài nguyên TypingEase"><a href="./bai-hoc/">Lộ trình</a><a href="./tien-do/">Tiến độ</a><a href="./luyen-tu-do/">Luyện tự do</a><a href="./cach-go-10-ngon/">Cách gõ 10 ngón</a><a href="./en/" lang="en" hreflang="en">English</a></nav><p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p><span>© 2024 TypingEase</span></footer>
+    <script src="profile.js"></script>
+    <script src="hands.js"></script>
+    <script src="data/curriculum.vi.js"></script>
+    <script src="progress-store.js"></script>
     <script src="script.js"></script>
+    <script src="taster.js"></script>
   </body>
 </html>

@@ -1,0 +1,80 @@
+{
+  "id": "u1-l04",
+  "unit": "u1",
+  "group": "bat-dau",
+  "order": 4,
+  "slug": "a-va-dau-cham-phay",
+  "title": "A và dấu chấm phẩy",
+  "summary": "Hai ngón út khép lại hàng cơ sở — tám phím, tám ngón, và ba từ tiếng Việt đầu tiên.",
+  "newKeys": ["a", ";"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";"],
+  "minAccuracy": 70,
+  "estMinutes": 6,
+  "inputMode": "ascii",
+  "intro": "Hai ngón út khép lại hàng cơ sở: A ở ngoài cùng bên trái, dấu chấm phẩy ở ngoài cùng bên phải. Xong bài này cả tám ngón đều có chỗ của mình, và có chữ A là bạn gõ được từ tiếng Việt đầu tiên.",
+  "congrats": "Tám phím hàng cơ sở đã đủ, và bạn vừa gõ ba từ có nghĩa: la, sa, da. Mẹo cần nhớ: ngón út rất dễ bị bỏ rơi — thay vì nghiêng cả bàn tay để với tới A hay dấu chấm phẩy, hãy giữ cổ tay thẳng và chỉ vươn ngón út ra.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "a",
+      "finger": "LP",
+      "text": "Phím A — ngón ÚT tay trái, phím ngoài cùng bên trái của hàng cơ sở. Giữ ngón trỏ ở lại trên F, chỉ ngón út vươn ra.",
+      "hint": "Nhấn A để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "a",
+      "content": "aaaa ssss\naaaa dddd\nas sa asd dsa"
+    },
+    {
+      "type": "intro",
+      "key": ";",
+      "finger": "RP",
+      "text": "Dấu chấm phẩy — ngón ÚT tay phải, nằm bên phải phím L. Đối xứng với A bên tay trái. Đây cũng là phím bạn sẽ dùng khi ngắt các cụm trong một câu dài.",
+      "hint": "Nhấn dấu chấm phẩy để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": ";",
+      "content": ";;;; llll\n;;;; kkkk\n;l l; ;lk kl;"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["a", ";", "aa", ";;", "a;", ";a", "as", "l;", "asd", "l;k"],
+      "text": "Ngón út gõ nhẹ nhưng phải dứt khoát. Cổ tay giữ thẳng, đừng xoay bàn tay."
+    },
+    {
+      "type": "block",
+      "content": "asdf jkl;\nasdf jkl;\nfdsa ;lkj\nasdf jkl; fdsa ;lkj",
+      "text": "Tám phím hàng cơ sở, tám ngón. Đây là tư thế bạn sẽ quay về sau mỗi phím, suốt cả giáo trình."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "asdf jkl; asdf jkl;\nfdsa ;lkj fdsa ;lkj\naj sk dl f; ja ks ld ;f"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "la sa da; la sa da;\nda la sa; sa da la;\nla; sa; da; la; sa;",
+      "text": "Ba từ tiếng Việt đầu tiên của bạn, viết không dấu: la, sa, da. Dấu chấm phẩy dùng để ngắt từng cụm, giống như khi liệt kê."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["la", "sa", "da", "la;", "sa;", "da;", "asdf", "jkl;", "fdsa", ";lkj"]
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "aa ss dd ff jj kk ll ;;\nafk sjl dk; ajf slk\nasdf jkl; fdsa ;lkj asdf"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "la sa da la sa da;\nasdf jkl; la sa da;\nda la sa; fdsa ;lkj",
+      "text": "Trộn từ và hàng cơ sở. Gõ xong hãy thử nhấc tay ra rồi đặt lại đúng chỗ mà không nhìn."
+    }
+  ]
+}

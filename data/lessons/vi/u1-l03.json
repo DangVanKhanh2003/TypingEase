@@ -1,0 +1,80 @@
+{
+  "id": "u1-l03",
+  "unit": "u1",
+  "group": "bat-dau",
+  "order": 3,
+  "slug": "s-va-l",
+  "title": "S và L",
+  "summary": "Hai ngón áp út vào việc: S nằm cạnh D, L nằm cạnh K.",
+  "newKeys": ["s", "l"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l"],
+  "minAccuracy": 70,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Ngón áp út thường yếu nhất và hay quên việc. S nằm cạnh D, L nằm cạnh K. Sáu phím này vẫn chưa có nguyên âm nên chưa ghép ra từ được — bài sau sẽ có.",
+  "congrats": "Sáu phím, sáu ngón. Mẹo cần nhớ: ngón áp út yếu nên hay gõ nhẹ thiếu lực và bị mất chữ — cứ gõ dứt khoát rồi để ngón nằm lại trên S và L, đừng co lên.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "s",
+      "finger": "LR",
+      "text": "Phím S — ngón ÁP ÚT tay trái, nằm bên trái phím D. Đây là ngón yếu nhất bên tay trái, hãy gõ chậm và dứt khoát.",
+      "hint": "Nhấn S để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "s",
+      "content": "ssss dddd\nssss ffff\nsd ds sdf fds"
+    },
+    {
+      "type": "intro",
+      "key": "l",
+      "finger": "RR",
+      "text": "Phím L — ngón ÁP ÚT tay phải, nằm bên phải phím K. Đối xứng với S bên tay trái.",
+      "hint": "Nhấn L để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "l",
+      "content": "llll kkkk\nllll jjjj\nlk kl lkj jkl"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["s", "l", "ss", "ll", "sl", "ls", "sd", "lk", "sdf", "lkj"],
+      "text": "Ngón áp út gõ xong phải nằm lại trên S và L, đừng để nó lửng lơ trên không."
+    },
+    {
+      "type": "block",
+      "content": "sl ls sl ls\nsd ds lk kl\nsdf lkj fds jkl",
+      "text": "Sáu phím, sáu ngón. Ngón trỏ và ngón giữa vẫn không rời phím của mình."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "sls lsl sds lkl\nsdl lks dsl kls\nsl ls dk kd fj jf"
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "sdfl fjsl dksl lkds\nslk lsd fds jkl\nsl ls fd df kl lk",
+      "text": "Chưa có nguyên âm nên đây vẫn là chuỗi chữ. Cứ đọc thành từng cụm ba, bốn chữ rồi gõ."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["sl", "ls", "sdl", "lks", "dsl", "kls", "ssll", "llss", "fsl", "jlk"]
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "sdfl kjls dfsl jkls\nlsdf sljk fdsl skjl\nsl ls df fd kl lk jk kj"
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "sdfj klsl fjds lkjl\nssdd llkk slsl lkls\nsdfjkl lkjfds sldkfj",
+      "text": "Dòng cuối không có dấu cách để nghỉ. Chậm cũng được, miễn là đúng thứ tự phím."
+    }
+  ]
+}

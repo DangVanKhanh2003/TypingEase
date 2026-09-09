@@ -1,0 +1,80 @@
+{
+  "id": "u1-l07",
+  "unit": "u1",
+  "group": "vuon-xa",
+  "order": 7,
+  "slug": "e-va-i",
+  "title": "E và I",
+  "summary": "Hai ngón giữa với lên hàng trên. Có nguyên âm là có từ tiếng Việt thật.",
+  "newKeys": ["e", "i"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Hai ngón giữa với lên hàng trên: E nằm trên D, I nằm trên K. Có thêm nguyên âm là bạn bắt đầu gõ được từ tiếng Việt thật, không còn chuỗi chữ vô nghĩa.",
+  "congrats": "E và I mở ra cả một rổ từ: hai, lai, kia, ghi, khe. Mẹo cần nhớ: ngón giữa với lên hàng trên rồi phải rơi ngay về D và K — đừng để cả bàn tay trôi lên theo ngón.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "e",
+      "finger": "LM",
+      "text": "Phím E — ngón GIỮA tay trái với lên hàng trên, ngay phía trên phím D. Với lên gõ xong là hạ ngón về D ngay.",
+      "hint": "Nhấn E để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "e",
+      "content": "eeee dddd\neeee dddd\nde ed ded ede\nea es ef eg"
+    },
+    {
+      "type": "intro",
+      "key": "i",
+      "finger": "RM",
+      "text": "Phím I — ngón GIỮA tay phải với lên hàng trên, ngay phía trên phím K. Đối xứng với E bên tay trái.",
+      "hint": "Nhấn I để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "i",
+      "content": "iiii kkkk\niiii kkkk\nki ik kik iki\nij il i; ih"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["e", "i", "de", "ki", "ed", "ik", "ei", "ie", "ded", "kik"],
+      "text": "Nhịp ba: với lên, gõ, về. Ngón trỏ và ngón út không được đi theo ngón giữa."
+    },
+    {
+      "type": "block",
+      "content": "de ki de ki\ned ik ed ik\nei ie eie iei\ndei kie",
+      "text": "E rồi về D, I rồi về K. Gõ chậm để cảm nhận ngón rơi đúng chỗ."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "dei kie dei kie\nese isi ede iki\nde ki ed ik ei ie"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ai hai lai kia\nde he ke le se\ndi ghi ghe khe",
+      "text": "Từ tiếng Việt viết không dấu, mỗi từ chỉ dùng những phím bạn đã học."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["ai", "hai", "lai", "kia", "di", "de", "he", "ke", "ghi", "khe"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "hai lai kia dia\nsai dai gai ai\ngia khai giai kha"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ghi de ke le se he\nkha gia khai giai\nhai lai kia dia sai dai gai",
+      "text": "Mười ba phím. Từ giờ mỗi bài mới sẽ thêm được cả chục từ, cứ giữ tay trên hàng cơ sở."
+    }
+  ]
+}

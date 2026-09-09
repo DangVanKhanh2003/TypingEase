@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luyện gõ tự do với đoạn văn của bạn | TypingEase</title>
+    <meta name="description" content="Luyện gõ tự do: dán đoạn văn của bạn hoặc dùng đoạn mẫu, rồi gõ lại và xem WPM, độ chính xác cùng bàn phím dẫn ngón theo từng ký tự." />
+    <link rel="canonical" href="https://typingease.site/luyen-tu-do/" />
+    <link rel="alternate" hreflang="vi" href="https://typingease.site/luyen-tu-do/" />
+    <link rel="alternate" hreflang="x-default" href="https://typingease.site/luyen-tu-do/" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../keyboard.css" />
+    <link rel="stylesheet" href="../hands.css" />
+    <link rel="stylesheet" href="free.css" />
+  </head>
+  <body class="free-page">
+    <header class="topbar">
+      <a class="brand" href="../">Typing<span>Ease</span></a>
+      <nav aria-label="Điều hướng chính">
+        <a href="../">Luyện gõ</a>
+        <a href="../bai-hoc/">Lộ trình</a>
+        <a href="../tien-do/">Tiến độ</a>
+        <a href="../kiem-tra-toc-do-go/">Kiểm tra tốc độ</a>
+      </nav>
+      <div class="header-actions"><a class="secondary-button" href="../hoc/">Vào học <span>→</span></a></div>
+    </header>
+
+    <main class="free-main">
+      <section class="free-head">
+        <p class="eyebrow"><i></i> Luyện gõ tự do</p>
+        <h1>Gõ lại đoạn văn của bạn</h1>
+        <p class="free-lead">Dán bất cứ đoạn nào bạn muốn — ghi chú, email, một trang sách — rồi gõ lại và
+          xem tốc độ cùng độ chính xác. Không có bài học nào ràng buộc, nhưng bàn phím vẫn chỉ ngón cho bạn.
+          Các đoạn mẫu viết không dấu để bạn gõ được ngay mà không cần bật bộ gõ.</p>
+      </section>
+
+      <section class="free-practice" id="free-practice" aria-label="Luyện gõ tự do">
+        <div class="free-intro">
+          <strong>Chọn đoạn văn</strong>
+          <span>Dán đoạn của bạn hoặc lấy một đoạn mẫu.</span>
+        </div>
+        <label class="sr-only" for="custom-text">Đoạn văn muốn luyện</label>
+        <textarea id="custom-text" rows="3" placeholder="Dán hoặc nhập đoạn văn bạn muốn luyện tại đây..."></textarea>
+        <div class="free-actions">
+          <button class="use-text" id="use-text" type="button">Dùng đoạn văn này</button>
+          <button class="random-text" id="random-text" type="button">↻ Đoạn văn ngẫu nhiên</button>
+        </div>
+        <div class="free-stats">
+          <span>Tốc độ <b id="free-wpm">0 WPM</b></span>
+          <span>Chính xác <b id="free-accuracy">--%</b></span>
+          <span>Thời gian <b id="free-timer">00:00</b></span>
+        </div>
+        <p class="free-sample" id="free-sample">Hãy chọn một đoạn văn để bắt đầu luyện gõ.</p>
+        <label class="typing-label" for="free-input">Gõ lại đoạn văn phía trên</label>
+        <textarea id="free-input" rows="3" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Bắt đầu gõ tại đây..."></textarea>
+        <p class="feedback" id="free-feedback" aria-live="polite">Bạn có thể dán nội dung riêng hoặc tạo đoạn ngẫu nhiên.</p>
+      </section>
+
+      <section class="keyboard-lab" aria-labelledby="free-keyboard-title">
+        <div class="keyboard-copy">
+          <p class="eyebrow"><i></i> Quan sát vị trí tay</p>
+          <h3 id="free-keyboard-title">Bàn phím &amp; ngón tay</h3>
+          <p>Phím cần gõ sáng màu xanh, ngón tương ứng nhấc lên. Nhìn màn hình, đừng nhìn tay.</p>
+          <div class="finger-legend"><span class="pinky">Út</span><span class="ring">Áp út</span><span class="middle">Giữa</span><span class="index">Trỏ</span><span class="thumb">Cái</span></div>
+        </div>
+        <div class="keyboard-demo free-board" id="free-board"></div>
+      </section>
+
+      <section class="explore" aria-labelledby="free-explore-title">
+        <div class="explore-heading">
+          <p class="eyebrow"><i></i> Có cấu trúc hơn?</p>
+          <h2 id="free-explore-title">Nếu bạn muốn học bài bản</h2>
+        </div>
+        <div class="explore-grid">
+          <a class="explore-card" href="../bai-hoc/">
+            <h3>Lộ trình 35 bài</h3>
+            <p>Bốn unit từ hàng phím cơ sở đến tiếng Việt có dấu, mỗi bài hai phím mới và năm phút.</p>
+            <span>Xem lộ trình <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="explore-card" href="../luyen-phim-yeu/">
+            <h3>Luyện phím yếu</h3>
+            <p>Bài tập sinh riêng từ những phím bạn hay sai nhất, thay vì gõ lan man.</p>
+            <span>Luyện ngay <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="explore-card" href="../kiem-tra-toc-do-go/">
+            <h3>Kiểm tra tốc độ</h3>
+            <p>Bài test có đồng hồ 15 · 30 · 60 · 120 giây và lưu lại biểu đồ tiến bộ.</p>
+            <span>Kiểm tra ngay <b aria-hidden="true">→</b></span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand" href="../">Typing<span>Ease</span></a>
+      <nav class="footer-links" aria-label="Tài nguyên TypingEase">
+        <a href="../bai-hoc/">Lộ trình</a><a href="../tien-do/">Tiến độ</a><a href="../luyen-tu-do/">Luyện tự do</a><a href="../cach-go-10-ngon/">Cách gõ 10 ngón</a>
+      </nav>
+      <p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p>
+      <span>© 2024 TypingEase</span>
+    </footer>
+
+    <script src="../hands.js"></script>
+    <script src="../profile.js"></script>
+    <script src="../progress-store.js"></script>
+    <script src="../keyboard-widget.js"></script>
+    <script src="free-page.js"></script>
+  </body>
+</html>

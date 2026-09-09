@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bài học · TypingEase</title>
+    <meta name="description" content="Trình học gõ 10 ngón của TypingEase: từng bài, từng screen, có bàn phím và hình bàn tay dẫn đường." />
+    <!-- This is the app, not a landing page: the drills have no search value and the route lives
+         in the hash, so it stays out of the index while the homepage keeps its SEO copy. -->
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://typingease.site/hoc/" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../keyboard.css" />
+    <link rel="stylesheet" href="../hands.css" />
+    <link rel="stylesheet" href="../player.css" />
+  </head>
+  <body class="player-page">
+    <div class="player" id="player">
+      <header class="player-topbar">
+        <a class="pt-back" href="../bai-hoc/" id="pt-back">← Lộ trình</a>
+        <div class="pt-title">
+          <span id="pt-unit"></span>
+          <strong id="pt-lesson">Đang tải…</strong>
+        </div>
+        <div class="pt-right">
+          <span class="pt-screen" id="pt-screen"></span>
+          <button class="pt-redo" id="pt-redo" type="button" title="Làm lại bài" aria-label="Làm lại bài từ đầu">↻</button>
+        </div>
+      </header>
+
+      <div class="progress-segments" id="pt-progress" role="progressbar" aria-label="Tiến độ bài học" aria-valuemin="0" aria-valuenow="0"></div>
+
+      <div class="player-notes" id="player-note" hidden></div>
+
+      <main class="player-stage is-loading" id="stage">
+        <section class="card"><p class="intro-text">Đang tải bài học…</p></section>
+      </main>
+
+      <div class="player-board keyboard-demo" id="board" aria-hidden="true"></div>
+
+      <p class="player-live" id="live" role="status" aria-live="polite"></p>
+
+      <label class="sr-only" for="player-input">Gõ theo dòng trên màn hình</label>
+      <textarea class="player-input" id="player-input" rows="1" autocomplete="off" autocapitalize="off"
+        autocorrect="off" spellcheck="false" inputmode="text" aria-describedby="live"></textarea>
+
+      <button class="tap-to-type" id="tap-to-type" type="button">Chạm để gõ</button>
+    </div>
+
+    <script src="../hands.js"></script>
+    <script src="../profile.js"></script>
+    <script src="../weak-keys.js"></script>
+    <script src="../data/curriculum.vi.js"></script>
+    <script src="../progress-store.js"></script>
+    <script src="../keyboard-widget.js"></script>
+    <script src="../player.js"></script>
+  </body>
+</html>

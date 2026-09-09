@@ -1,0 +1,78 @@
+/* tien-do/progress.css — trang tiến độ (PLAN.md B1/B4).
+   Bảng thành tích, heatmap phím, coach + trend, streak và mục tiêu ngày đều chuyển về đây,
+   nên trang chủ chỉ còn một mục đích. Nạp sau style.css / keyboard.css / coach.css / hands.css. */
+
+.progress-main{max-width:1068px;margin:0 auto;padding:0 24px}
+
+.prog-head{padding:32px 0 22px}
+.prog-head h1{margin:0 0 13px;font-size:38px;line-height:1.15;letter-spacing:-2px}
+.prog-intro{max-width:600px;margin:0;color:var(--muted);font-size:14px;line-height:1.75}
+
+/* ---------- status strip (streak · phút hôm nay · trình độ) ---------- */
+.status-strip{display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:20px}
+.status-strip span{padding:7px 12px;border:1px solid #d5e8dd;border-radius:999px;background:#fff;color:#4c6b5f;font-size:11px;font-weight:700}
+
+/* ---------- 4 ô tổng quan ---------- */
+.prog-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.prog-summary div{border:1px solid var(--line);border-radius:9px;padding:15px 16px;background:#fff}
+.prog-summary span{display:block;color:#7d9188;font-size:10px;margin-bottom:6px}
+.prog-summary strong{font:800 20px "DM Mono",monospace;color:var(--ink);letter-spacing:-.6px}
+.prog-legacy{margin:0 0 20px;padding:11px 14px;border:1px solid #e6e2c9;border-radius:9px;background:#fdfbef;color:#6d5510;font-size:12px;line-height:1.6}
+.prog-legacy[hidden]{display:none}
+
+/* ---------- mục tiêu ngày (chuyển từ <style> inline của trang chủ) ---------- */
+.daily-goal{display:grid;grid-template-columns:1.1fr 1fr auto;gap:18px;align-items:center;margin:0 0 22px;padding:15px 18px;border:1px solid #d5e8dd;border-radius:9px;background:#fff}
+.daily-goal p{margin:0}
+.daily-goal-copy>p:first-child{color:var(--green);font-size:10px;font-weight:800}
+.daily-goal h3{margin:4px 0;color:var(--ink);font-size:20px;letter-spacing:-.7px}
+.daily-goal-copy>p:last-child,.daily-goal-progress p{color:#6d877b;font-size:10px}
+.daily-progress-track{height:8px;overflow:hidden;border-radius:999px;background:#e4efe9}
+.daily-progress-track i{display:block;width:var(--daily-progress,0%);height:100%;border-radius:inherit;background:var(--green)}
+.daily-goal-progress p{margin-top:6px}
+.daily-goal-options{display:flex;gap:5px}
+.daily-goal-options button{border:1px solid #d5e6dd;border-radius:5px;padding:7px 8px;background:#fff;color:#6d877b;font-size:10px;font-weight:800}
+.daily-goal-options button.selected{border-color:var(--green);background:#e5f5df;color:var(--green)}
+
+/* ---------- coach ---------- */
+/* Cạm bẫy 1: `hidden` là IDL của HTMLElement, SVGElement không có — và UA stylesheet cũng
+   không áp `[hidden]` cho SVG. coach.css đã có rule này; nhắc lại ở đây để trang tiến độ
+   không phụ thuộc vào thứ tự nạp CSS. */
+.coach-trend[hidden]{display:none}
+.coach-trend-hint[hidden]{display:none}
+.coach{margin:0 0 22px}
+.coach-action{display:inline-flex;align-items:center;text-decoration:none}
+
+/* ---------- heatmap ---------- */
+.keyboard-lab{margin:0 0 22px}
+.heat-board{min-width:0;padding-bottom:0}
+.heat-board .keyboard{width:max-content;max-width:100%;margin:0 auto;background:#dfe8e3}
+.heat-board .key-row{min-width:0}
+.heat-board .key{height:32px;min-width:30px}
+.heat-empty{margin:12px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
+.heat-empty[hidden]{display:none}
+
+/* ---------- bảng thành tích ---------- */
+.progress-main .results{padding:26px 0 40px}
+.results-table td .rt-lesson{display:block;font-weight:700}
+.results-table td .rt-unit{display:block;margin-top:2px;color:var(--muted);font:10px "DM Mono",monospace;font-weight:400}
+.results-table .rt-stars{color:#f4b400;letter-spacing:1px;white-space:nowrap}
+.results-table tr.is-soon td{color:#9aaba3}
+
+.progress-main .explore{max-width:none;margin:0;padding:0 0 64px}
+
+@media(max-width:900px){
+  .prog-summary{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:750px){
+  .progress-main{padding:0 18px}
+  .prog-head{padding:22px 0 16px}
+  .prog-head h1{font-size:28px;letter-spacing:-1.4px}
+  .daily-goal{grid-template-columns:1fr;gap:12px}
+  .daily-goal-options{display:grid;grid-template-columns:repeat(4,1fr)}
+  .daily-goal-options button{padding:9px 4px}
+  .progress-main .results{padding:16px 0 30px}
+  .results-table{min-width:560px}
+}
+@media(max-width:520px){
+  .prog-summary{grid-template-columns:1fr}
+}

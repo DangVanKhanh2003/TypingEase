@@ -1,0 +1,79 @@
+{
+  "id": "u1-l02",
+  "unit": "u1",
+  "group": "bat-dau",
+  "order": 2,
+  "slug": "d-va-k",
+  "title": "D và K",
+  "summary": "Hai ngón giữa vào việc: D nằm cạnh F, K nằm cạnh J.",
+  "newKeys": ["d", "k"],
+  "keysSoFar": ["j", "f", " ", "d", "k"],
+  "minAccuracy": 70,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Hai ngón trỏ đã biết việc, giờ tới hai ngón giữa. D nằm ngay cạnh F, K nằm ngay cạnh J — ngón chỉ nhích một phím, không phải đi đâu xa.",
+  "congrats": "Bốn phím, bốn ngón. Mẹo cần nhớ: đừng nhấc cả bàn tay khi gõ D hay K — chỉ một ngón hạ xuống, những ngón khác vẫn chạm phím của mình.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "d",
+      "finger": "LM",
+      "text": "Phím D — ngón GIỮA tay trái, nằm sát bên trái phím F. Ngón trỏ vẫn ở lại trên F, chỉ ngón giữa hạ xuống D.",
+      "hint": "Nhấn D để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "d",
+      "content": "dddd ffff\ndddd ffff\ndf fd dff ffd"
+    },
+    {
+      "type": "intro",
+      "key": "k",
+      "finger": "RM",
+      "text": "Phím K — ngón GIỮA tay phải, nằm sát bên phải phím J. Đối xứng hoàn toàn với D bên tay trái.",
+      "hint": "Nhấn K để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "k",
+      "content": "kkkk jjjj\nkkkk jjjj\nkj jk kjj jjk"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["d", "k", "dd", "kk", "dk", "kd", "fd", "jk", "ddk", "kkd"],
+      "text": "Gõ nhanh từng cụm. Ngón giữa gõ xong thì nằm luôn tại chỗ, không co lên."
+    },
+    {
+      "type": "block",
+      "content": "dk kd dk kd\nfj jf fj jf\ndkfj jfkd dfjk",
+      "text": "Bốn ngón, bốn phím cạnh nhau. Gõ chậm và cảm nhận phím dưới từng ngón."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "dkd kdk fjf jfj\ndfk kjd fdk jkd\nkd dk jf fj dkfj"
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["dk", "kd", "fd", "jk", "dkf", "kjd", "ddkk", "ffjj", "dkfj", "jfkd"]
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "ddkk ffjj dkfj jfkd\nfkd djk kfd jdk\ndk fj kd jf dkfj"
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "jdkf kfdj dfkj jkfd\nkkdd jjff dkdk fjfj\ndjkf fkjd kdjf jfdk"
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "fdjk jkfd dkjf kfjd\ndd kk ff jj dk fj kd jf\nkfdjkd dfjkfj kdjfdk",
+      "text": "Dòng cuối dài hơn để tay quen giữ nhịp. Sai thì cứ gõ tiếp, đừng dừng lại soi lỗi."
+    }
+  ]
+}

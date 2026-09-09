@@ -1,0 +1,76 @@
+{
+  "id": "u1-l01",
+  "unit": "u1",
+  "group": "bat-dau",
+  "order": 1,
+  "slug": "j-f-va-dau-cach",
+  "title": "J, F và dấu cách",
+  "summary": "Hai phím có gờ nổi giúp bạn đặt tay mà không cần nhìn xuống bàn phím.",
+  "newKeys": ["j", "f", " "],
+  "keysSoFar": ["j", "f", " "],
+  "minAccuracy": 70,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Chào mừng bạn tới bài đầu tiên. Cả bài chỉ có hai phím chữ và dấu cách, vì việc quan trọng nhất lúc này là đặt tay đúng chỗ. Gõ chậm mà đúng, tốc độ sẽ tới sau.",
+  "congrats": "Bạn vừa học hai phím mốc của cả bàn phím. Mẹo cần nhớ: trên F và J có một gờ nổi nhỏ — mỗi lần mất phương hướng, dùng hai ngón trỏ sờ tìm gờ đó rồi đặt lại tay, đừng nhìn xuống bàn phím.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "j",
+      "finger": "RI",
+      "text": "Phím J — ngón TRỎ tay phải. Sờ nhẹ lên phím J, bạn sẽ thấy một gờ nổi nhỏ. Đặt ngón trỏ phải lên đó, ba ngón còn lại xếp sang K, L và dấu chấm phẩy.",
+      "hint": "Nhấn J để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "j",
+      "content": "jjjjjjjj\njjjjjjjj"
+    },
+    {
+      "type": "intro",
+      "key": "f",
+      "finger": "LI",
+      "text": "Phím F — ngón TRỎ tay trái, cũng có một gờ nổi. Hai ngón trỏ nằm trên F và J chính là tư thế xuất phát của cách gõ 10 ngón.",
+      "hint": "Nhấn F để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "f",
+      "content": "ffffffff\nffffjjjj\njjjjffff\nfjfjfjfj"
+    },
+    {
+      "type": "intro",
+      "key": " ",
+      "finger": "RT",
+      "text": "Dấu cách — gõ bằng ngón CÁI. Chỉ cần hạ ngón cái xuống, không nhấc cả bàn tay. Chọn ngón cái của tay nào bạn thấy thuận hơn rồi giữ nguyên thói quen đó.",
+      "hint": "Nhấn dấu cách để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": " ",
+      "content": "jjj fff jjj fff jf fj"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["j", "f", "jj", "ff", "jf", "fj", "jjf", "ffj"],
+      "text": "Mỗi lần chỉ hiện một cụm ngắn, gõ xong cụm này mới hiện cụm sau. Mắt nhìn màn hình, không nhìn tay."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "jjf jjf fjj fjj\njf fj jj ff jjff\nfjf jfj ffj jjf"
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["jf", "fj", "jjf", "ffj", "jfj", "fjf", "jjff", "ffjj"]
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "fjfj jfjf ffjj jjff\njjfjff ffjfjj fjfjfj\nfj jf jjf ffj jf fj",
+      "text": "Hai ngón trỏ ở lại trên gờ nổi suốt cả dòng. Nếu tay trượt đi, dừng lại đặt tay rồi gõ tiếp."
+    }
+  ]
+}

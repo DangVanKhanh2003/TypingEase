@@ -1,0 +1,66 @@
+{
+  "id": "u1-l05",
+  "unit": "u1",
+  "group": "bat-dau",
+  "order": 5,
+  "slug": "on-tap-hang-co-so",
+  "title": "Ôn tập hàng cơ sở",
+  "summary": "Không có phím mới. Tám ngón nhớ chỗ của mình mà bạn không phải nghĩ.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Bài này không có phím mới. Việc duy nhất cần làm là để tám ngón nhớ chỗ của mình mà bạn không phải nghĩ. Quên phím nào thì sờ lại gờ nổi trên F và J.",
+  "congrats": "Hàng cơ sở là nhà của mười ngón tay. Mẹo cần nhớ: từ bài sau bạn sẽ với lên và với xuống, nhưng ngón nào rời hàng cơ sở thì phải rơi về đúng chỗ cũ ngay, không cần nhìn.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "asdf jkl; asdf jkl;\nfdsa ;lkj fdsa ;lkj\na s d f j k l ;",
+      "text": "Khởi động lại tám phím. Mỗi ngón một phím, không ngón nào làm hộ ngón nào."
+    },
+    {
+      "type": "block",
+      "content": "af aj ak al a;\nsf sj sk sl s;\ndf dj dk dl d;"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["as", "sd", "df", "jk", "kl", "l;", "fj", "ja", "a;", "sl"],
+      "text": "Cụm hai phím, đổi tay liên tục. Đây là lúc kiểm tra xem tay bạn còn nhìn xuống không."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "asl dkj fls kja\nsdj lkf a;s d;l\nfj dk sl a; jf kd ls ;a"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "la sa da; da la sa\nsa da la; la sa da\nda sa la; sa la da",
+      "text": "Ba từ không dấu, ngắt bằng dấu chấm phẩy."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["la", "sa", "da", "la;", "asdf", "jkl;", "fdsa", ";lkj", "dl", "sk"]
+    },
+    {
+      "type": "block",
+      "content": "asdfjkl;\nasdfjkl;\n;lkjfdsa\n;lkjfdsa",
+      "text": "Không có dấu cách để nghỉ. Cứ chậm cũng được, miễn là đúng thứ tự."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "aj sk dl f; ja ks ld ;f\nafj skl dk; f;a\nasdf jkl; fdsa ;lkj"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "la da sa; sa la da;\nda sa la la da sa;\nsa; la; da; la sa da;",
+      "text": "Xong bài này, bốn ngón trỏ và giữa sẽ bắt đầu rời hàng cơ sở ở bài sau."
+    }
+  ]
+}

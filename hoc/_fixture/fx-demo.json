@@ -1,0 +1,31 @@
+{
+  "_comment": "Development fixture, not shipped content. One short lesson that exercises ALL FIVE screen types of PLAN.md C3 — intro, block, standard, burst, test (fixed content) and test (source:weak-keys) — so the player can be worked on without waiting for data/lessons/vi/. Open /hoc/#fx-demo/1. The id is deliberately absent from data/curriculum.vi.js, which is what makes player.js fall back to this folder.",
+  "id": "fx-demo",
+  "unit": "u1",
+  "group": "bat-dau",
+  "order": 1,
+  "slug": "fixture-nam-loai-screen",
+  "title": "Fixture · năm loại screen",
+  "summary": "Bài mẫu để kiểm thử player: mỗi loại screen một cái.",
+  "newKeys": ["j", "f", " "],
+  "keysSoFar": ["j", "f", " ", "d", "k"],
+  "minAccuracy": 75,
+  "estMinutes": 3,
+  "inputMode": "ascii",
+  "intro": "Bài mẫu dùng để kiểm thử. Nội dung không có giá trị sư phạm.",
+  "congrats": "Kỹ thuật cần nhớ: đây là bài fixture, chỉ dùng để kiểm thử năm loại screen của player.",
+  "screens": [
+    { "type": "intro", "key": "j", "finger": "RI",
+      "text": "Phím J — ngón trỏ tay PHẢI, trên phím có một gờ nổi nhỏ.",
+      "hint": "Nhấn J để tiếp tục" },
+    { "type": "block", "newKey": "j", "content": "jjjj jjjj\njjjj jjjj" },
+    { "type": "standard", "dictation": "letters", "content": "jf fj jjf ffj\njfj fjf jjff ffjj",
+      "text": "Hai ngón trỏ ở lại trên gờ nổi suốt cả dòng." },
+    { "type": "burst", "seconds": 20, "tokens": ["j", "f", "jj", "ff", "jf", "fj", "jjf", "ffj"],
+      "text": "Mỗi lần chỉ hiện một cụm ngắn. Mắt nhìn màn hình, không nhìn tay." },
+    { "type": "test", "seconds": 20, "content": "jf fj jjf ffj jf fj jjff ffjj jfjf fjfj jj ff jf fj",
+      "text": "Screen test có đồng hồ: 20 giây." },
+    { "type": "test", "seconds": 20, "source": "weak-keys", "minKeys": 2,
+      "text": "Screen test sinh nội dung lúc chạy từ những phím bạn hay sai nhất." }
+  ]
+}

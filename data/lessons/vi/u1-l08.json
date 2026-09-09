@@ -1,0 +1,80 @@
+{
+  "id": "u1-l08",
+  "unit": "u1",
+  "group": "vuon-xa",
+  "order": 8,
+  "slug": "r-va-u",
+  "title": "R và U",
+  "summary": "Đường thứ hai của ngón trỏ: với lên R và U rồi về gờ nổi.",
+  "newKeys": ["r", "u"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "R và U cùng do ngón trỏ với lên hàng trên: R nằm trên F, U nằm trên J. Sau bài này bạn có 14 phím chữ và gõ được kha khá từ tiếng Việt.",
+  "congrats": "Ngón trỏ vừa học đường thứ hai: với lên R, U rồi về gờ nổi. Mẹo cần nhớ: chỉ ngón trỏ đi, ba ngón còn lại của bàn tay đó vẫn phải chạm phím — gõ chậm và cảm nhận phím dưới ngón út để tự kiểm tra.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "r",
+      "finger": "LI",
+      "text": "Phím R — ngón TRỎ tay trái với lên một hàng, ngay phía trên phím F. Gõ xong hạ ngón về F, nơi có gờ nổi.",
+      "hint": "Nhấn R để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "r",
+      "content": "rrrr ffff\nrrrr ffff\nfr rf frf rfr\nre ra rg rd"
+    },
+    {
+      "type": "intro",
+      "key": "u",
+      "finger": "RI",
+      "text": "Phím U — ngón TRỎ tay phải với lên một hàng, ngay phía trên phím J. Đối xứng với R bên tay trái.",
+      "hint": "Nhấn U để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "u",
+      "content": "uuuu jjjj\nuuuu jjjj\nju uj juj uju\nuh uk ui ul"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["r", "u", "fr", "ju", "rf", "uj", "ru", "ur", "frf", "juj"],
+      "text": "Ngón trỏ giờ có ba việc: F/J, G/H và R/U. Mỗi lần chỉ đi một hướng rồi về."
+    },
+    {
+      "type": "block",
+      "content": "fr ju fr ju\nrf uj rf uj\nru ur ruru urur\nfru jur",
+      "text": "Hai ngón trỏ đổi nhau với lên, rồi cả hai về gờ nổi."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "ur ru ri re ui ue\nfru jur dru kur\nfr ju rf uj ru ur"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ra ru rau sau\nlau dau hau gau\nhu khu rua dua",
+      "text": "Từ tiếng Việt không dấu: rau, sau, lau, khu, rua (rùa), dua (dừa)."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["ra", "ru", "rau", "sau", "lau", "dau", "rua", "dua", "sua", "khu"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "sua lua rua dua khua\ngui khau khai giai kha\nhieu kieu lieu sieu dieu"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "rau sau lau dau hau gau\nhai lai kia dia sai dai\nhieu dieu kieu lieu rieu",
+      "text": "Hết bài này bạn đã có đủ phím cho cả Unit 1. Hai bài còn lại là luyện phím yếu và kiểm tra."
+    }
+  ]
+}

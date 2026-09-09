@@ -1,0 +1,37 @@
+.coach{display:grid;gap:13px;margin:-5px 0 22px;padding:16px 18px;border:1px solid #d5e8dd;border-radius:9px;background:#fff}
+.coach p{margin:0}
+.coach-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.coach-kicker{color:var(--green);font-size:10px;font-weight:800}
+.coach-head h3{margin:4px 0 0;color:var(--ink);font-size:20px;letter-spacing:-.7px}
+.coach-level{padding:5px 11px;border:1px solid var(--green);border-radius:999px;background:#e5f5df;color:var(--green);font-size:10px;font-weight:800;white-space:nowrap}
+.coach-body{display:grid;grid-template-columns:1fr 190px;gap:16px;align-items:center}
+.coach:not(.has-trend) .coach-body{grid-template-columns:1fr}
+/* UA [hidden] khong ap dung cho phan tu SVG, phai an bang CSS cua minh */
+.coach-trend[hidden]{display:none}
+.coach-trend-hint{color:#8ba396;font-size:10px}
+.coach-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.coach-stats div{display:grid;gap:3px}
+.coach-stats span{color:#6d877b;font-size:10px}
+.coach-stats b{color:var(--ink);font-family:"DM Mono",monospace;font-size:17px}
+.coach-trend{width:100%;height:52px;border:1px solid #e4efe9;border-radius:6px;background:#f8fcf9}
+.coach-trend polyline{fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.coach-trend circle{fill:var(--green)}
+.coach-trend text{fill:#8ba396;font-family:"DM Mono",monospace;font-size:9px}
+.coach-target{color:#6d877b;font-size:11px}
+.coach-target b{color:var(--green);font-family:"DM Mono",monospace}
+.coach-keys{display:flex;flex-wrap:wrap;gap:6px}
+.coach-key{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:1px solid #efd3c6;border-radius:999px;background:#fdf1ec;color:#a9452b;font-size:10px}
+.coach-key b{font-family:"DM Mono",monospace;font-size:12px}
+.coach-advice{color:var(--ink);font-size:12px;line-height:1.5}
+.coach-action{justify-self:start;padding:11px 17px;border:0;border-radius:6px;background:var(--green);color:#fff;font-size:12px;font-weight:800;cursor:pointer}
+.coach-action:hover{background:#0f6244}
+.key[data-heat=strong]{border-color:#9fd3ba;background:#eefaf2;color:#14624a}
+.key[data-heat=fair]{border-color:#f0dcae;background:#fdf8e9;color:#8a6a1f}
+.key[data-heat=weak]{border-color:#efbfae;background:#fdeee8;color:#a9452b}
+.heat-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;color:#6d877b;font-size:10px}
+.heat-legend span{display:inline-flex;align-items:center;gap:5px}
+.heat-legend i{width:11px;height:11px;border:1px solid #d0dfd7;border-radius:3px}
+.heat-legend i[data-heat=strong]{border-color:#9fd3ba;background:#eefaf2}
+.heat-legend i[data-heat=fair]{border-color:#f0dcae;background:#fdf8e9}
+.heat-legend i[data-heat=weak]{border-color:#efbfae;background:#fdeee8}
+@media(max-width:750px){.coach-body{grid-template-columns:1fr;gap:12px}.coach-stats{gap:8px}.coach-action{justify-self:stretch;text-align:center}}

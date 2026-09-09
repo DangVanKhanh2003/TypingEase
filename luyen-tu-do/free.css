@@ -1,0 +1,32 @@
+/* luyen-tu-do/free.css — trang luyện tự do (chuyển từ tab "Tự do" của trang chủ).
+   Dùng lại class .free-practice / .free-stats / .keyboard-lab của keyboard.css; ở đó chúng bị
+   `display:none` vì chỉ hiện khi .typing-card có class .free-mode — đây là chỗ bật lại. */
+
+.free-main{max-width:1068px;margin:0 auto;padding:0 24px}
+
+.free-head{padding:32px 0 20px}
+.free-head h1{margin:0 0 13px;font-size:38px;line-height:1.15;letter-spacing:-2px}
+.free-lead{max-width:640px;margin:0;color:var(--muted);font-size:14px;line-height:1.75}
+
+.free-page .free-practice{display:block;margin-bottom:22px;border:1px solid var(--line);border-radius:11px;background:#fff;padding:22px 24px}
+.free-page .free-practice #free-feedback{display:block;margin-top:12px;font-size:11px}
+.free-page .free-sample{min-height:96px}
+.free-page .free-practice #free-input{min-height:88px}
+.free-page .free-practice #custom-text{font:13px "DM Mono",monospace}
+
+.free-page .keyboard-lab{margin:0 0 22px}
+.free-board{min-width:0}
+/* Ban phim gon lai vua du be rong cac phim, canh giua — de toa do tay khop voi phim thuc. */
+.free-board .keyboard{width:max-content;max-width:100%;margin:0 auto;background:#dfe8e3}
+.free-board .key{height:32px;min-width:30px}
+@media(max-width:900px){.free-board{padding-bottom:0}.free-board .hand-layer{display:none}}
+
+.free-main .explore{max-width:none;margin:0;padding:6px 0 64px}
+
+@media(max-width:750px){
+  .free-main{padding:0 18px}
+  .free-head{padding:22px 0 16px}
+  .free-head h1{font-size:28px;letter-spacing:-1.4px}
+  .free-page .free-practice{padding:18px 15px}
+  .free-main .explore{margin:0}
+}

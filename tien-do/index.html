@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tiến độ luyện gõ của bạn | TypingEase</title>
+    <meta name="description" content="Xem tiến độ luyện gõ 10 ngón: bảng thành tích từng bài, WPM và độ chính xác tốt nhất, bản đồ nhiệt từng phím, chuỗi ngày liên tục và mục tiêu mỗi ngày." />
+    <link rel="canonical" href="https://typingease.site/tien-do/" />
+    <link rel="alternate" hreflang="vi" href="https://typingease.site/tien-do/" />
+    <link rel="alternate" hreflang="x-default" href="https://typingease.site/tien-do/" />
+    <!-- Cùng quy ước với /luyen-phim-yeu/ và /kiem-tra-toc-do-go/: là trang công cụ, vẫn có
+         phần copy giải thích ổn định nên để index. Số liệu thì đọc từ localStorage của chính
+         người dùng, crawler chỉ thấy trạng thái rỗng — đó là chuyện bình thường với trang công cụ. -->
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../keyboard.css" />
+    <link rel="stylesheet" href="../coach.css" />
+    <link rel="stylesheet" href="../hands.css" />
+    <link rel="stylesheet" href="progress.css" />
+  </head>
+  <body class="progress-page">
+    <header class="topbar">
+      <a class="brand" href="../">Typing<span>Ease</span></a>
+      <nav aria-label="Điều hướng chính">
+        <a href="../">Luyện gõ</a>
+        <a href="../bai-hoc/">Lộ trình</a>
+        <a class="active" href="./">Tiến độ</a>
+        <a href="../kiem-tra-toc-do-go/">Kiểm tra tốc độ</a>
+      </nav>
+      <div class="header-actions"><a class="secondary-button" href="../hoc/">Vào học <span>→</span></a></div>
+    </header>
+
+    <main class="progress-main">
+      <section class="prog-head">
+        <p class="eyebrow"><i></i> Tiến bộ của bạn</p>
+        <h1>Tiến độ luyện gõ</h1>
+        <p class="prog-intro">Mọi số liệu dưới đây được lưu ngay trên thiết bị này, không gửi đi đâu.
+          Gõ thêm một bài là chúng cập nhật ngay.</p>
+        <div class="status-strip" id="status-strip">
+          <span id="strip-streak">🔥 0 ngày liên tục</span>
+          <span id="strip-today">Hôm nay 0 phút</span>
+          <span id="strip-level">Trình độ: Mới bắt đầu</span>
+        </div>
+      </section>
+
+      <section class="prog-summary" aria-label="Tổng quan">
+        <div><span>Bài đã hoàn thành</span><strong id="sum-lessons">0 / 35</strong></div>
+        <div><span>Sao đã thu</span><strong id="sum-stars">0</strong></div>
+        <div><span>WPM tốt nhất</span><strong id="sum-wpm">0 WPM</strong></div>
+        <div><span>Chính xác tốt nhất</span><strong id="sum-accuracy">--%</strong></div>
+      </section>
+      <p class="prog-legacy" id="prog-legacy" hidden></p>
+
+      <section class="daily-goal" aria-labelledby="daily-goal-title">
+        <div class="daily-goal-copy">
+          <p id="daily-goal-kicker">Mục tiêu hôm nay</p>
+          <h3 id="daily-goal-title">0 / 10 phút</h3>
+          <p id="daily-goal-status">🔥 0 ngày liên tục</p>
+        </div>
+        <div class="daily-goal-progress">
+          <div class="daily-progress-track" id="daily-progress" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><i></i></div>
+          <p id="daily-best-streak">Kỷ lục: 0 ngày</p>
+        </div>
+        <div class="daily-goal-options" role="group" aria-label="Chọn mục tiêu mỗi ngày">
+          <button type="button" data-daily-goal="5" aria-pressed="false">5 phút</button>
+          <button type="button" data-daily-goal="10" aria-pressed="true" class="selected">10 phút</button>
+          <button type="button" data-daily-goal="15" aria-pressed="false">15 phút</button>
+          <button type="button" data-daily-goal="20" aria-pressed="false">20 phút</button>
+        </div>
+      </section>
+
+      <section class="coach" id="coach" aria-labelledby="coach-title">
+        <div class="coach-head">
+          <div><p class="coach-kicker" id="coach-kicker">Huấn luyện cá nhân</p><h3 id="coach-title">Trình độ của bạn</h3></div>
+          <span class="coach-level" id="coach-level">Mới bắt đầu</span>
+        </div>
+        <div class="coach-body">
+          <div class="coach-stats" id="coach-stats"></div>
+          <svg class="coach-trend" id="coach-trend" viewBox="0 0 200 52" preserveAspectRatio="none" role="img" aria-label="Tiến bộ gần đây" hidden></svg>
+          <p class="coach-trend-hint" id="coach-trend-hint">Cần thêm 2 bài nữa để vẽ biểu đồ tiến bộ.</p>
+        </div>
+        <p class="coach-target" id="coach-target"></p>
+        <div class="coach-keys" id="coach-keys"></div>
+        <p class="coach-advice" id="coach-advice" aria-live="polite">Hãy gõ một bài để hệ thống hiểu trình độ của bạn.</p>
+        <a class="coach-action" id="coach-action" href="../hoc/">Bắt đầu bài đầu tiên →</a>
+      </section>
+
+      <section class="keyboard-lab" aria-labelledby="heat-title">
+        <div class="keyboard-copy">
+          <p class="eyebrow"><i></i> Từng phím bấm</p>
+          <h3 id="heat-title">Bản đồ nhiệt bàn phím</h3>
+          <p>Phím xanh là phím bạn gõ chắc, phím vàng còn chập chờn, phím đỏ đang kéo tốc độ xuống.
+            Chỉ những phím đã gõ đủ số lần mới được tô màu.</p>
+          <p class="heat-empty" id="heat-empty">Chưa đủ dữ liệu — hãy gõ vài bài rồi quay lại.</p>
+          <div class="heat-legend" id="heat-legend" aria-label="Độ chính xác từng phím" hidden></div>
+        </div>
+        <div class="keyboard-demo heat-board" id="heat-board"></div>
+      </section>
+
+      <section class="results" id="bang-xep-hang" aria-labelledby="results-title">
+        <div class="results-heading">
+          <div>
+            <p class="eyebrow"><i></i> Giáo trình 35 bài</p>
+            <h2 id="results-title">Thành tích từng bài</h2>
+            <p>Điểm tốt nhất của mỗi bài được lưu trên thiết bị này.</p>
+          </div>
+          <button class="clear-results" id="clear-results" type="button">Xoá lịch sử</button>
+        </div>
+        <div class="results-table-wrap">
+          <table class="results-table">
+            <thead><tr><th>Bài học</th><th>Screen đã xong</th><th>Sao</th><th>WPM tốt nhất</th><th>Chính xác</th></tr></thead>
+            <tbody id="results-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="explore" aria-labelledby="prog-explore-title">
+        <div class="explore-heading">
+          <p class="eyebrow"><i></i> Luyện tiếp</p>
+          <h2 id="prog-explore-title">Bước tiếp theo</h2>
+        </div>
+        <div class="explore-grid">
+          <a class="explore-card" href="../bai-hoc/">
+            <h3>Lộ trình 35 bài</h3>
+            <p>Xem toàn bộ bốn unit, chọn bài muốn học lại hoặc mở sớm unit tiếp theo.</p>
+            <span>Xem lộ trình <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="explore-card" href="../luyen-phim-yeu/">
+            <h3>Luyện phím yếu</h3>
+            <p>Bài tập sinh riêng từ những phím bạn hay sai nhất, gói trong một phút.</p>
+            <span>Luyện ngay <b aria-hidden="true">→</b></span>
+          </a>
+          <a class="explore-card" href="../kiem-tra-toc-do-go/">
+            <h3>Kiểm tra tốc độ</h3>
+            <p>Đo WPM và độ chính xác trong 15 · 30 · 60 · 120 giây để thấy mình tiến bộ tới đâu.</p>
+            <span>Kiểm tra ngay <b aria-hidden="true">→</b></span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand" href="../">Typing<span>Ease</span></a>
+      <nav class="footer-links" aria-label="Tài nguyên TypingEase">
+        <a href="../bai-hoc/">Lộ trình</a><a href="../tien-do/">Tiến độ</a><a href="../luyen-tu-do/">Luyện tự do</a><a href="../cach-go-10-ngon/">Cách gõ 10 ngón</a>
+      </nav>
+      <p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p>
+      <span>© 2024 TypingEase</span>
+    </footer>
+
+    <script src="../hands.js"></script>
+    <script src="../profile.js"></script>
+    <script src="../data/curriculum.vi.js"></script>
+    <script src="../progress-store.js"></script>
+    <script src="../keyboard-widget.js"></script>
+    <script src="progress-page.js"></script>
+  </body>
+</html>

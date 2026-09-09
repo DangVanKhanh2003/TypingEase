@@ -1,0 +1,24 @@
+{
+  "id": "u1-l10",
+  "unit": "u1",
+  "group": "ve-dich",
+  "order": 10,
+  "slug": "kiem-tra-unit-1",
+  "title": "Kiểm tra Unit 1",
+  "summary": "60 giây với 15 phím đã học, để biết bạn đang ở đâu.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u"],
+  "minAccuracy": 80,
+  "estMinutes": 1,
+  "inputMode": "ascii",
+  "intro": "Một screen duy nhất, 60 giây. Không có phím mới, không có mẹo mới — chỉ để xem 15 phím của Unit 1 đã vào tay tới đâu.",
+  "congrats": "Xong Unit 1. Mẹo cần nhớ: điểm chính xác quan trọng hơn tốc độ ở giai đoạn này — nếu bạn đạt trên 95% thì cứ để tốc độ tự lên ở Unit 2, đừng cố gõ nhanh bằng cách nhìn tay.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 60,
+      "content": "hai lai kia dia sai dai gai ai\nrau sau lau dau hau gau hu khu\nrua dua sua lua khua gui ria\nghi ghe khe kha gia giai khai khau\nde he ke le se di ra ru re\nhieu kieu lieu sieu dieu rieu\nla sa da ga ha; hai kia; sau lau\ndai gai sai lai; ghi de; khe ghe\ngau hau dau lau; rua dua sua lua\nkhu hu ru ra; hieu dieu; kieu lieu\nkhi ghi; khe ghe; gia khai; giai\ndua sua; rua lua; gau hau; dau lau",
+      "text": "Bạn có 60 giây. Chỉ di chuyển ngón cần gõ, các ngón khác ở lại hàng cơ sở. Gõ hết dòng nào thì xuống dòng tiếp, không cần gõ hết cả bài."
+    }
+  ]
+}

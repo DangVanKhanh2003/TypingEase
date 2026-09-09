@@ -1,0 +1,80 @@
+{
+  "id": "u1-l06",
+  "unit": "u1",
+  "group": "vuon-xa",
+  "order": 6,
+  "slug": "g-va-h",
+  "title": "G và H",
+  "summary": "Hai phím giữa bàn phím, do hai ngón trỏ với ngang vào.",
+  "newKeys": ["g", "h"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "G và H nằm ngay giữa bàn phím, do hai ngón trỏ với ngang vào. Đây là hai phím đầu tiên bắt một ngón rời khỏi vị trí của nó rồi phải quay về.",
+  "congrats": "Ngón trỏ giờ làm hai việc: giữ F, J và với vào G, H. Mẹo cần nhớ: với ngang vào giữa, gõ, rồi bật ngay về gờ nổi — nếu phải nhìn xuống mới tìm lại được F và J thì bạn đã nhấc tay quá nhiều.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "g",
+      "finger": "LI",
+      "text": "Phím G — ngón TRỎ tay trái với ngang sang phải một phím, ngay cạnh F. Ba ngón còn lại vẫn nằm yên trên A, S, D.",
+      "hint": "Nhấn G để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "g",
+      "content": "gggg ffff\ngggg ffff\nfg gf fgf gfg\ngd gs ga gf"
+    },
+    {
+      "type": "intro",
+      "key": "h",
+      "finger": "RI",
+      "text": "Phím H — ngón TRỎ tay phải với ngang sang trái một phím, ngay cạnh J. Đối xứng với G bên tay trái.",
+      "hint": "Nhấn H để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "h",
+      "content": "hhhh jjjj\nhhhh jjjj\njh hj jhj hjh\nhk hl h; hj"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["g", "h", "fg", "jh", "gf", "hj", "gh", "hg", "fgf", "jhj"],
+      "text": "Với vào, gõ, về gờ nổi. Ba nhịp đó lặp lại cho tới khi tay tự làm."
+    },
+    {
+      "type": "block",
+      "content": "fg jh fg jh\ngf hj gf hj\ngh hg ghg hgh\nfgh jhg",
+      "text": "Hai ngón trỏ luân phiên. Gõ xong G hay H là ngón phải nằm lại trên F, J."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "gag hah gah hag\nghd ghs ghl gh;\nfg jh gf hj gh hg"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ga ha la da sa\nha ga da la sa\nga la ha da; sa ha;",
+      "text": "Từ tiếng Việt không dấu: ga (nhà ga), ha (hạ), la, da, sa."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["ga", "ha", "la", "da", "sa", "gh", "hg", "fgh", "jhg", "gah"]
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "asdfg hjkl; asdfg hjkl;\ngfdsa ;lkjh gfdsa ;lkjh\nag sh dg fh gj hf"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ga ha; la da sa;\nha la ga da; sa ha ga\nda ga sa ha la; ga ha",
+      "text": "Mười phím rồi. Dòng cuối gõ liền không dừng, sai cũng gõ tiếp cho hết dòng."
+    }
+  ]
+}
