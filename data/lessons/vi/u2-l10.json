@@ -1,0 +1,25 @@
+{
+  "id": "u2-l10",
+  "unit": "u2",
+  "group": "ve-dich",
+  "order": 10,
+  "slug": "luyen-phim-yeu",
+  "title": "Luyện phím yếu",
+  "summary": "Hai phút với đúng những phím bạn hay sai nhất ở Unit 2.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter"],
+  "minAccuracy": 80,
+  "estMinutes": 2,
+  "inputMode": "ascii",
+  "intro": "Bạn vừa học 15 phím mới trong Unit 2. Bài này lấy ra những phím bạn sai nhiều nhất và cho chúng xuất hiện dày đặc trong hai phút.",
+  "congrats": "Phím nào cũng sẽ thành quen nếu được gõ đủ nhiều trong ngữ cảnh thật. Mẹo cần nhớ: sau mỗi buổi học, hãy quay lại bài này một lần — nó tự đổi nội dung theo lỗi mới nhất của bạn, nên không bao giờ thừa.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 120,
+      "source": "weak-keys",
+      "minKeys": 3,
+      "text": "Bạn có 2 phút. Nội dung sinh từ những phím bạn hay sai nhất, giới hạn trong các phím đã học."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "u3-l01",
+  "unit": "u3",
+  "group": "dau-thanh",
+  "order": 1,
+  "slug": "dau-sac-va-dau-huyen",
+  "title": "Dấu sắc và dấu huyền",
+  "summary": "Hai dấu thanh đầu tiên theo kiểu Telex: gõ chữ xong mới gõ dấu.",
+  "newKeys": ["s", "f"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Từ bài này bạn gõ tiếng Việt CÓ DẤU, nên hãy bật bộ gõ (Unikey hoặc EVKey) ở kiểu Telex. Quy tắc Telex rất gọn: gõ hết chữ rồi mới gõ phím dấu. S là dấu sắc, F là dấu huyền — má là m-a-s, mà là m-a-f.",
+  "congrats": "Bạn vừa gõ chữ có dấu mà không cần rời tay khỏi hàng cơ sở — S và F nằm ngay dưới ngón áp út trái và ngón trỏ trái. Mẹo cần nhớ: đừng gõ dấu ở giữa chữ, hãy gõ trọn âm tiết rồi mới bỏ dấu; bộ gõ sẽ tự đặt dấu vào đúng nguyên âm.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "s",
+      "finger": "LR",
+      "text": "Dấu SẮC — gõ phím S sau khi đã gõ xong âm tiết. Chữ ma thành má khi bạn gõ thêm S. Vẫn là ngón áp út trái, đúng phím S bạn đã học ở Unit 1.",
+      "hint": "Nhấn S để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "s",
+      "content": "má cá bá lá\nná tá vá xá\nhá gá khá quá",
+      "text": "Gõ m-a rồi S ra má. Nếu màn hình vẫn hiện ma thì bộ gõ chưa bật."
+    },
+    {
+      "type": "intro",
+      "key": "f",
+      "finger": "LI",
+      "text": "Dấu HUYỀN — phím F, ngay dưới ngón trỏ trái, nơi có gờ nổi. Chữ ma thành mà khi bạn gõ thêm F.",
+      "hint": "Nhấn F để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "f",
+      "content": "mà cà bà là\nnà tà và xà\nhà gà nhà trà"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["má", "mà", "cá", "cà", "bá", "bà", "lá", "là", "gà", "khá"],
+      "text": "Cùng một âm tiết, hai dấu khác nhau. Chỉ khác nhau đúng một phím cuối."
+    },
+    {
+      "type": "block",
+      "content": "má mà cá cà\nbá bà lá là\ntá tà há hà",
+      "text": "Đọc thành tiếng khi gõ: sắc lên, huyền xuống."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "bà cà gà nhà trà\nlá má cá khá quá\nbán bàn cán càn",
+      "text": "Dấu vẫn gõ ở cuối âm tiết, kể cả khi âm tiết có phụ âm cuối: b-a-n rồi S ra bán."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["bán", "bàn", "cán", "càn", "sáng", "làng", "vàng", "tháng", "ngày", "cháu"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "sáng tháng vàng làng\nngày cháu máu màu\ntrái cái mái mài gái",
+      "text": "Những vần hay gặp nhất của tiếng Việt, chỉ với hai dấu."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Bà bán cá và gà.\nMá nói là nhà có khách.\nCá to quá, bà cho má hai con.",
+      "text": "Ba câu có dấu đầu tiên của bạn. Bài sau là ba dấu còn lại: hỏi, ngã, nặng."
+    }
+  ]
+}

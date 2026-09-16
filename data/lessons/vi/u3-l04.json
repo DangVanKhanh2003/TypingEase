@@ -1,0 +1,77 @@
+{
+  "id": "u3-l04",
+  "unit": "u3",
+  "group": "nguyen-am",
+  "order": 4,
+  "slug": "a-u-o-moc",
+  "title": "Ă Ư Ơ",
+  "summary": "Phím W là phím móc: aw ra ă, uw ra ư, ow ra ơ.",
+  "newKeys": ["aw", "uw", "ow"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Ba chữ cuối cùng dùng chung một phím: W. aw ra ă, uw ra ư, ow ra ơ. Đây chính là lý do bạn đã làm quen với phím W từ Unit 2 — trong tiếng Việt nó gần như chỉ để làm việc này.",
+  "congrats": "Xong ba chữ này là bạn gõ được mọi chữ của tiếng Việt. Mẹo cần nhớ: những từ hay gặp nhất lại là những từ khó gõ nhất — người, được, trường, tưởng. Gõ chậm từng từ đó vài chục lần, rồi tay sẽ tự nhớ.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "w",
+      "finger": "LR",
+      "text": "Phím W — ngón áp út trái với lên. Trong Telex, W là phím thêm móc: gõ a rồi w ra ă, u rồi w ra ư, o rồi w ra ơ.",
+      "hint": "Nhấn W để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "aw",
+      "content": "ăn năm căn chăm\nmắt tắt nắng vắng\nngăn thăng bằng hăng",
+      "text": "Gõ a rồi w ra ă. Dấu thanh vẫn gõ sau cùng."
+    },
+    {
+      "type": "block",
+      "newKey": "uw",
+      "content": "ư như thư từ\nmừng từng chừng ngừng\ntự nhưng chứng bừng",
+      "text": "Gõ u rồi w ra ư."
+    },
+    {
+      "type": "block",
+      "newKey": "ow",
+      "content": "ơn cơm sơn thơm\nmới tới với lợi\nđợi hơn lớn bơi",
+      "text": "Gõ o rồi w ra ơ."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["ăn", "ư", "ơn", "năm", "thư", "cơm", "mắt", "mừng", "mới", "lớn"],
+      "text": "Ba chữ mới, một phím chung. Đọc thầm w là móc."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "người được trường tưởng\nnước trước bước vườn\nmương đường hương sương",
+      "text": "Đây là nhóm từ khó gõ nhất tiếng Việt: có cả ư, ơ và dấu."
+    },
+    {
+      "type": "block",
+      "content": "ưa ươ ơi ăn\nnướng trường vượt\nđược người mượn",
+      "text": "Vần ươ luôn gõ là uow rồi mới tới dấu."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["người", "được", "trường", "nước", "vườn", "đường", "hương", "trước", "tưởng", "thường"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ăn cơm uống nước\nđi đường về nhà\nnăm mới tháng mười",
+      "text": "Toàn từ dùng hằng ngày, giờ bạn gõ được hết."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Người Việt thường ăn cơm với rau.\nSáng mai tôi được nghỉ, sẽ về quê.\nTrường của em ở cuối đường lớn.",
+      "text": "Hết phần chữ mới. Hai bài sau là luyện từ và luyện câu."
+    }
+  ]
+}

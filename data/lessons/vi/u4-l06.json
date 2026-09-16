@@ -1,0 +1,24 @@
+{
+  "id": "u4-l06",
+  "unit": "u4",
+  "group": "toc-do",
+  "order": 6,
+  "slug": "tong-ket-va-kiem-tra-cuoi",
+  "title": "Tổng kết và Kiểm tra cuối",
+  "summary": "Ba phút, tiếng Việt có dấu, có số và dấu câu — toàn bộ những gì bạn đã học.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "-"],
+  "minAccuracy": 80,
+  "estMinutes": 3,
+  "inputMode": "telex",
+  "intro": "Bài cuối cùng: ba phút gõ liên tục, tiếng Việt có dấu, có số và dấu câu. Đây là con số bạn nên ghi lại để so sánh sau vài tuần nữa.",
+  "congrats": "Bạn đã đi hết giáo trình: 35 bài, từ hai phím F và J tới đoạn văn tiếng Việt đầy đủ. Mẹo cần nhớ: tốc độ từ giờ không đến từ bài học nữa mà từ việc dùng thật — viết thư, ghi chú, nhắn tin bằng mười ngón, kể cả trong tuần đầu còn thấy chậm hơn mổ cò.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 180,
+      "content": "Ba tháng trước, tôi gõ bằng hai ngón và phải nhìn bàn phím liên tục.\nMỗi lần viết một tin nhắn dài, tôi mất gấp đôi thời gian so với bạn bè.\nTôi quyết định học lại từ đầu, bắt đầu bằng tám phím của hàng cơ sở.\nTuần đầu tiên rất khó chịu, vì tay chậm hơn hẳn cách gõ cũ.\nNhưng đến tuần thứ ba, ngón tay bắt đầu tự tìm được phím mà tôi không phải nghĩ.\nTôi học tiếp hàng trên, hàng dưới, rồi tới dấu câu và chữ hoa.\nPhần thú vị nhất là khi học gõ tiếng Việt có dấu theo kiểu Telex.\nChỉ cần nhớ năm phím dấu và vài quy tắc gõ đôi là viết được mọi thứ.\nBây giờ tôi gõ khoảng 45 từ một phút, với độ chính xác trên 95 phần trăm.\nCon số đó không cao, nhưng nó gấp ba lần lúc tôi mới bắt đầu.\nĐiều tôi thích nhất không phải là tốc độ, mà là việc không còn nhìn xuống tay.\nTôi vừa nhìn màn hình vừa nghĩ, và chữ cứ thế hiện ra.\nNếu bạn đang ở tuần đầu tiên và thấy nản, hãy tin rằng ai cũng qua đoạn đó.\nMười phút mỗi ngày, đều đặn, đưa bạn tới đích nhanh hơn ba tiếng dồn vào cuối tuần.\nChúc bạn gõ vui, và hẹn gặp lại ở lần kiểm tra sau.",
+      "text": "Bạn có 3 phút. Nhớ bật bộ gõ Telex. Gõ đều tay, sai thì sửa rồi đi tiếp."
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "u2-l01",
+  "unit": "u2",
+  "group": "bat-dau",
+  "order": 1,
+  "slug": "t-va-y",
+  "title": "T và Y",
+  "summary": "Hai phím hàng trên của ngón trỏ, ngay cạnh R và U.",
+  "newKeys": ["t", "y"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Unit 2 mở rộng bàn phím. Bắt đầu bằng T và Y — vẫn là hai ngón trỏ, nhưng lần này với lên chéo vào trong. T nằm cạnh R, Y nằm cạnh U.",
+  "congrats": "T và Y là hai phím xa nhất mà ngón trỏ phải với tới. Mẹo cần nhớ: đừng xoay cả bàn tay theo ngón trỏ — ba ngón kia vẫn phải nằm im trên hàng cơ sở, nếu chúng trượt theo thì bạn sẽ mất chỗ ngay sau vài chữ.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "t",
+      "finger": "LI",
+      "text": "Phím T — ngón TRỎ tay trái với lên hàng trên rồi chéo sang phải một phím, ngay cạnh R. Gõ xong hạ ngón về F.",
+      "hint": "Nhấn T để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "t",
+      "content": "tttt ffff\ntttt ffff\nft tf ftf tft\nta te ti tu"
+    },
+    {
+      "type": "intro",
+      "key": "y",
+      "finger": "RI",
+      "text": "Phím Y — ngón TRỎ tay phải với lên hàng trên rồi chéo sang trái một phím, ngay cạnh U. Đối xứng với T bên tay trái.",
+      "hint": "Nhấn Y để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "y",
+      "content": "yyyy jjjj\nyyyy jjjj\njy yj jyj yjy\nay ey uy iy"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["t", "y", "ft", "jy", "tf", "yj", "ty", "yt", "ftf", "jyj"],
+      "text": "Ngón trỏ giờ với tới bốn phím: F/J, G/H, R/U và T/Y. Đi một hướng rồi về ngay."
+    },
+    {
+      "type": "block",
+      "content": "ft jy ft jy\ntf yj tf yj\nty yt tyty ytyt\nfty jty",
+      "text": "Hai ngón trỏ thay nhau với vào trong, rồi cả hai về gờ nổi."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "ty yt ta ay ti uy\nftj jyf tay yat\nft jy tf yj ty yt"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "tai tay hai hay\ngai gay dai day\nlai lay sai say",
+      "text": "Từ tiếng Việt không dấu. Hai vần -ai và -ay khác nhau đúng một phím."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["tai", "tay", "hai", "hay", "gay", "day", "lay", "say", "thu", "tre"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "tu tre tra tri tha the\nthai thay that thu thi\nhuy duy tuy suy khuy"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "tai tay hai hay gai gay\nthay thai that thu the\nhuy duy tuy suy khuy uy",
+      "text": "Bốn ngón trỏ đã xong phần khó nhất của hàng trên. Bài sau là O và W."
+    }
+  ]
+}

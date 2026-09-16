@@ -1,0 +1,86 @@
+{
+  "id": "u2-l03",
+  "unit": "u2",
+  "group": "bat-dau",
+  "order": 3,
+  "slug": "c-va-n",
+  "title": "C và N",
+  "summary": "Hai phím phổ biến nhất còn thiếu: C ở hàng dưới, N ở hàng dưới bên phải.",
+  "newKeys": ["c", "n"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n"],
+  "minAccuracy": 80,
+  "estMinutes": 6,
+  "inputMode": "ascii",
+  "intro": "Lần đầu tiên các ngón đi XUỐNG hàng dưới. C nằm dưới D, N nằm dưới J và hơi chéo vào trong. Hai phím này có mặt trong phần lớn từ tiếng Việt.",
+  "congrats": "Hàng dưới khó hơn hàng trên vì ngón phải cong lại chứ không duỗi ra. Mẹo cần nhớ: gập đốt ngón tay xuống thay vì hạ cả bàn tay — cổ tay giữ nguyên độ cao thì ngón mới về đúng chỗ cũ được.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "c",
+      "finger": "LM",
+      "text": "Phím C — ngón GIỮA tay trái gập xuống một hàng, ngay phía dưới phím D. Gõ xong đưa ngón về D.",
+      "hint": "Nhấn C để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "c",
+      "content": "cccc dddd\ncccc dddd\ndc cd dcd cdc\nca co cu ci"
+    },
+    {
+      "type": "intro",
+      "key": "n",
+      "finger": "RI",
+      "text": "Phím N — ngón TRỎ tay phải gập xuống một hàng rồi chéo vào trong, ngay dưới phím J. Gõ xong về gờ nổi trên J.",
+      "hint": "Nhấn N để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "n",
+      "content": "nnnn jjjj\nnnnn jjjj\njn nj jnj njn\nan on un in"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["c", "n", "dc", "jn", "cd", "nj", "cn", "nc", "dcd", "jnj"],
+      "text": "Ngón giữa trái xuống C, ngón trỏ phải xuống N. Mỗi lần chỉ một ngón rời chỗ."
+    },
+    {
+      "type": "block",
+      "content": "dc jn dc jn\ncd nj cd nj\ncn nc cnc ncn\ncon can cua",
+      "text": "Ba cụm cuối đã là từ thật rồi: con, can, cua."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "cn nc ca an co on\ncan con cun cin\ndc jn cd nj cn nc"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "con can cao cai cua\nnha nho nhu nen nay\nnao noi non nui nang",
+      "text": "Có C và N là gõ được rất nhiều từ. Chú ý cụm nh- rất hay gặp."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["con", "can", "cao", "cua", "nha", "nho", "nay", "nao", "noi", "nang"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "cha chi chu che chan\nchin chung cung cuon\nhoc doc coc cot con",
+      "text": "Cụm ch- và cụm -ung, hai khuôn vần rất thông dụng."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "sinh danh canh linh chinh\nnong song trong thanh\ntin ton tan than nhanh"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "con can cao cua cai nha\nnoi nao nang non nui\nhoc sinh chung tay nhanh",
+      "text": "Dòng cuối đã là một câu có nghĩa. Bài sau là M và V."
+    }
+  ]
+}

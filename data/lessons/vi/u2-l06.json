@@ -1,0 +1,81 @@
+{
+  "id": "u2-l06",
+  "unit": "u2",
+  "group": "vuon-xa",
+  "order": 6,
+  "slug": "q-va-p",
+  "title": "Q và P",
+  "summary": "Hai phím ngoài cùng của hàng trên, do hai ngón út đảm nhận.",
+  "newKeys": ["q", "p"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Ngón út là ngón yếu nhất nhưng phải với xa nhất. Q nằm trên A, P nằm trên dấu chấm phẩy. Trong tiếng Việt, Q gần như luôn đi cùng U thành qu-.",
+  "congrats": "Ngón út vừa nhận thêm việc. Mẹo cần nhớ: đừng nhấc cả bàn tay lên để ngón út với tới Q hay P — chỉ duỗi ngón út, còn ngón trỏ vẫn phải chạm gờ nổi trên F và J.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "q",
+      "finger": "LP",
+      "text": "Phím Q — ngón ÚT tay trái với thẳng lên một hàng, ngay phía trên phím A. Gõ xong hạ ngón về A.",
+      "hint": "Nhấn Q để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "q",
+      "content": "qqqq aaaa\nqqqq aaaa\naq qa aqa qaq\nqu qua que qui"
+    },
+    {
+      "type": "intro",
+      "key": "p",
+      "finger": "RP",
+      "text": "Phím P — ngón ÚT tay phải với lên một hàng, ngay phía trên dấu chấm phẩy. Cùng ngón với dấu chấm phẩy.",
+      "hint": "Nhấn P để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "p",
+      "content": "pppp ;;;;\npppp ;;;;\n;p p; ;p; p;p\npa po pu pi"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["q", "p", "aq", "p;", "qa", ";p", "qp", "pq", "aqa", "p;p"],
+      "text": "Hai ngón út đổi nhau. Nếu thấy cổ tay xoay theo thì bạn đang với bằng cả bàn tay."
+    },
+    {
+      "type": "block",
+      "content": "aq ;p aq ;p\nqa p; qa p;\nqu up qui pui\nqua que quy",
+      "text": "Trong tiếng Việt, sau Q gần như luôn là U."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "qp pq qa ap qu pu\naqp ;pq qup puq\naq ;p qa p; qp pq"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "qua que quen quan quy\nquoc quang quyen quai\npho phu phim phong phat",
+      "text": "Cụm qu- và cụm ph-, hai khuôn chữ rất hay gặp."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["qua", "que", "quen", "quan", "quoc", "pho", "phim", "phong", "giup", "dep"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "hop gap tap kip dep\ngiup nhap lop cap sap\ntiep hep phep phan phai",
+      "text": "P đứng cuối từ rất nhiều: -op, -ap, -ep, -ip."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "qua que quen quan quoc quy\npho phim phong phat phai\nhop gap tap dep giup tiep",
+      "text": "Còn đúng ba phím chữ nữa là hết bảng chữ cái. Bài sau là B và X."
+    }
+  ]
+}

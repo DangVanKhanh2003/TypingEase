@@ -1,0 +1,67 @@
+{
+  "id": "u3-l06",
+  "unit": "u3",
+  "group": "tu-va-cau",
+  "order": 6,
+  "slug": "cau-ngan",
+  "title": "Câu ngắn",
+  "summary": "Câu tiếng Việt hoàn chỉnh: chữ hoa đầu câu, dấu câu và dấu thanh cùng lúc.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Giờ ghép lại: chữ hoa đầu câu bằng Shift, dấu thanh bằng Telex, dấu chấm dấu phẩy ở hàng dưới. Đây là cách bạn sẽ gõ mọi thứ từ nay về sau.",
+  "congrats": "Bạn vừa gõ những câu tiếng Việt hoàn chỉnh, có dấu và có dấu câu. Mẹo cần nhớ: giữ Shift bằng ngón út bên kia ngay trước chữ đầu câu, đừng gõ chữ thường rồi quay lại sửa — sửa mất nhiều thời gian hơn gõ đúng ngay.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Tôi tên là Nam.\nTôi là học sinh.\nNhà tôi ở Hà Nội.",
+      "text": "Ba câu ngắn. Chữ đầu câu viết hoa, cuối câu có dấu chấm."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Hôm nay trời đẹp.\nChúng tôi đi học lúc bảy giờ.\nBuổi chiều, tôi giúp mẹ nấu cơm.",
+      "text": "Dấu phẩy tách phần trạng ngữ ở đầu câu."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["Tôi", "Chúng", "Hôm", "Buổi", "Nhà", "Người", "Bạn", "Trường", "Công", "Việt"],
+      "text": "Chữ đầu câu, viết hoa. Giữ Shift bằng ngón út tay bên kia."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Chào bạn.\nTôi là Nam, học sinh lớp chín.\nRất vui được làm quen với bạn.",
+      "text": "Lần này xuống dòng bằng Enter thật, như khi nhắn tin."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Cuối tuần, cả nhà tôi về quê thăm ông bà.\nQuê tôi có dòng sông và cánh đồng rộng.\nTôi thích nhất là buổi chiều ở đó.",
+      "text": "Câu dài hơn. Cứ gõ đều tay, đừng tăng tốc ở giữa câu."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["được", "người", "trường", "những", "nhiều", "thường", "chuyện", "nghiệp", "nguyên", "khoẻ"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Mỗi ngày tôi tập gõ mười phút.\nTuần này tôi gõ nhanh hơn tuần trước.\nTôi không nhìn bàn phím nữa.",
+      "text": "Ba câu về chính việc bạn đang làm."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Kính gửi cô Lan.\nEm xin phép nghỉ buổi học chiều mai vì em bị ốm.\nEm cảm ơn cô.\nHọc sinh Nguyễn Văn Nam.",
+      "text": "Một lá thư ngắn, đủ chữ hoa, dấu thanh, dấu câu và Enter."
+    }
+  ]
+}

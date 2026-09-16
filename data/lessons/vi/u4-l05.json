@@ -1,0 +1,59 @@
+{
+  "id": "u4-l05",
+  "unit": "u4",
+  "group": "toc-do",
+  "order": 5,
+  "slug": "doan-van-va-toc-do-2",
+  "title": "Đoạn văn và tốc độ 2",
+  "summary": "Đoạn văn dài hơn, trộn cả chữ, số và dấu câu — như văn bản thật.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "-"],
+  "minAccuracy": 80,
+  "estMinutes": 6,
+  "inputMode": "telex",
+  "intro": "Bài cuối cùng trước kỳ kiểm tra. Đoạn văn ở đây trộn đủ thứ bạn gặp khi viết thật: chữ có dấu, số, dấu câu, tên riêng và cả địa chỉ email.",
+  "congrats": "Bạn vừa gõ loại văn bản khó nhất: trộn chữ, số và ký hiệu. Mẹo cần nhớ: giữa các cụm khác loại, tay cần nửa nhịp để chuyển vùng — cứ để nó chậm lại nửa nhịp đó, ép nhanh chỉ tạo thêm lỗi.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Lớp học gõ mở vào thứ hai và thứ năm, lúc 18:30.\nMỗi buổi kéo dài 45 phút.\nBạn nào đăng ký thì gửi email trước ngày 10.",
+      "text": "Chữ có dấu và số đứng cạnh nhau — chỗ tay hay vấp nhất."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["18:30", "45", "thứ", "hai", "đăng", "ký", "gửi", "email", "ngày", "10"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Việt Nam có hơn 60 tỉnh thành.\nHà Nội, Huế và Đà Nẵng đều có phố cổ riêng.\nTừ Hà Nội vào Sài Gòn dài khoảng 1700 cây số.",
+      "text": "Tên riêng viết hoa: giữ Shift bằng ngón út tay bên kia."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Buổi sáng, tôi dậy lúc 6 giờ và tập thể dục mười lăm phút.\nSau đó tôi ăn sáng rồi đi làm.\nTrên đường đi, tôi thường nghe một bản tin ngắn.",
+      "text": "Đoạn kể chuyện thường ngày — kiểu văn bạn viết nhiều nhất."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["buổi", "sáng", "thường", "đường", "nghe", "bản", "tin", "ngắn", "thể", "dục"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Gửi bạn địa chỉ trang web: https://typingease.site/bai-hoc\nEmail của tôi là nam@gmail.com, bạn cứ nhắn khi cần.\nHẹn gặp lại bạn vào thứ năm tuần sau!",
+      "text": "Chữ có dấu đứng cạnh địa chỉ web và email — phần tiếng Anh thì gõ thẳng, không bỏ dấu."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Sau ba tháng, tôi gõ được 45 từ một phút với 97 phần trăm chính xác.\nTôi không còn nhìn bàn phím nữa.\nViệc viết một trang giấy giờ chỉ mất vài phút.\nĐó là toàn bộ lý do tôi bắt đầu.",
+      "text": "Bài cuối cùng của giáo trình là kỳ kiểm tra ba phút."
+    }
+  ]
+}

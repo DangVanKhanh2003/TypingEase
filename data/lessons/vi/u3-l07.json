@@ -1,0 +1,24 @@
+{
+  "id": "u3-l07",
+  "unit": "u3",
+  "group": "ve-dich",
+  "order": 7,
+  "slug": "luyen-dau-hay-sai",
+  "title": "Luyện dấu hay sai",
+  "summary": "Hai phút với đúng những chỗ tay hay vấp: hỏi và ngã, ư và ơ, â và ă.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow"],
+  "minAccuracy": 80,
+  "estMinutes": 2,
+  "inputMode": "telex",
+  "intro": "Bài luyện phím yếu của Unit 3 không lấy phím chữ, vì phím chữ bạn gõ đã quen rồi. Nó lấy đúng bốn chỗ mà tay hay vấp khi gõ Telex: hỏi với ngã, ư với ơ, â với ă, và vần ươ.",
+  "congrats": "Bốn nhóm này là toàn bộ phần khó của Telex. Mẹo cần nhớ: vần ươ luôn là u-o-w (hoặc u-w-o-w) rồi mới tới dấu — gõ nhầm thành ưo hay uơ là lỗi phổ biến nhất của người mới.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 120,
+      "content": "hỏi ngã bảo bão cửa cữa sửa sữa\nnghỉ nghĩ vẻ vẽ giả giã cải cãi\nmở mỡ chảo chão đủ đũ sạch sẽ\nư ơ tư tơ như nhơ trư trơ\nnước ước bước được trước rượu\nngười cười lười mười tươi tưới\nân ăn cân căn tân tăn vấn vắn\nnấm nắm đầu đấu cầm cắm bận bắn\nvườn trường hương đường cương tưởng\nnướng thương xưởng ngưỡng lưỡng\ncả nhà đều khoẻ, ai cũng vui vẻ\nchị ấy nghĩ kỹ rồi mới nghỉ việc",
+      "text": "Bạn có 2 phút. Mỗi dòng là một cặp dễ nhầm — gõ chậm và nghe tiếng trong đầu trước khi bỏ dấu."
+    }
+  ]
+}

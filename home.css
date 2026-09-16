@@ -38,13 +38,13 @@ body.is-returning #taster{display:none}
 /* Ban phim hero: nho hon ban phim bai hoc (10 cot thay vi 14) va canh giua.
    Khong ghi de padding-bottom cua .keyboard-demo — 104px la cho cua ghost hands. */
 #taster .taster-board{order:4;width:100%;max-width:560px}
-#taster .keyboard{width:max-content;max-width:100%;margin:0 auto;gap:5px;padding:9px}
-#taster .key-row{min-width:0;gap:5px}
-#taster .key{height:30px;min-width:31px;font-size:11px}
-#taster .key.space{min-width:186px}
-#taster .key.home{border-bottom-width:3px;border-bottom-color:var(--green)}
+#taster .keyboard{width:100%;max-width:100%;margin:0 auto}
+#taster .key-row{min-width:0}
+#taster .key{max-height:44px;font-size:14px}
+#taster .key.space{flex:1 1 336px}
+#taster .key.home{border-bottom-color:#a9a9a9}
 /* Phim dang can go phai noi bat hon trong hero vi khong co con tro chuot dan duong. */
-#taster .key.active-key{border-color:var(--green);background:var(--lime);color:#0d5238;font-weight:700;box-shadow:0 0 0 2px #157a5545,0 0 0 5px #c8f05a7a}
+#taster .key.active-key{background:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff;font-weight:700;box-shadow:none}
 
 #taster .taster-foot{order:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 18px;width:100%}
 #taster .taster-status{min-height:17px;margin:0;color:var(--green);font-size:12px;font-weight:700}

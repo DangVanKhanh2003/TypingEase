@@ -45,9 +45,11 @@
 /* ---------- heatmap ---------- */
 .keyboard-lab{margin:0 0 22px}
 .heat-board{min-width:0;padding-bottom:0}
-.heat-board .keyboard{width:max-content;max-width:100%;margin:0 auto;background:#dfe8e3}
+.heat-board .keyboard{width:100%;max-width:100%;margin:0 auto}
 .heat-board .key-row{min-width:0}
-.heat-board .key{height:32px;min-width:30px}
+.heat-board .key{max-height:34px;font-size:12px}
+.heat-board .key--duo{font-size:9px}
+.heat-board .key--special .key-label{font-size:8px}
 .heat-empty{margin:12px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
 .heat-empty[hidden]{display:none}
 

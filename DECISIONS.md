@@ -176,3 +176,150 @@ node scripts/validate-lessons.js    # kiểm dữ liệu bài học
 node bai-hoc/generate.mjs           # sinh lại /bai-hoc/ sau khi sửa curriculum
 ```
 Đo mobile phải dùng CDP `Emulation.setDeviceMetricsOverride`, KHÔNG `--window-size` (cạm bẫy 2).
+
+---
+
+# TRẠNG THÁI CUỐI NGÀY 2026-09-14 — PHASE 4 ĐÃ XONG PHẦN NỘI DUNG
+
+## Đã làm
+- **Unit 2 (11 bài)** `u2-l01..u2-l11` — T Y, O W, C N, M V, ôn tập, Q P, B X, Z . , Enter+Shift,
+  luyện phím yếu, kiểm tra 60 s. Tiếng Việt không dấu, đúng theo giáo trình.
+- **Prototype Telex — ĐẠT** (điều kiện của quyết định 1). `telex-match.js` + `scripts/test-telex.js`
+  (chạy: `node scripts/test-telex.js`). Kiểm cả hai lối gõ dấu (dấu ngay sau nguyên âm và dấu ở
+  cuối âm tiết) trên 6 từ mẫu: không có ký tự nào bị chấm sai giữa chừng, lỗi thật vẫn bị bắt,
+  phát hiện được "chưa bật bộ gõ", bản đồ phím vật lý cho heatmap đúng (ầ = a a f, đ = d d, ư = u w).
+  Đã chạy thật trong Chrome: gõ qua chuỗi giá trị mà IME tạo ra cho screen `u3-l01/2` → 0 lỗi giả,
+  kết thúc 100 %; gõ chuỗi Telex thô → hiện cảnh báo kèm nút "Gõ không dấu"; bấm nút thì cả bài
+  chuyển sang bản không dấu và có nút quay lại. **Không phải dùng đường lùi ascii-fallback cho
+  toàn Unit 3** — nó chỉ còn là lựa chọn cho máy không có bộ gõ.
+- **Unit 3 (8 bài)** `u3-l01..u3-l08` — dấu sắc/huyền, hỏi/ngã/nặng, â ê ô đ, ă ư ơ, từ thông dụng,
+  câu ngắn, luyện dấu hay sai, kiểm tra 60 s. Tất cả `inputMode: "telex"`.
+- **Unit 4 (6 bài)** `u4-l01..u4-l06` — hàng số, ký hiệu, email/web/mật khẩu, hai bài đoạn văn,
+  kiểm tra cuối 180 s.
+- Tổng: **35/35 bài có nội dung, 289 screen, 15 313 ký tự**. `node scripts/validate-lessons.js` PASS.
+
+## Thay đổi hợp đồng (cập nhật so với phần trên của file này)
+1. **`linebreak: "enter"` đã có thật** trong player: `buildTarget(content, linebreak)` để `
+` là ký
+   tự phải gõ; Enter chỉ lọt vào textarea đúng vị trí đó; prompt hiện ⏎ thay cho ␣. Dùng ở
+   `u2-l09`, `u3-l06`, `u4-l03`, `u4-l04`, `u4-l05`.
+2. **Phím có tên** (`shift`, `enter`) hợp lệ trong `newKeys` và `keysSoFar`. Chữ HOA chỉ hợp lệ sau
+   khi bài dạy `shift`; screen intro dạy chúng chờ đúng phím đó được nhấn (không gõ vào ô nhập).
+3. **`newKeys` (số nhiều) trên screen `block`** — một screen giới thiệu nhiều phím cùng lúc, dùng cho
+   hàng số (`u4-l01` dạy 4+5, 6+7, 3+8, 2+9, 1+0). Chip "PHÍM MỚI" hiện nhiều phím.
+4. **Ký hiệu tầng Shift** (quyết định bổ sung 9): hợp lệ khi đã dạy `shift` + phím vật lý, theo bảng
+   `SHIFT_MAP` (US layout) có trong cả validator lẫn `keyboard-widget.js`. Vì vậy `u4-l02` chỉ khai
+   `newKeys: ['/', '-']`, còn `@ # : ? ! _` do các screen `shifted: true` dạy.
+5. **`u3-l07` đổi từ `kind: 'weak'` (sinh runtime) sang `kind: 'review'` với nội dung viết tay**
+   ("Luyện dấu hay sai"). Lý do: `weak-keys.js` chỉ sinh từ KHÔNG DẤU, mà gõ từ không dấu trong lúc
+   bộ gõ Telex đang bật sẽ ra chữ sai (gõ `as` ra `á`) — một bài luyện tự đánh bẫy người học.
+   `u1-l09` và `u2-l10` vẫn dùng weak-keys như cũ (Unit 1-2 không bật bộ gõ).
+6. **minAccuracy**: `u3`/`u4` trong `curriculum.vi.js` hạ từ 85 xuống **80**, đúng quyết định bổ sung 4
+   ("80 từ bài 5"), để chỉ mục và file bài không mâu thuẫn nhau.
+7. **Tập phím telex tách riêng trong validator**: dấu thanh (s f r x j) và token tạo dấu
+   (aa ee oo dd aw uw ow) chỉ tính là "đã dạy" khi một bài `inputMode: "telex"` TRƯỚC đó dạy chúng —
+   học chữ cái `s` ở Unit 1 không có nghĩa là đã học dấu sắc. Nhờ vậy validator bắt được
+   `u3-l02` dùng `đ` trước `u3-l03`, hay `u3-l03` dùng `ơ` trước `u3-l04` (đã xảy ra thật khi viết).
+
+## Chấm điểm chế độ telex trong player
+- Ba trạng thái mỗi ký tự: `ok` / `pending` (đang compose, màu vàng) / `bad`. Điểm được **tính lại từ
+  đầu mỗi lần input đổi**, không cộng dồn theo phím — vì IME viết đè lên chữ đã gõ.
+- **Lỗi đếm theo âm tiết** (`badTokens`), độ chính xác đếm theo ký tự.
+- Ký tự còn `pending` thì screen chưa kết thúc, dù đã đủ độ dài.
+- Ô nhập ở chế độ telex cho dư 16 ký tự (không cắt ngay ở độ dài đích) để còn nhận ra chuỗi Telex thô.
+- 3 âm tiết thô liên tiếp → hiện cảnh báo "chưa bật bộ gõ" + nút chuyển ascii-fallback.
+- Heatmap: ký tự có dấu được quy về phím vật lý (`telex.keysFor`), nên `/tien-do/` vẫn đúng phím.
+
+## Còn lại
+- **Phase 5** — `curriculum.en.js` + bài en/ja (fallback ja → en → vi), huy hiệu, service worker,
+  âm click, `prefers-reduced-motion`.
+- Nợ kỹ thuật cũ vẫn còn: ~45 KB bảng chuỗi 6 ngôn ngữ chết trong `script.js`; CSS chết trong
+  `keyboard.css` / `style.css`; `/en/` `/ja/` vẫn hiện tên bài tiếng Việt; `/hoc/#<id-bịa>/1` báo sai.
+- Chưa test trên macOS và Android Gboard (quyết định 1 yêu cầu 3 môi trường). Windows + Chrome đã
+  đạt; hai môi trường kia cần người thật, và engine so khớp không phụ thuộc hệ điều hành vì nó chỉ
+  đọc giá trị của ô nhập.
+
+---
+
+# 2026-09-14 (tối) — BÀN PHÍM + BÀN TAY THEO GIAO DIỆN TYPING.COM
+
+Yêu cầu của user: bàn phím và hình bàn tay "giống hệt" bản typing-clone.
+
+## Cách làm — dựng lại, KHÔNG copy tài sản của Teaching.com
+- Bàn phím của typing.com là CSS thuần → chép lại **thông số** (đọc từ `app.min.745.css` trong clone):
+  panel `#d9dadb` bo 20px padding 15/15/10, phím trắng bo 5px viền trên `#fff` dưới `#a9a9a9`, chữ Roboto Mono
+  700 viết hoa `#4a4a4a`, phím đôi (shifted trên / main dưới, 12px), phím chức năng chữ thường canh trái/phải
+  10-11px, phím cần gõ `#3295db` viền `#47a0df #3295db #2d86c5`, hàng cách 5px (10px màn cao), phím vuông tối đa 50px,
+  mọi phím giãn đều với flex-basis theo `keyboards.json` (delete 74, tab 68, caps 83, enter 83, shift 108, cmd 70,
+  space 336, backslash 48).
+- Bàn tay của typing.com là **mô hình 3D WebGL** (`hand-default.compressed.gltf` + texture `base-1.jpg`) vẽ vào
+  canvas rồi phủ `opacity:.5` + mask mờ dần + drop-shadow. Mô hình/texture là tài sản có bản quyền và site này
+  public → **không copy file**. `hands.js` vẽ lại bằng SVG của mình theo cùng bố cục (ngón đặt trên hàng cơ sở,
+  ngón cái trên phím cách, mờ dần ở cổ tay, ngón đang gõ nhuộm xanh `#37b3d6`), đầu ngón đo theo phím thật nên
+  khớp mọi kích cỡ. Bàn tay **đứng yên** như typing.com (bỏ animation với ngón của bản cũ).
+
+## File đổi
+- `keyboard-widget.js` — markup phím mới (`.key-label`, `.key--duo`, `.key--special-l/-r`, flex-basis theo layout US),
+  bỏ `reach()`; API giữ nguyên (`highlight/mark/press/layout/fingerFor/...`).
+- `hands.js`, `hands.css` — hình tay mới; hook DOM giữ nguyên (`.hand-layer`, `.finger[data-finger][data-key]`,
+  `.digit-press`, `.finger-glow`, `active-finger`, `pressing`) nên `taster.js` không phải đổi logic.
+- `keyboard.css` — thêm khối `.kb-widget` / `.tc-board` (typing.com look). Rule `.keyboard/.key` cũ vẫn giữ cho
+  heatmap `/tien-do/` và các chỗ khác.
+- `player.css`, `home.css`, `taster.js` — bỏ rule kích cỡ phím cũ, board rộng 830px, chừa 210px dưới cho bàn tay;
+  bàn phím hero dùng class `tc-board`.
+- 6 trang HTML thêm font Roboto Mono (index, en, ja, hoc, luyen-tu-do, tien-do).
+
+## Cạm bẫy mới
+6. **Bash tool cắt lệnh dài (~>6 KB) → "unexpected EOF while looking for matching quote"**. Heredoc dài phải
+   chia thành nhiều file phần rồi `cat` lại. Tool cũng gộp `\` thành `\` trong heredoc → tránh backslash
+   trong chuỗi JS/Python (dùng `String.fromCharCode(92)` / `chr(92)`).
+7. Chrome headless cache CSS/JS giữa các lần chạy CDP → screenshot cũ. `cdp.js` giờ luôn gọi
+   `Network.setCacheDisabled`.
+
+---
+
+# 2026-09-16 — BÀN TAY 3D BẰNG SVG + NGÓN DI CHUYỂN (theo PLAN-ban-tay.md)
+
+## Sửa nhận định 14/09
+- Tay typing.com **không đứng yên**: cài đặt `animated_hands` mặc định bật → ngón di chuyển tới phím đích theo hàng
+  (`top-row-3-left`, `bottom-row-2-right`... trong `hand-default.compressed.gltf`, 159 tư thế), tween 0,275 s, tốc độ
+  thích ứng theo nhịp gõ. Chỉ khi người dùng tắt mới giữ tư thế home. Bản 14/09 làm tay tĩnh là do đọc thiếu.
+
+## Cách làm (3 phase, chạy bằng 3 agent song song/tuần tự, mỗi agent sở hữu file riêng)
+- **A — bàn phím** (`keyboard-widget.js`, `keyboard.css`, `player.js`, `taster.js`): `press()` nhún phím theo keyframe
+  `keyPressDefault` gốc; `reject(ch)` nháy đỏ `keyRejected`; player/taster gọi trong `reactToKeystroke()` **trước**
+  `paintPrompt()` (vì paint chuyển highlight sang phím kế). Telex: `ok`→press, `bad`→reject, `pending`→không.
+  Nhãn phím chức năng giữ nhưng nhạt (#a9a9a9, 10px); typing.com ẩn hẳn.
+- **B — hình tay** (`hands.js`, `hands.css`): vẫn SVG tự vẽ, không dùng tài sản Teaching.com. Ngón 2 đốt cong, gradient
+  ống 5 stop + dải khớp sáng/tối dọc trục, bóng kẽ ngón (ellipse blur), `feDropShadow` từng ngón khai báo 1 lần trong
+  `<defs>`, móng có shine. Lớp phủ đúng gốc: `opacity:.5` + `drop-shadow(0 -1px 1px rgba(0,0,0,.8))`. Glow: `#1fa0c8`
+  đầu ngón → `#37b3d6` đặc 45% → tan 80%; `.glow-full` tô cả ngón.
+- **C — chuyển động** (`hands.js`, `hands.css`, `keyboard-widget.js`): `TypingEaseHands.reach()` là hàm thuần trả
+  transform: bàn tay (`.ghost-hand`) đi 35% vector, ngón đi 65% + xoay quanh gốc ≤12°; ngón đã nằm trên phím đích
+  không dịch; tay kia rest. `transition: transform var(--hand-speed,.275s) cubic-bezier(.65,0,.35,1)`; `--hand-speed`
+  = 0,09 + 0,36·clamp((avg−90)/610) với avg = trung bình 8 khoảng gõ gần nhất kẹp 70–1200 ms (đúng công thức gốc).
+  Space → ngón cái **phải** (`FINGERS[' ']` = `RT`, `LT` vẫn hợp lệ cho `screen.finger`). Shift → ngón út tay đối
+  diện tới phím Shift, `glow-full`. `create({animatedHands})` / `layout({animatedHands})`; tắt → host `.hands-static`.
+  `prefers-reduced-motion` → `transition:none`.
+
+## Kiểm định
+- `scripts/e2e.js` (playwright-core + Chrome cài sẵn, không cần package.json):
+  `PW=<…>/node_modules/playwright-core node scripts/e2e.js http://127.0.0.1:8765`. Server tĩnh bất kỳ phục vụ thư
+  mục gốc. Mỗi test 1 context mới; `pageerror`/`console.error` làm FAIL. Bao phủ: load player, gõ đúng/sai, hết screen,
+  Shift, Telex (mô phỏng IME bằng `fill`), hero, 1024/390px, reduced-motion, 5 trang không lỗi, pose ngón (Phase C).
+- Sai số đầu ngón đo qua Playwright: |errX| ≤ 3,7 px trên các phím e x 5 p q /; Shift phải −5 px (phím rộng 108 px,
+  vẫn trong phím).
+
+## Cạm bẫy mới
+8. **`element.dataset['is-animatingTimer']` ném DOMException** (tên có gạch nối + chữ thường không hợp lệ cho dataset).
+   Lỗi này làm player chết sau đúng 1 phím vì `reactToKeystroke()` chạy trước `paintPrompt()`. Đã thay bằng
+   `WeakMap` ở cả `keyboard-widget.js` và `taster.js`. Bài học: hiệu ứng phụ (press/reject) phải bọc try hoặc chạy
+   **sau** logic chính; E2E bắt được ngay, screenshot tĩnh thì không.
+9. Hai agent sửa song song chỉ an toàn khi **sở hữu file tách bạch**; agent Phase C phải sửa lỗi của Phase A trong
+   file chung `keyboard-widget.js`, còn `taster.js` phải chờ điều phối viên sửa.
+
+## Còn lại
+- `taster.js` có `reach()` riêng cho bàn phím hero (xoay ngón quanh khớp), không dùng `TypingEaseHands.reach()` →
+  hero và player động khác nhau. Nên gộp về một đường.
+- Tông da hơi nâu hơn gốc (gốc hồng-xám); ngón vẫn thiếu rút ngắn phối cảnh ở đầu ngón. Chấp nhận ở opacity .5.
+- Chưa có UI cho `animatedHands` (chỉ có API).

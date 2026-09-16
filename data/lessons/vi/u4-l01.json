@@ -1,0 +1,88 @@
+{
+  "id": "u4-l01",
+  "unit": "u4",
+  "group": "so-va-ky-hieu",
+  "order": 1,
+  "slug": "so-1-5-va-6-0",
+  "title": "Số 1-5 và 6-0",
+  "summary": "Hàng số: mỗi ngón đi thẳng lên hai hàng rồi về đúng chỗ cũ.",
+  "newKeys": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+  "minAccuracy": 80,
+  "estMinutes": 6,
+  "inputMode": "ascii",
+  "intro": "Hàng số nằm trên cùng, xa hàng cơ sở nhất. Quy tắc vẫn y hệt: mỗi ngón phụ trách cột của mình, đi thẳng lên rồi về ngay. Bài này gõ không dấu để bạn tập trung vào quãng đường của ngón tay.",
+  "congrats": "Hàng số là nơi mắt hay kéo bạn nhìn xuống nhất. Mẹo cần nhớ: tìm số bằng cách đếm từ phím cơ sở của ngón đó chứ đừng nhìn — ngón trỏ trái ở F thì 4 nằm ngay trên, 5 nằm chéo vào trong.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "4",
+      "finger": "LI",
+      "text": "Hàng số — mỗi ngón đi thẳng lên hai hàng. Ngón trỏ trái đang ở F sẽ với lên 4, rồi chéo vào trong một phím là 5. Gõ xong luôn về F.",
+      "hint": "Nhấn 4 để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKeys": ["4", "5"],
+      "content": "444 555 f4 f5\n45 54 445 554\nf4f5 4f5f 45 54",
+      "text": "Hai số của ngón trỏ trái. Ba ngón còn lại vẫn nằm trên hàng cơ sở."
+    },
+    {
+      "type": "block",
+      "newKeys": ["6", "7"],
+      "content": "666 777 j6 j7\n67 76 667 776\nj6j7 6j7j 67 76",
+      "text": "Đối xứng bên phải: ngón trỏ phải với lên 7, chéo vào trong là 6."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["4", "5", "6", "7", "45", "67", "f4", "j7", "456", "567"],
+      "text": "Bốn số của hai ngón trỏ — bốn số bạn gõ nhiều nhất."
+    },
+    {
+      "type": "block",
+      "newKeys": ["3", "8"],
+      "content": "333 888 d3 k8\n38 83 338 883\nd3k8 3d8k 38 83",
+      "text": "Hai ngón giữa: trái lên 3, phải lên 8."
+    },
+    {
+      "type": "block",
+      "newKeys": ["2", "9"],
+      "content": "222 999 s2 l9\n29 92 229 992\ns2l9 2s9l 29 92",
+      "text": "Hai ngón áp út: trái lên 2, phải lên 9."
+    },
+    {
+      "type": "block",
+      "newKeys": ["1", "0"],
+      "content": "111 000 a1 ;0\n10 01 110 001\na1;0 1a0; 10 01",
+      "text": "Hai ngón út: trái lên 1, phải lên 0. Đây là quãng với xa nhất của cả bàn phím."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["1", "0", "2", "9", "3", "8", "10", "29", "38", "100"]
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "12 34 56 78 90\n13 57 90 24 68\n147 258 369 100 2026"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ngay 12 thang 5 nam 2026\nlop 9a co 32 hoc sinh\nso nha 145 duong Le Loi",
+      "text": "Số nằm xen giữa chữ. Tay phải quay về hàng cơ sở giữa mỗi lần với lên."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["2026", "1990", "12", "31", "07", "365", "24", "60", "100", "1000"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Toi sinh ngay 3 thang 9 nam 2010.\nLop toi co 32 ban, 18 nu va 14 nam.\nSo dien thoai cua me la 0912 345 678.",
+      "text": "Bài sau là các ký hiệu: dấu gạch, gạch chéo, @ và #."
+    }
+  ]
+}

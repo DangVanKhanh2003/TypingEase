@@ -1,0 +1,77 @@
+{
+  "id": "u3-l02",
+  "unit": "u3",
+  "group": "dau-thanh",
+  "order": 2,
+  "slug": "dau-hoi-nga-nang",
+  "title": "Dấu hỏi, ngã, nặng",
+  "summary": "Ba dấu còn lại: R là hỏi, X là ngã, J là nặng.",
+  "newKeys": ["r", "x", "j"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Ba dấu thanh còn lại nằm gọn trong ba phím bạn đã biết: R cho dấu hỏi, X cho dấu ngã, J cho dấu nặng. Cộng với S và F ở bài trước là đủ năm dấu của tiếng Việt.",
+  "congrats": "Năm dấu thanh giờ nằm trên năm phím: s sắc, f huyền, r hỏi, x ngã, j nặng. Mẹo cần nhớ: gõ sai dấu thì không cần xoá cả chữ — gõ tiếp phím dấu đúng, bộ gõ sẽ thay dấu cũ bằng dấu mới.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "r",
+      "finger": "LI",
+      "text": "Dấu HỎI — phím R, ngón trỏ trái với lên. Gõ xong âm tiết rồi gõ R: c-o rồi R ra cỏ, n-h-o rồi R ra nhỏ.",
+      "hint": "Nhấn R để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "r",
+      "content": "cỏ nhỏ mỏ tỏ\nbả cả chả thả\nchỉ củ quả nhả"
+    },
+    {
+      "type": "intro",
+      "key": "x",
+      "finger": "LR",
+      "text": "Dấu NGÃ — phím X, ngón áp út trái gập xuống. Dấu ngã và dấu hỏi rất hay bị nhầm khi viết, nhưng trên bàn phím thì chúng là hai phím khác hẳn nhau.",
+      "hint": "Nhấn X để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "x",
+      "content": "ngã xã mã bã\nvẽ lẽ sẽ kẽ\ncũ vũ mũ ngũ"
+    },
+    {
+      "type": "intro",
+      "key": "j",
+      "finger": "RI",
+      "text": "Dấu NẶNG — phím J, ngón trỏ phải, ngay trên gờ nổi. Đây là dấu bạn sẽ gõ nhiều nhất sau dấu sắc.",
+      "hint": "Nhấn J để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "j",
+      "content": "bạn lạ hạ họ\nchị bị vị dị\nnhạc tạp kịp lạnh"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["cỏ", "ngã", "bạn", "nhỏ", "vẽ", "chị", "cũ", "hỏi", "mã", "lạ"],
+      "text": "Ba dấu mới xen kẽ nhau. Gõ trọn âm tiết trước, dấu sau."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "chỉ chị chì chí\nbả bã bạ bà bá\nhỏi hỏng hạn hãi",
+      "text": "Cùng một âm tiết, năm dấu khác nhau, chỉ khác phím cuối cùng."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["bạn", "chị", "nhỏ", "quả", "ngủ", "mạnh", "lạnh", "chạy", "giải", "bãi"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Bạn nhỏ chạy ra ngoài.\nChị Hạ mua cá và rau.\nCả nhà vui vẻ, ai cũng khoẻ.",
+      "text": "Bài sau bạn học ba nguyên âm có mũ: â, ê, ô, và chữ đ."
+    }
+  ]
+}

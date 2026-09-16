@@ -1,0 +1,77 @@
+{
+  "id": "u4-l02",
+  "unit": "u4",
+  "group": "so-va-ky-hieu",
+  "order": 2,
+  "slug": "ky-hieu-thuong-gap",
+  "title": "Ký hiệu thường gặp",
+  "summary": "Gạch chéo, gạch ngang, rồi tầng Shift: ? ! @ # : và gạch dưới.",
+  "newKeys": ["/", "-"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "-"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Hai phím mới là gạch chéo và gạch ngang, cả hai đều của ngón út phải. Các ký hiệu còn lại không có phím riêng: chúng nằm ở tầng trên của những phím bạn đã biết, mở ra bằng Shift.",
+  "congrats": "Ký hiệu ở tầng Shift luôn cần hai tay: một ngón út giữ Shift, ngón kia gõ phím. Mẹo cần nhớ: dấu chấm hỏi là Shift + phím gạch chéo, và cả hai đều thuộc tay phải — nên phải giữ Shift bên TRÁI, đừng cố với bằng một tay.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "/",
+      "finger": "RP",
+      "text": "Phím gạch chéo — ngón ÚT tay phải gập xuống một hàng, bên phải dấu chấm. Bạn dùng nó cho ngày tháng và địa chỉ web.",
+      "hint": "Nhấn / để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "/",
+      "content": "/// ;;; ;/ /;\n// // a/b c/d\n12/5 3/9 vao/ra"
+    },
+    {
+      "type": "intro",
+      "key": "-",
+      "finger": "RP",
+      "text": "Phím gạch ngang — cũng ngón ÚT tay phải, nhưng với LÊN hàng số, ngay bên phải số 0. Đây là quãng với xa nhất của ngón út.",
+      "hint": "Nhấn - để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "-",
+      "content": "--- 000 0- -0\n-- -- a-b c-d\ne-mail on-line 2026-05-12"
+    },
+    {
+      "type": "block",
+      "shifted": true,
+      "content": "? ! ?? !!\nai? sao? gi? dau?\nnhanh! gioi! tot!",
+      "text": "Dấu hỏi là Shift + gạch chéo, dấu chấm than là Shift + số 1. Giữ Shift bằng tay bên kia."
+    },
+    {
+      "type": "block",
+      "shifted": true,
+      "content": "@ # @@ ##\nnam@gmail.com\n#1 #2 #hoc #go",
+      "text": "@ là Shift + 2, # là Shift + 3. Cả hai đều thuộc tay trái, nên giữ Shift bên phải."
+    },
+    {
+      "type": "block",
+      "shifted": true,
+      "content": ": _ :: __\ngio 7:30 8:45\nho_ten ten_file",
+      "text": "Hai chấm là Shift + dấu chấm phẩy, gạch dưới là Shift + gạch ngang."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["?", "!", "@", "#", ":", "_", "/", "-", "a@b", "x/y"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "an@gmail.com nam@yahoo.com\nwww.typingease.site/hoc\nho_ten-2026.txt bai-hoc/unit-4",
+      "text": "Ký hiệu trong đời thật: email, địa chỉ web, tên tệp."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Ban co khoe khong?\nChuc mung ban!\nEmail cua toi la nam@gmail.com, hen gap luc 7:30.",
+      "text": "Bài sau bạn gõ email, địa chỉ web và mật khẩu thật."
+    }
+  ]
+}

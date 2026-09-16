@@ -1,0 +1,59 @@
+{
+  "id": "u4-l04",
+  "unit": "u4",
+  "group": "toc-do",
+  "order": 4,
+  "slug": "doan-van-va-toc-do-1",
+  "title": "Đoạn văn và tốc độ 1",
+  "summary": "Đoạn văn tiếng Việt có dấu, đủ dài để tay tìm được nhịp riêng.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "-"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Từ đây trở đi không còn phím mới nào nữa. Việc còn lại là tốc độ, và tốc độ đến từ nhịp: gõ đều, không giật cục, không dừng lại giữa từ. Nhớ bật bộ gõ Telex.",
+  "congrats": "Đoạn văn dài khác hẳn từ rời: tay phải giữ được nhịp trong nhiều dòng liền. Mẹo cần nhớ: khi gõ sai, đừng dừng lại tiếc nuối — xoá đúng chỗ sai rồi đi tiếp; dừng lâu còn tốn thời gian hơn cả lỗi vừa mắc.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Gõ mười ngón không phải là năng khiếu.\nĐó là một thói quen, và thói quen thì cần thời gian.\nMỗi ngày mười phút là đủ.",
+      "text": "Ba câu ngắn để khởi động tay."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["thói", "quen", "mỗi", "ngày", "mười", "phút", "bàn", "phím", "nhịp", "đều"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Khi mới học, tay bạn sẽ chậm hơn lúc mổ cò, và điều đó là bình thường.\nNão cần vài tuần để nhớ chỗ của từng phím.\nSau giai đoạn đó, tốc độ tăng lên rất nhanh.",
+      "text": "Câu dài hơn. Giữ đều tay, đừng tăng tốc rồi lại phanh gấp."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Điều quan trọng nhất là không nhìn xuống bàn phím.\nMỗi lần nhìn xuống, bạn dạy cho tay một thói quen sai.\nHãy nhìn màn hình, kể cả khi đang gõ sai.",
+      "text": "Đoạn này nói đúng việc bạn đang làm lúc này."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["quan", "trọng", "nhìn", "xuống", "màn", "hình", "chính", "xác", "tốc", "độ"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Chính xác đi trước tốc độ.\nMột người gõ 40 từ một phút với 98 phần trăm chính xác\nsẽ xong việc trước người gõ 60 từ mà sai liên tục.",
+      "text": "Có cả chữ số trong câu — tay phải lên hàng số rồi về ngay."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Hôm nay tôi gõ được một đoạn văn hoàn chỉnh.\nTôi không nhìn bàn phím, và tay tôi tự biết đường đi.\nTuần sau tôi sẽ gõ nhanh hơn tuần này.",
+      "text": "Xuống dòng bằng Enter thật, như khi bạn viết một đoạn ghi chú."
+    }
+  ]
+}

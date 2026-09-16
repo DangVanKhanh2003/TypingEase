@@ -1,0 +1,63 @@
+{
+  "id": "u4-l03",
+  "unit": "u4",
+  "group": "so-va-ky-hieu",
+  "order": 3,
+  "slug": "email-web-va-mat-khau",
+  "title": "Email, web và mật khẩu",
+  "summary": "Những chuỗi bạn gõ hằng ngày mà không được phép gõ sai một ký tự nào.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "-"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Email, địa chỉ web và mật khẩu có một điểm chung: sai một ký tự là hỏng cả chuỗi, và bạn không nhìn thấy mình gõ gì khi nhập mật khẩu. Bài này luyện đúng những chuỗi đó.",
+  "congrats": "Mật khẩu là chỗ duy nhất bạn gõ mà không nhìn thấy kết quả, nên nó là phép thử thật của gõ mười ngón. Mẹo cần nhớ: gõ mật khẩu chậm và đều, đừng gõ nhanh rồi xoá — mỗi lần xoá là một lần tay quên mất nhịp.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "nam@gmail.com lan.vu@gmail.com\nhoang_minh@yahoo.com\nlien-he@typingease.site",
+      "text": "Email: tên, @, rồi tên miền. Không có dấu cách ở bất kỳ đâu."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["@gmail.com", "@yahoo.com", "nam@", "lan.vu@", "ho_ten@", "a@b.co", "x-y@z.vn", ".com", ".vn", ".site"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "https://typingease.site\nhttps://typingease.site/bai-hoc\nhttps://typingease.site/kiem-tra-toc-do-go",
+      "text": "Địa chỉ web: hai dấu chéo sau https, rồi các đoạn ngăn bằng một dấu chéo."
+    },
+    {
+      "type": "block",
+      "content": "http:// https:// www.\n/hoc /bai-hoc /tien-do\n.com .vn .site .org"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "Mua-He-2026 Ha-Noi-2026\nGo10Ngon_2026 Hoc-Go-Nhanh\nBanPhim_9a2 Sang_7h30",
+      "text": "Mẫu mật khẩu mạnh: chữ hoa, chữ thường, số và một ký hiệu. Đây chỉ là ví dụ để luyện tay."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["Mua-He-2026", "Go10Ngon", "Ha-Noi-2026", "BanPhim_9a2", "Sang_7h30", "Hoc-Go", "2026!", "9a2#", "Lop_9a", "Nam-2026"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Ban gui bai vao email nam@gmail.com truoc 17:30 nhe.\nDia chi trang web la https://typingease.site/bai-hoc.\nMat khau mau: Mua-He-2026!",
+      "text": "Câu có đủ email, web, giờ và mật khẩu — gõ chậm, đúng từng ký tự."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Kinh gui anh Minh,\nEm gui anh dia chi trang web: https://typingease.site/hoc\nEmail lien he cua em la nam@gmail.com.\nEm cam on anh!",
+      "text": "Một email ngắn, xuống dòng bằng Enter thật. Hai bài sau là đoạn văn tiếng Việt có dấu."
+    }
+  ]
+}

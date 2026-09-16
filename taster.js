@@ -56,7 +56,7 @@
     + '<p class="taster-line" id="taster-line" aria-label="Dòng gõ thử"></p>'
     + '<label class="sr-only" for="taster-input">Gõ dòng trên</label>'
     + '<textarea class="taster-input" id="taster-input" rows="1" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>'
-    + '<div class="taster-board keyboard-demo" id="taster-board"><div class="keyboard" id="taster-keyboard"></div></div>'
+    + '<div class="taster-board keyboard-demo" id="taster-board"><div class="keyboard tc-board" id="taster-keyboard"></div></div>'
     + `<button class="taster-tap" id="taster-tap" type="button"></button>`
     + '<div class="taster-foot"><p class="taster-status" id="taster-status"></p>'
     + `<a class="taster-skip" id="taster-skip" href="${TEST_URL}"></a></div>`
@@ -80,7 +80,11 @@
       const key = document.createElement('span');
       key.className = `key${label === ' ' ? ' space' : ''}${label === 'f' || label === 'j' ? ' home' : ''}`;
       key.dataset.tkey = label;
-      key.textContent = label === ' ' ? 'Space' : label;
+      key.style.flex = label === ' ' ? '1 1 336px' : '1 1 50px';
+      const text = document.createElement('span');
+      text.className = 'key-label';
+      text.textContent = label === ' ' ? '' : label;
+      key.append(text);
       line.append(key);
     });
     keyboard.append(line);
@@ -140,14 +144,39 @@
     reach(target);
   }
 
+  // Re-run a one-shot CSS animation: drop the class, force a reflow, add it back, clear it later.
+  // Timers live in a WeakMap: a dataset key such as `is-animatingTimer` is rejected by the
+  // browser (hyphen followed by a lower-case letter), which would throw on every correct key.
+  const pulseTimers = new WeakMap();
+  function pulse(element, className, ms) {
+    if (!element) return;
+    element.classList.remove(className);
+    void element.getBoundingClientRect();
+    element.classList.add(className);
+    const timers = pulseTimers.get(element) || {};
+    clearTimeout(timers[className]);
+    timers[className] = setTimeout(() => element.classList.remove(className), ms);
+    pulseTimers.set(element, timers);
+  }
+
+  // Right key: the wanted key dips and the finger on it jabs down. Wrong key: the key that was
+  // actually hit flashes red (typing.com's keyPressDefault / keyRejected).
   function press() {
-    const group = board.querySelector('.hand-layer .finger.active-finger');
-    if (!group) return;
-    group.classList.remove('pressing');
-    void group.getBoundingClientRect();
-    group.classList.add('pressing');
-    clearTimeout(Number(group.dataset.pressTimer));
-    group.dataset.pressTimer = String(setTimeout(() => group.classList.remove('pressing'), 240));
+    pulse(keyboard.querySelector('.key.active-key'), 'is-animating', 250);
+    pulse(board.querySelector('.hand-layer .finger.active-finger'), 'pressing', 240);
+  }
+  function reject(char) {
+    const id = (char || '').toLowerCase();
+    if (!id) return;
+    pulse(keyboard.querySelector(`.key[data-tkey="${id}"]`), 'is-wrong', 250);
+  }
+  let lastInputLength = 0;
+  function reactToKeystroke(typed) {
+    const grew = typed.length === lastInputLength + 1 || typed.length === 1;
+    lastInputLength = typed.length;
+    if (!grew) return;
+    const position = typed.length - 1;
+    if (typed[position] === LINE[position]) press(); else reject(typed[position]);
   }
 
   function paint() {
@@ -217,8 +246,10 @@
     if (finished) { input.value = input.value.slice(0, LINE.length); return; }
     if (!startedAt && input.value.length) startedAt = Date.now();
     if (input.value.length > LINE.length) input.value = input.value.slice(0, LINE.length);
+    // Judge the keystroke before repainting: paint() moves the highlight on to the next key, and
+    // the dip belongs to the key that was just typed.
+    reactToKeystroke(input.value);
     paint();
-    press();
     const { accuracy } = grade();
     statusEl.textContent = input.value.length ? format(strings().progress, { accuracy }) : '';
     if (input.value.length >= LINE.length) finish();

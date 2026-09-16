@@ -1,0 +1,68 @@
+{
+  "id": "u3-l05",
+  "unit": "u3",
+  "group": "tu-va-cau",
+  "order": 5,
+  "slug": "tu-thong-dung-tieng-viet",
+  "title": "Từ thông dụng tiếng Việt",
+  "summary": "Không có quy tắc mới. Chỉ là những từ bạn gõ nhiều nhất, gõ tới khi thành phản xạ.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Bạn đã có đủ quy tắc Telex. Bài này không dạy gì mới, chỉ cho tay gặp lại những từ xuất hiện nhiều nhất trong tiếng Việt cho tới khi chúng thành phản xạ.",
+  "congrats": "Vài trăm từ chiếm phần lớn mọi văn bản tiếng Việt, và bạn vừa gõ qua những từ dày nhất trong số đó. Mẹo cần nhớ: khi gõ đã quen, hãy nghĩ theo cả từ chứ đừng nghĩ theo từng chữ — tay sẽ tự chạy hết âm tiết rồi mới dừng.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "tôi bạn anh chị em\nchúng ta người ấy họ\nai gì đâu nào sao",
+      "text": "Nhóm đại từ và từ để hỏi. Toàn từ ngắn, gõ liền tay."
+    },
+    {
+      "type": "block",
+      "content": "của và với cho\nđã đang sẽ vẫn\nnhưng nên nếu thì"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["của", "và", "với", "đã", "đang", "sẽ", "nhưng", "nếu", "thì", "cũng"],
+      "text": "Những từ nối này chiếm tới một phần năm số chữ bạn gõ mỗi ngày."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "làm ăn học nói\nđi đến về ở\nxem nghe biết hiểu",
+      "text": "Nhóm động từ thông dụng nhất."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "hôm nay ngày mai\ntuần trước tháng sau\nbuổi sáng buổi chiều buổi tối",
+      "text": "Từ chỉ thời gian, luôn đi thành cụm hai tiếng."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["người", "được", "những", "không", "trong", "nhiều", "trường", "công", "việc", "thường"]
+    },
+    {
+      "type": "block",
+      "content": "nhà trường bệnh viện\ncông ty cửa hàng\nthành phố nông thôn",
+      "text": "Cụm hai tiếng: gõ trọn tiếng thứ nhất, dấu cách, rồi tiếng thứ hai."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "một hai ba bốn năm\nsáu bảy tám chín mười\ntrăm nghìn triệu tỉ",
+      "text": "Số đếm viết bằng chữ — bạn sẽ gõ chúng nhiều hơn là gõ chữ số."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "cảm ơn xin lỗi không sao\nvâng dạ được rồi\nchào bạn hẹn gặp lại",
+      "text": "Bài sau bạn ghép những từ này thành câu."
+    }
+  ]
+}

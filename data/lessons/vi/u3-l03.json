@@ -1,0 +1,78 @@
+{
+  "id": "u3-l03",
+  "unit": "u3",
+  "group": "nguyen-am",
+  "order": 3,
+  "slug": "a-e-o-mu-va-d",
+  "title": "Â Ê Ô và Đ",
+  "summary": "Gõ hai lần một chữ để được chữ có mũ: aa ra â, ee ra ê, oo ra ô, dd ra đ.",
+  "newKeys": ["aa", "ee", "oo", "dd"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "telex",
+  "intro": "Telex có một quy tắc rất dễ nhớ: gõ hai lần cùng một chữ thì được chữ đội mũ. aa ra â, ee ra ê, oo ra ô, và dd ra đ. Sau đó bạn vẫn bỏ dấu như bình thường: aas ra ấ.",
+  "congrats": "Bốn chữ này có mặt trong phần lớn từ tiếng Việt, nên gõ đôi sẽ nhanh chóng thành phản xạ. Mẹo cần nhớ: gõ đôi xong mới gõ dấu thanh — d-d-a-u rồi F ra đầu; đảo thứ tự thì bộ gõ sẽ hiểu sai.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "a",
+      "finger": "LP",
+      "text": "Chữ Â — gõ chữ A hai lần liền. Ngón út trái gõ A, rồi gõ A thêm lần nữa, màn hình sẽ hiện â. Quy tắc này dùng chung cho cả ê và ô.",
+      "hint": "Nhấn A để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "aa",
+      "content": "âm ân âu ây\ncân tân vân sân\ncấp tấm vấn hận",
+      "text": "Gõ a hai lần ra â. Gõ đôi xong mới bỏ dấu."
+    },
+    {
+      "type": "block",
+      "newKey": "ee",
+      "content": "êm mềm quên bên\nbê dê kê lê\nvề nghề chuyện tết",
+      "text": "Gõ e hai lần ra ê."
+    },
+    {
+      "type": "block",
+      "newKey": "oo",
+      "content": "ông công không sông\ncốc hốc tốc mộc\nsố cổ hồ bộ",
+      "text": "Gõ o hai lần ra ô."
+    },
+    {
+      "type": "intro",
+      "key": "d",
+      "finger": "LM",
+      "text": "Chữ Đ — gõ chữ D hai lần liền. Đây là chữ cái riêng của tiếng Việt và bạn sẽ gõ nó rất nhiều: đi, đến, đâu, đông.",
+      "hint": "Nhấn D để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "dd",
+      "content": "đi đo đa đe\nđông đêm đến đầu\nđã đó đây đâu"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["âm", "êm", "ông", "đi", "cân", "bên", "công", "đến", "đầu", "vần"],
+      "text": "Bốn chữ mới trộn lẫn nhau. Gõ đôi, rồi bỏ dấu."
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "đông đúc đến đâu\nđêm đông bến sông\ncần cấp vấn đề",
+      "text": "Chữ nào có mũ thì gõ đôi, chữ nào không thì gõ như cũ."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["đến", "đâu", "đông", "đêm", "công", "chồng", "sống", "bến", "thân", "cần"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Đêm nay mát, cả nhà đi bộ.\nCô bé đến bên cổng, gọi bố.\nBố tôi đã về, mẹ nấu bún.",
+      "text": "Bài sau là ba chữ cuối cùng: ă, ư, ơ."
+    }
+  ]
+}

@@ -17,6 +17,14 @@
  *   7. Không có content rỗng; newKey của screen `block` phải xuất hiện trong content của nó;
  *      mọi phím trong lesson.newKeys phải được một screen `block` giới thiệu.
  *   8. Nhặt rác định dạng: dòng có khoảng trắng đầu/cuối, hai dấu cách liền, tab, \r.
+ *   9. Chữ HOA chỉ hợp lệ sau khi bài dạy phím `shift`; screen có linebreak:"enter" chỉ hợp lệ
+ *      sau khi bài dạy phím `enter` (DECISIONS.md quyết định bổ sung 6).
+ *  10. Ký hiệu cần Shift (! @ # : ? _ ...) hợp lệ khi đã dạy `shift` và phím vật lý tương ứng;
+ *      screen dạy chúng nên ghi `shifted: true`. Một screen `block` có thể giới thiệu NHIỀU phím
+ *      cùng lúc bằng `newKeys: [...]` (dùng cho hàng số).
+ *  11. Bài `inputMode: "telex"`: mỗi ký tự có dấu phải có phím chữ gốc đã dạy, token tạo dấu
+ *      (aa ee oo dd aw uw ow) và phím dấu thanh (s f r x j) do chính các bài telex TRƯỚC dạy —
+ *      học chữ cái s ở Unit 1 không có nghĩa là đã học dấu sắc.
  */
 
 'use strict';
@@ -25,10 +33,18 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
+require(path.join(ROOT, 'telex-match.js'));
+const TELEX = globalThis.TypingEaseTelex;
 const SCREEN_TYPES = ['intro', 'block', 'standard', 'burst', 'test'];
 const DICTATIONS = ['letters', 'words', 'sentence'];
 const FINGERS = ['LP', 'LR', 'LM', 'LI', 'LT', 'RT', 'RI', 'RM', 'RR', 'RP'];
 const INPUT_MODES = ['ascii', 'telex'];
+const LINEBREAKS = ['space', 'enter'];
+/* Bàn phím US: ký hiệu -> phím vật lý phải giữ Shift để gõ ra nó (DECISIONS.md bổ sung 9). */
+const SHIFT_MAP = {
+  '!': '1', '@': '2', '#': '3', '$': '4', '%': '5', '^': '6', '&': '7', '*': '8', '(': '9', ')': '0',
+  '_': '-', '+': '=', '{': '[', '}': ']', '|': '\\', ':': ';', '"': "'", '<': ',', '>': '.', '?': '/', '~': '`'
+};
 const LESSON_KINDS = ['keys', 'review', 'weak', 'test'];
 const NAMED_KEYS = ['shift', 'enter', 'tab', 'backspace'];
 const REQUIRED_LESSON_FIELDS = [
@@ -54,6 +70,30 @@ const warn = message => warnings.push(`${where}${message}`);
 const show = key => JSON.stringify(key === ' ' ? '␣' : key);
 const isPlainObject = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const isKeyToken = value => typeof value === 'string' && (value.length === 1 || NAMED_KEYS.includes(value) || /^[a-z]{2}$/.test(value));
+/* Một screen "dùng" phím nào: ký tự thường phải có mặt trong content; `shift` coi như được dùng
+   khi content có chữ hoa; `enter` khi screen khai báo linebreak:"enter" (xuống dòng bằng Enter thật). */
+function telexTokens(character) {
+  if (!TELEX) return null;
+  const { base, shape, tone } = TELEX.parts(character);
+  if (!base) return null;
+  const lower = base.toLowerCase();
+  let shapeToken = '';
+  if (shape === 'stroke') shapeToken = 'dd';
+  else if (shape === TELEX.CIRCUMFLEX) shapeToken = lower + lower;
+  else if (shape) shapeToken = lower + 'w';
+  return { base: lower, upper: base !== lower, shape: shapeToken, tone: TELEX.TONE_KEYS[tone] || '' };
+}
+
+function usesKey(screen, key, telexMode) {
+  const content = typeof screen.content === 'string' ? screen.content : '';
+  if (key === 'shift') return /\p{Lu}/u.test(content);
+  if (key === 'enter') return screen.linebreak === 'enter' && content.includes('\n');
+  if (telexMode && [...content].some(character => {
+    const need = telexTokens(character);
+    return !!need && (need.shape === key || need.tone === key);
+  })) return true;
+  return content.includes(key);
+}
 
 /* ---------- 1. curriculum ---------- */
 
@@ -164,7 +204,9 @@ function checkFormatting(label, value) {
   });
 }
 
-function checkScreen(screen, index, allowed, lessonNewKeys) {
+function checkScreen(screen, index, allowed, lessonNewKeys, context) {
+  const telexMode = !!context && context.telexMode;
+  const allowedTelex = (context && context.allowedTelex) || new Set();
   const label = `screen ${index + 1} (${screen && screen.type})`;
   if (!isPlainObject(screen)) { fail(`screen ${index + 1} không phải object`); return; }
   if (!SCREEN_TYPES.includes(screen.type)) {
@@ -176,7 +218,10 @@ function checkScreen(screen, index, allowed, lessonNewKeys) {
   const introduced = [];
   if (screen.type === 'intro' && typeof screen.key === 'string') introduced.push(screen.key);
   if (typeof screen.newKey === 'string') introduced.push(screen.newKey);
-  introduced.forEach(key => { if (key.length === 1) allowed.add(key); });
+  if (Array.isArray(screen.newKeys)) screen.newKeys.filter(key => typeof key === 'string').forEach(key => introduced.push(key));
+  /* Phím có tên (shift, enter) cũng vào `allowed`: chúng không phải ký tự, mà là điều kiện để
+     chữ hoa và xuống dòng bằng Enter được coi là hợp lệ. */
+  introduced.forEach(key => { allowed.add(key); allowedTelex.add(key); });
 
   switch (screen.type) {
     case 'intro':
@@ -187,9 +232,16 @@ function checkScreen(screen, index, allowed, lessonNewKeys) {
       break;
     case 'block':
       if (typeof screen.content !== 'string' || !screen.content.trim()) fail(`${label}: content rỗng`);
+      if (screen.newKeys !== undefined) {
+        if (!Array.isArray(screen.newKeys) || !screen.newKeys.length) fail(`${label}: newKeys phải là mảng không rỗng`);
+        else screen.newKeys.forEach(key => {
+          if (!isKeyToken(key)) fail(`${label}: newKeys có phần tử không hợp lệ ${show(key)}`);
+          else if (!usesKey(screen, key, telexMode)) fail(`${label}: newKeys ${show(key)} không được dùng trong content`);
+        });
+      }
       if (screen.newKey !== undefined) {
         if (typeof screen.newKey !== 'string' || !screen.newKey.length) fail(`${label}: newKey không hợp lệ`);
-        else if (typeof screen.content === 'string' && !screen.content.includes(screen.newKey)) fail(`${label}: newKey ${show(screen.newKey)} không xuất hiện trong content`);
+        else if (!usesKey(screen, screen.newKey, telexMode)) fail(`${label}: newKey ${show(screen.newKey)} không được dùng trong content`);
       }
       break;
     case 'standard':
@@ -217,6 +269,17 @@ function checkScreen(screen, index, allowed, lessonNewKeys) {
       break;
   }
 
+  if (screen.shifted !== undefined && typeof screen.shifted !== 'boolean') fail(`${label}: shifted phải là true/false`);
+
+  if (screen.linebreak !== undefined) {
+    if (!LINEBREAKS.includes(screen.linebreak)) fail(`${label}: linebreak = ${show(screen.linebreak)}, phải thuộc ${LINEBREAKS.join(' | ')}`);
+    else if (screen.linebreak === 'enter') {
+      if (screen.type === 'burst') fail(`${label}: burst hiện từng cụm liền, không có xuống dòng`);
+      if (!allowed.has('enter')) fail(`${label}: linebreak "enter" nhưng phím Enter chưa được dạy tới đây`);
+      if (typeof screen.content !== 'string' || !screen.content.includes('\n')) fail(`${label}: linebreak "enter" nhưng content chỉ có một dòng`);
+    }
+  }
+
   if (screen.text !== undefined && (typeof screen.text !== 'string' || !screen.text.trim())) fail(`${label}: text rỗng`);
   if (screen.hint !== undefined && (typeof screen.hint !== 'string' || !screen.hint.trim())) fail(`${label}: hint rỗng`);
 
@@ -224,21 +287,45 @@ function checkScreen(screen, index, allowed, lessonNewKeys) {
   for (const part of collectTypedText(screen)) {
     checkFormatting(`${label} ${part.field}`, part.value);
     const unknown = new Map();
+    const unknownTelex = new Map();
     for (const character of part.value) {
       if (character === '\n' || character === ' ') continue;
-      if (!allowed.has(character)) unknown.set(character, (unknown.get(character) || 0) + 1);
+      if (allowed.has(character)) continue;
+      /* Chữ HOA hợp lệ khi bài đã dạy cả Shift lẫn phím chữ thường tương ứng. */
+      const lower = character.toLowerCase();
+      if (lower !== character && allowed.has('shift') && allowed.has(lower)) continue;
+      /* Ký hiệu ở tầng Shift: hợp lệ khi đã dạy Shift và phím vật lý nằm dưới nó. */
+      const physical = SHIFT_MAP[character];
+      if (physical && allowed.has('shift') && allowed.has(physical)) continue;
+      const need = telexMode ? telexTokens(character) : null;
+      if (need) {
+        const missing = [];
+        if (!allowed.has(need.base)) missing.push(`phím ${need.base}`);
+        if (need.upper && !allowed.has('shift')) missing.push('shift');
+        if (need.shape && !allowedTelex.has(need.shape)) missing.push(`telex ${need.shape}`);
+        if (need.tone && !allowedTelex.has(need.tone)) missing.push(`dấu ${need.tone}`);
+        if (!missing.length) continue;
+        unknownTelex.set(character, missing.join(' + '));
+        continue;
+      }
+      unknown.set(character, (unknown.get(character) || 0) + 1);
     }
     if (unknown.size) {
       const listing = [...unknown.entries()].map(([character, count]) => `${show(character)} x${count}`).join(', ');
       fail(`${label} ${part.field}: dùng phím CHƯA DẠY: ${listing}`);
       fail(`    phím được phép tới đây: ${[...allowed].map(k => (k === ' ' ? '␣' : k)).sort().join(' ')}`);
     }
+    if (unknownTelex.size) {
+      const listing = [...unknownTelex.entries()].map(([character, missing]) => `${show(character)} (thiếu ${missing})`).join(', ');
+      fail(`${label} ${part.field}: ký tự có dấu CHƯA ĐỦ ĐIỀU KIỆN: ${listing}`);
+      fail(`    telex đã dạy tới đây: ${[...allowedTelex].sort().join(' ') || '(chưa có)'}`);
+    }
   }
 
-  introduced.filter(key => key.length === 1).forEach(key => lessonNewKeys.introducedBy.set(key, screen.type));
+  introduced.forEach(key => lessonNewKeys.introducedBy.set(key, screen.type));
 }
 
-function checkLesson(id, entry, taught, place) {
+function checkLesson(id, entry, taught, place, telexTaught) {
   const relative = path.join('data', 'lessons', lang, `${id}.json`);
   const file = path.join(ROOT, relative);
   where = `${id}: `;
@@ -276,7 +363,7 @@ function checkLesson(id, entry, taught, place) {
   if (!Array.isArray(lesson.screens) || !lesson.screens.length) { fail('screens phải là mảng không rỗng'); return; }
 
   const newKeys = Array.isArray(lesson.newKeys) ? lesson.newKeys : [];
-  newKeys.filter(key => typeof key !== 'string' || key.length !== 1).forEach(key => fail(`newKeys có phần tử không phải 1 ký tự: ${show(key)}`));
+  newKeys.filter(key => !isKeyToken(key)).forEach(key => fail(`newKeys có phần tử không hợp lệ ${show(key)} (1 ký tự, hoặc ${NAMED_KEYS.join('/')}, hoặc cặp chữ Telex)`));
   if (newKeys.join(',') !== (entry.newKeys || []).join(',')) fail(`newKeys ${JSON.stringify(newKeys)} khác chỉ mục ${JSON.stringify(entry.newKeys)}`);
 
   /* 4. keysSoFar phải bằng tập luỹ tiến */
@@ -292,11 +379,16 @@ function checkLesson(id, entry, taught, place) {
   /* 6. số screen khớp chỉ mục */
   if (lesson.screens.length !== entry.screens) fail(`có ${lesson.screens.length} screen nhưng chỉ mục ghi ${entry.screens}`);
 
-  /* 5. tập phím cho phép: các bài TRƯỚC + phím do các screen trước trong bài này giới thiệu */
+  /* 5. tập phím cho phép: các bài TRƯỚC + phím do các screen trước trong bài này giới thiệu.
+     Bài telex có thêm một tập riêng: dấu thanh và token tạo dấu chỉ tính là "đã dạy" khi một bài
+     telex trước đó dạy chúng — chứ không phải vì chữ cái s, f, w đã có từ Unit 1. */
+  const telexMode = lesson.inputMode === 'telex';
+  if (telexMode) newKeys.forEach(key => telexTaught.add(key));
   const allowed = new Set([...taught].filter(key => !newKeys.includes(key)));
   allowed.add(' ');
+  const allowedTelex = new Set([...telexTaught].filter(key => !newKeys.includes(key)));
   const lessonNewKeys = { introducedBy: new Map() };
-  lesson.screens.forEach((screen, index) => checkScreen(screen, index, allowed, lessonNewKeys));
+  lesson.screens.forEach((screen, index) => checkScreen(screen, index, allowed, lessonNewKeys, { telexMode, allowedTelex }));
 
   /* 7. mọi newKeys của bài phải được một screen block giới thiệu */
   for (const key of newKeys) {
@@ -326,12 +418,14 @@ if (curriculum) plan = checkCurriculumShape(curriculum);
 
 if (plan && plan.order) {
   const taught = new Set();
+  const telexTaught = new Set();
   for (const id of plan.order) {
     const entry = curriculum.lessons[id];
     if (!isPlainObject(entry)) continue;
     if (entry.ready === false) {
       /* Bài chưa có nội dung: vẫn cộng phím vào tập luỹ tiến để bài sau tính đúng. */
       (entry.newKeys || []).filter(key => typeof key === 'string' && key.length === 1).forEach(key => taught.add(key));
+      if (entry.inputMode === 'telex') (entry.newKeys || []).forEach(key => telexTaught.add(key));
       const orphan = path.join(ROOT, 'data', 'lessons', lang, `${id}.json`);
       if (fs.existsSync(orphan)) {
         where = `${id}: `;
@@ -340,7 +434,7 @@ if (plan && plan.order) {
       }
       continue;
     }
-    checkLesson(id, entry, taught, plan.unitOf.get(id));
+    checkLesson(id, entry, taught, plan.unitOf.get(id), telexTaught);
   }
 }
 

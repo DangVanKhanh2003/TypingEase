@@ -1,0 +1,76 @@
+{
+  "id": "u2-l09",
+  "unit": "u2",
+  "group": "vuon-xa",
+  "order": 9,
+  "slug": "enter-va-shift",
+  "title": "Enter và Shift (viết hoa)",
+  "summary": "Hai phím của ngón út: Shift để viết hoa, Enter để xuống dòng thật.",
+  "newKeys": ["shift", "enter"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Hai phím cuối của Unit 2 đều do ngón út lo: Shift để viết hoa và Enter để xuống dòng. Quy tắc vàng của Shift là dùng ngón út của bàn tay KHÔNG gõ chữ cái đó.",
+  "congrats": "Shift và Enter là hai phím mà gần như ai tự học cũng gõ sai ngón — thường là nhấc cả bàn tay phải lên. Mẹo cần nhớ: chữ hoa bên tay trái thì giữ Shift bên phải, và ngược lại; Enter luôn là ngón út phải với sang ngang, không phải ngón áp út.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "shift",
+      "finger": "RP",
+      "text": "Phím Shift — giữ Shift rồi mới gõ chữ. Luôn dùng ngón út của bàn tay KHÔNG gõ chữ cái đó: chữ A ở tay trái thì giữ Shift bên phải, chữ L ở tay phải thì giữ Shift bên trái.",
+      "hint": "Nhấn phím Shift để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "shift",
+      "content": "Aa Ss Dd Ff\nJj Kk Ll Hh\nGg Tt Yy Rr Uu\nQq Pp Bb Xx Zz",
+      "text": "Mỗi cặp là một chữ hoa rồi chữ thường. Ngón út bên kia giữ Shift, thả ra rồi mới gõ chữ thường."
+    },
+    {
+      "type": "intro",
+      "key": "enter",
+      "finger": "RP",
+      "text": "Phím Enter — ngón ÚT tay phải với sang ngang từ dấu chấm phẩy. Ba ngón còn lại của tay phải vẫn nằm trên J, K, L.",
+      "hint": "Nhấn Enter để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "enter",
+      "linebreak": "enter",
+      "content": "Ha Noi\nViet Nam\nSai Gon\nDa Nang\nHue",
+      "text": "Hết mỗi dòng bạn phải nhấn Enter thật. Dấu ⏎ trên màn hình là chỗ cần nhấn."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["Ha", "Noi", "Viet", "Nam", "Hue", "Lan", "Minh", "Mai", "Nga", "Son"],
+      "text": "Tên riêng luôn viết hoa chữ đầu. Giữ Shift bằng ngón út bên kia."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "Toi ten la Nam.\nToi song o Ha Noi, hoc lop chin.\nBan than cua toi ten la Mai.",
+      "text": "Câu nào cũng viết hoa chữ đầu. Xuống dòng ở đây vẫn tính là một dấu cách."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Chao ban.\nToi la Nam, hoc sinh lop chin.\nRat vui duoc lam quen voi ban.",
+      "text": "Lần này mỗi dòng kết thúc bằng Enter thật, giống khi bạn viết tin nhắn."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["Toi", "Ban", "Chao", "Cam", "Xin", "Vang", "Khong", "Hom", "Ngay", "Em"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "linebreak": "enter",
+      "content": "Kinh gui thay Minh.\nEm xin phep nghi hoc ngay mai, vi em bi om.\nEm cam on thay.\nHoc sinh Nguyen Van Nam.",
+      "text": "Đây là bài cuối có phím mới của Unit 2. Hai bài còn lại là luyện phím yếu và kiểm tra."
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "id": "u2-l05",
+  "unit": "u2",
+  "group": "bat-dau",
+  "order": 5,
+  "slug": "on-tap-20-phim",
+  "title": "Ôn tập 20 phím",
+  "summary": "Không có phím mới. Ba hàng phím chạy cùng nhau trong một bài.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Bài này không có phím mới. Bạn đã có 23 phím ở cả ba hàng, và việc cần làm bây giờ là để tay đi lên đi xuống mà không mất chỗ về.",
+  "congrats": "Đi lên rồi đi xuống trong cùng một từ là bài kiểm tra thật của hàng cơ sở. Mẹo cần nhớ: nếu bạn thấy mình phải liếc xuống bàn phím ở một chữ nào đó, hãy gõ riêng chữ đó mười lần thật chậm — nhìn một lần là mất cả phút để quên.",
+  "screens": [
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "asdf jkl; asdf jkl;\nrtyu io rtyu io\ncv nm cv nm",
+      "text": "Ba hàng, ba nhịp. Sau mỗi cụm, mười ngón phải về hàng cơ sở."
+    },
+    {
+      "type": "block",
+      "content": "frv juj ded kim\ntgc yhn swa lo;\ncde vfr nju myj"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["frv", "jum", "ded", "kim", "tgc", "yhn", "swa", "lo", "cde", "vfr"],
+      "text": "Mỗi cụm đi qua hai hàng khác nhau. Chậm cũng được, nhưng phải đúng ngón."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "av sw dc fv gt hy\njn km lo ;a jm\nrf uj tf yj cd nj"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "con nha cua toi\nem mua rau va ca\nmay hom nay troi mat",
+      "text": "Ba câu ngắn, chưa có dấu câu. Cứ coi dấu cách là chỗ nghỉ của tay."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["con", "nha", "cua", "toi", "mua", "rau", "hom", "nay", "troi", "mat"]
+    },
+    {
+      "type": "block",
+      "content": "wert yuio\nasdf ghjkl;\ncvnm cvnm",
+      "text": "Ba hàng phím liền nhau, không có dấu cách để nghỉ ở hai dòng đầu."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "ca co cu ci ce\nna no nu ni ne\nma mo mu mi me va vo vu vi ve"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "hoc sinh di hoc moi ngay\nnha cua chung toi o gan day\nem vui vi mai duoc ve nha",
+      "text": "Ba câu tiếng Việt không dấu. Bài sau là Q và P, hai phím của ngón út."
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "u2-l07",
+  "unit": "u2",
+  "group": "vuon-xa",
+  "order": 7,
+  "slug": "b-va-x",
+  "title": "B và X",
+  "summary": "Hàng dưới bên trái: B do ngón trỏ với vào trong, X do ngón áp út.",
+  "newKeys": ["b", "x"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Hai phím hàng dưới còn lại: B là phím xa nhất mà ngón trỏ trái phải với tới, X nằm ngay dưới S. Sau bài này bạn chỉ còn thiếu đúng một chữ cái.",
+  "congrats": "B là phím bị gõ sai ngón nhiều nhất trên bàn phím — rất nhiều người dùng ngón trỏ phải cho tiện. Mẹo cần nhớ: B thuộc tay trái, vì tay phải còn phải lo N và M ngay bên cạnh.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "b",
+      "finger": "LI",
+      "text": "Phím B — ngón TRỎ tay trái gập xuống rồi với chéo vào trong, bên phải phím V. Đây là phím xa nhất của tay trái ở hàng dưới.",
+      "hint": "Nhấn B để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "b",
+      "content": "bbbb ffff\nbbbb ffff\nfb bf fbf bfb\nba bo bu bi"
+    },
+    {
+      "type": "intro",
+      "key": "x",
+      "finger": "LR",
+      "text": "Phím X — ngón ÁP ÚT tay trái gập xuống một hàng, ngay phía dưới phím S. Gõ xong đưa ngón về S.",
+      "hint": "Nhấn X để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "x",
+      "content": "xxxx ssss\nxxxx ssss\nsx xs sxs xsx\nxa xe xo xu"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["b", "x", "fb", "sx", "bf", "xs", "bx", "xb", "fbf", "sxs"],
+      "text": "B đi vào trong, X đi thẳng xuống. Hai đường khác nhau của cùng một bàn tay."
+    },
+    {
+      "type": "block",
+      "content": "fb sx fb sx\nbf xs bf xs\nbx xb bxb xbx\nban xem bao xa",
+      "text": "Bốn cụm cuối là từ thật: ban, xem, bao, xa."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "bx xb ba ax bo ox\nfbx sxb bax xab\nfb sx bf xs bx xb"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ban bao bat bien biet\nbo bua but bang bong\nxa xe xem xin xong",
+      "text": "B mở đầu từ rất nhiều, X thường đi với xu-, xa-, xe-."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["ban", "bao", "biet", "bang", "bong", "xem", "xin", "xong", "xanh", "xuan"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "buon bien bay bo bua\nxuan xuong xanh xay xuat\nbach bien buoc bung xoa"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "ban bao biet bang bong bien\nxem xin xong xanh xuan xuong\nban be cung nhau hoc bai",
+      "text": "Chỉ còn chữ Z. Bài sau bạn học Z cùng dấu chấm và dấu phẩy."
+    }
+  ]
+}

@@ -21,3 +21,42 @@ body .lesson-path:not(.is-expanded) .level:nth-child(n+7):not(.active){display:b
 .lesson-path:not(.is-expanded) .level:nth-child(-n+10){display:block!important}.lesson-path:not(.is-expanded) .level:nth-child(n+11){display:none!important}
 .lesson-path .level.roadmap-hidden{display:none!important}
 @media(min-width:751px){.hero{min-height:360px;align-items:center}.hero-copy{min-width:0;padding-left:clamp(0px,3.4vw,40px)}.hero .eyebrow{margin-bottom:12px}.hero h1{max-width:100%;font-size:clamp(40px,3.2vw,48px);line-height:1.08;letter-spacing:clamp(-3px,-.2vw,-1.8px);margin-bottom:12px;text-wrap:balance}.hero .intro{max-width:min(100%,500px);font-size:clamp(13px,1.05vw,15px);line-height:1.55;margin-bottom:16px}.hero-actions{gap:8px 12px}.hero-actions .primary-button,.hero-actions .secondary-button,.hero-actions .continue-button{font-size:clamp(11px,.94vw,14px);padding:12px 14px}.trust-row{gap:9px;margin-top:14px}.trust-row p{font-size:clamp(10px,.8vw,11px);line-height:1.35}.hero-visual{min-width:0}}
+
+/* Shift held for an uppercase letter: marked, but no finger animation (keyboard-widget.js markShift). */
+.kb-widget .key.active-mod{color:var(--green);border-color:var(--green);background:var(--lime);opacity:.75}
+
+/* ===== Bàn phím kiểu typing.com — dùng cho widget bài học (.kb-widget) và bàn phím hero (#taster .tc-board).
+   Thông số lấy từ CSS gốc của họ: panel #d9dadb bo 20px, phím trắng bo 5px viền trên #fff / dưới #a9a9a9,
+   chữ Roboto Mono đậm viết hoa #4a4a4a, nhãn shifted xếp trên nhãn chính, phím cần gõ xanh #3295db.
+   Phím vuông (padding-top 100%) và không cao quá 50px; mọi phím giãn đều, flex-basis chỉ giữ tỉ lệ. ===== */
+.kb-widget .keyboard,.tc-board.keyboard{display:flex;flex-direction:column;gap:5px;padding:15px 15px 10px;background:#d9dadb;border:1px solid rgba(0,0,0,.07);border-radius:20px;overflow:visible;box-shadow:none}
+.kb-widget .key-row,.tc-board .key-row{display:flex;justify-content:space-between;gap:0;min-width:0;max-height:50px}
+.kb-widget .key,.tc-board .key{position:relative;display:block;flex:1 1 50px;height:auto;min-width:0;max-height:50px;margin-right:5px;padding:0;border:0;border-top:1px solid #fff;border-bottom:1px solid #a9a9a9;border-radius:5px;background:#fff;color:#4a4a4a;font:700 16px/1 "Roboto Mono","DM Mono","Courier New",monospace;text-transform:uppercase;box-shadow:none;line-height:1}
+.kb-widget .key:last-child,.tc-board .key:last-child{margin-right:0}
+.kb-widget .key:after,.tc-board .key:after{content:"";display:block;padding-top:100%}
+.kb-widget .key-label,.tc-board .key-label{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-weight:700}
+.kb-widget .key--duo,.tc-board .key--duo{font-size:12px}
+.kb-widget .key--duo .key-label:first-child,.tc-board .key--duo .key-label:first-child{height:50%}
+.kb-widget .key--duo .key-label:last-child,.tc-board .key--duo .key-label:last-child{height:50%;top:50%}
+.kb-widget .key--special,.tc-board .key--special{text-transform:lowercase}
+.kb-widget .key--special .key-label,.tc-board .key--special .key-label{top:auto;bottom:5px;left:5px;width:calc(100% - 10px);height:calc(100% - 5px);align-items:flex-end;font-size:11px}
+.kb-widget .key--special-l .key-label,.tc-board .key--special-l .key-label{justify-content:flex-start}
+.kb-widget .key--special-r .key-label,.tc-board .key--special-r .key-label{justify-content:flex-end}
+.kb-widget .key.home,.tc-board .key.home{border-bottom-color:#a9a9a9}
+.kb-widget .key.active-key,.tc-board .key.active-key,.kb-widget .key.active-mod{background:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff;box-shadow:none;opacity:1;font-weight:700}
+.kb-widget .key.is-new{box-shadow:inset 0 0 0 2px #82c0f1}
+.kb-widget .key.is-new.active-key{box-shadow:none}
+@media(min-height:690px) and (min-width:650px){.kb-widget .keyboard{gap:10px}}
+@media(max-width:599px){.kb-widget .keyboard,.tc-board.keyboard{padding:8px;border-radius:12px;gap:4px}.kb-widget .key,.tc-board .key{margin-right:3px;font-size:12px;border-radius:4px}.kb-widget .key--duo{font-size:10px}}
+
+/* ===== Phím nhún / nháy đỏ — keyframes chép thông số từ typing.com (keyPressDefault, keyRejected, .25s).
+   Nhãn phím chức năng để nhạt (#a9a9a9, 10px) thay vì ẩn hẳn như bản gốc: người mới cần biết Shift/Enter ở đâu. ===== */
+@keyframes keyPressDefault{0%,to{background-color:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff}50%{background-color:#2d86c5;border-bottom-width:0;transform:translateY(1px)}}
+@keyframes keyRejected{0%,50%{background-color:#ce3e44;border-color:#d35157 #ce3e44 #b9383d;color:#fff}to{background-color:#fff;border-color:#a9a9a9;color:#4a4a4a}}
+@keyframes keyRejectedLabel{0%,50%{color:#fff}to{color:#4a4a4a}}
+.kb-widget .key.is-animating,.tc-board .key.is-animating{animation:keyPressDefault .25s}
+.kb-widget .key.is-wrong,.tc-board .key.is-wrong{animation:keyRejected .25s}
+.kb-widget .key.is-wrong .key-label,.tc-board .key.is-wrong .key-label{animation:keyRejectedLabel .25s}
+.kb-widget .key--special .key-label,.tc-board .key--special .key-label{color:#a9a9a9;font-size:10px}
+.tc-board.keyboard--shadow{box-shadow:0 10px 30px rgba(0,0,0,.3)}
+@media(prefers-reduced-motion:reduce){.kb-widget .key.is-animating,.tc-board .key.is-animating,.kb-widget .key.is-wrong,.tc-board .key.is-wrong,.kb-widget .key.is-wrong .key-label,.tc-board .key.is-wrong .key-label{animation:none}}

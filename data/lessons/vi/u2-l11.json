@@ -1,0 +1,24 @@
+{
+  "id": "u2-l11",
+  "unit": "u2",
+  "group": "ve-dich",
+  "order": 11,
+  "slug": "kiem-tra-unit-2",
+  "title": "Kiểm tra Unit 2",
+  "summary": "60 giây với cả bảng chữ cái, dấu câu và chữ hoa.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter"],
+  "minAccuracy": 80,
+  "estMinutes": 1,
+  "inputMode": "ascii",
+  "intro": "Một screen, 60 giây, dùng hết những gì Unit 2 đã dạy: 26 chữ cái, dấu chấm, dấu phẩy và chữ hoa. Vẫn viết không dấu — dấu tiếng Việt là chuyện của Unit 3.",
+  "congrats": "Xong Unit 2. Bạn đã gõ được mọi chữ cái mà không phải nhìn bàn phím. Mẹo cần nhớ: nếu tốc độ của bạn đã trên 30 WPM với độ chính xác trên 95%, hãy vào thẳng Unit 3 — gõ tiếng Việt có dấu là phần thú vị nhất của giáo trình.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 60,
+      "content": "Toi ten la Nam, nam nay hoc lop chin.\nNha toi o Ha Noi, gan mot cong vien nho.\nMoi sang, toi day luc sau gio va di bo toi truong.\nLop toi co ba muoi hai ban, ai cung vui ve.\nBan than cua toi ten la Mai, nha ban ay o Da Nang.\nChung toi thich hoc mon toan va mon tieng Viet.\nBuoi chieu, toi giup me nau com va rua bat.\nSau do toi hoc bai, xem tin tuc mot lat roi di ngu.\nCuoi tuan, ca nha toi ve que tham ong ba.\nQue toi co dong song xanh, co canh dong lua rong.\nToi thich ngoi ben bo song, nhin thuyen di qua.\nMua he nam sau, toi muon di Sai Gon va Hue mot chuyen.",
+      "text": "Bạn có 60 giây. Chữ hoa đầu câu, dấu chấm và dấu phẩy tính như mọi ký tự khác. Xuống dòng ở đây vẫn gõ bằng một dấu cách."
+    }
+  ]
+}

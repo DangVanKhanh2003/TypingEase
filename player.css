@@ -127,12 +127,7 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 /* Bottom room for the ghost hands: the shorthand above used to reset the 104px that
    hands.css reserves on .keyboard-demo, which clipped the palms at the viewport edge.
    .player-board.no-hands and the mobile block below still zero it out. */
-.player-board{width:100%;max-width:940px;margin:0 auto;padding:0 20px 96px}
-.player-board .keyboard{background:var(--key-bg)}
-.player-board .key{height:36px;min-width:34px;font-size:11px}
-.player-board .key.wide{min-width:56px}
-.player-board .key.space{min-width:230px}
-.player-board .key.is-new{border-color:#a9cf38;box-shadow:inset 0 0 0 2px #c8f05a}
+.player-board{width:100%;max-width:830px;margin:0 auto;padding:0 15px 210px}
 .player-board.no-hands{padding-bottom:0}
 .player-live{min-height:20px;margin:10px 0 0;padding:0 20px 18px;text-align:center;color:var(--muted);font-size:12px;font-weight:700}
 
@@ -172,10 +167,10 @@ body.player-page{background:var(--cream);overflow-x:hidden}
   .result-headline{font-size:21px}
   .star-row{font-size:30px}
   .player-board{padding:0 8px}
-  .player-board .keyboard{padding:6px;gap:3px}
-  .player-board .key-row{min-width:0;gap:3px}
-  .player-board .key{height:30px;min-width:0;flex:1 1 0;padding:0;font-size:10px}
-  .player-board .key.space{min-width:0;flex:6 1 0}
+  .player-board .keyboard{padding:8px;gap:4px}
+  .player-board .key-row{min-width:0}
+  .player-board .key{max-height:34px;font-size:11px}
+  .player-board .key.space{flex:1 1 336px}
   .player-live{margin:8px 0 0;padding:0 12px 8px}
   .result-actions{flex-direction:column}
   .result-actions>*{width:100%}
@@ -193,3 +188,6 @@ body.player-page{background:var(--cream);overflow-x:hidden}
   .tap-to-type{display:block;position:fixed;left:0;right:0;bottom:0;z-index:10;width:100%;border:0;border-top:1px solid #0f6244;padding:15px;background:var(--green);color:#fff;font-size:14px;font-weight:800}
   .player{padding-bottom:58px}
 }
+
+/* Telex: a character still being composed ("ma" on its way to "má") is neither right nor wrong yet. */
+.prompt-lines .ch.pending,.burst-token .ch.pending{color:#9a6b00;background:#fff3cd;border-radius:3px}

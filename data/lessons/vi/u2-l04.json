@@ -1,0 +1,80 @@
+{
+  "id": "u2-l04",
+  "unit": "u2",
+  "group": "bat-dau",
+  "order": 4,
+  "slug": "m-va-v",
+  "title": "M và V",
+  "summary": "Hai phím hàng dưới còn lại của ngón trỏ: V dưới F, M cạnh N.",
+  "newKeys": ["m", "v"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Hai ngón trỏ tiếp tục làm việc ở hàng dưới. V nằm dưới F, M nằm ngay cạnh N. Xong bài này bạn đã có 23 phím và gõ được hầu hết từ tiếng Việt không dấu.",
+  "congrats": "M và V nằm ở hàng dưới nên rất dễ gõ bằng ngón giữa cho tiện. Mẹo cần nhớ: cứ để ngón trỏ làm, dù lúc đầu chậm hơn — sai ngón bây giờ thì đến Unit 4 bạn sẽ phải học lại từ đầu.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "v",
+      "finger": "LI",
+      "text": "Phím V — ngón TRỎ tay trái gập xuống một hàng, ngay phía dưới phím F. Gõ xong về gờ nổi trên F.",
+      "hint": "Nhấn V để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "v",
+      "content": "vvvv ffff\nvvvv ffff\nfv vf fvf vfv\nva vo vu vi"
+    },
+    {
+      "type": "intro",
+      "key": "m",
+      "finger": "RI",
+      "text": "Phím M — ngón TRỎ tay phải gập xuống một hàng, ngay bên phải phím N. Cùng một ngón với J, U, Y, H và N.",
+      "hint": "Nhấn M để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "m",
+      "content": "mmmm jjjj\nmmmm jjjj\njm mj jmj mjm\nam om um im"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["v", "m", "fv", "jm", "vf", "mj", "vm", "mv", "fvf", "jmj"],
+      "text": "Ngón trỏ phải giờ lo bốn phím ở ba hàng. Gõ xong phím nào cũng về J."
+    },
+    {
+      "type": "block",
+      "content": "fv jm fv jm\nvf mj vf mj\nvm mv vmv mvm\nvui mua vao",
+      "text": "Ba cụm cuối là từ thật: vui, mua, vao."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "vm mv va am vo om\nfvm jmv vam mav\nfv jm vf mj vm mv"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "me mai mua muon moi\nminh mang mat mui may\nvui ve van vao voi",
+      "text": "Chú ý cụm mi- và vi-: ngón trỏ xuống rồi lên, không kéo cả bàn tay."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["me", "mai", "mua", "moi", "minh", "vui", "vao", "voi", "vang", "viet"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "com lam nam tam them\nem im am hom kem\ntim tom muc vet vay"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "vui ve minh mang mua vao\nem hoc tieng viet moi ngay\nnam thang van con dai",
+      "text": "Hai dòng cuối đã là câu thật. Bài sau là bài ôn tập, không có phím mới."
+    }
+  ]
+}

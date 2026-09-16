@@ -1,0 +1,24 @@
+{
+  "id": "u3-l08",
+  "unit": "u3",
+  "group": "ve-dich",
+  "order": 8,
+  "slug": "kiem-tra-unit-3",
+  "title": "Kiểm tra Unit 3",
+  "summary": "60 giây gõ tiếng Việt có dấu, đúng như lúc bạn viết thật.",
+  "newKeys": [],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ",", "shift", "enter", "aa", "ee", "oo", "dd", "aw", "uw", "ow"],
+  "minAccuracy": 80,
+  "estMinutes": 1,
+  "inputMode": "telex",
+  "intro": "Một screen, 60 giây, tiếng Việt có dấu. Tốc độ gõ có dấu luôn thấp hơn gõ không dấu chừng một phần tư — đó là chuyện bình thường, vì mỗi chữ có dấu tốn hai tới ba phím.",
+  "congrats": "Xong Unit 3, phần khó nhất của giáo trình. Từ đây bạn gõ được mọi thứ bằng tiếng Việt. Mẹo cần nhớ: muốn nhanh hơn thì luyện theo cụm từ quen thuộc, đừng luyện theo chữ cái rời — tay nhớ cả cụm thì mới bỏ được nhịp ngập ngừng giữa các tiếng.",
+  "screens": [
+    {
+      "type": "test",
+      "seconds": 60,
+      "content": "Tôi tên là Nam, năm nay tôi học lớp chín.\nNhà tôi ở Hà Nội, gần một công viên nhỏ.\nMỗi sáng tôi dậy lúc sáu giờ rồi đi bộ tới trường.\nLớp tôi có ba mươi hai bạn, ai cũng vui vẻ.\nBạn thân của tôi tên là Mai, nhà bạn ấy ở Đà Nẵng.\nChúng tôi thích học môn toán và môn tiếng Việt.\nBuổi chiều, tôi giúp mẹ nấu cơm và rửa bát.\nSau đó tôi học bài, đọc một lúc rồi đi ngủ.\nCuối tuần, cả nhà tôi về quê thăm ông bà.\nQuê tôi có dòng sông xanh và cánh đồng lúa rộng.\nTôi thích ngồi bên bờ sông, nhìn thuyền đi qua.\nMùa hè năm sau, tôi muốn đi Huế và Sài Gòn một chuyến.",
+      "text": "Bạn có 60 giây. Nhớ bật bộ gõ Telex. Gõ hết dòng nào thì xuống dòng tiếp, không cần gõ hết cả bài."
+    }
+  ]
+}

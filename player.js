@@ -11,6 +11,7 @@
   const store = global.TypingEaseProgress;
   const profile = global.TypingEaseProfile;
   const weakKeysApi = global.TypingEaseWeakKeys;
+  const telex = global.TypingEaseTelex;
   const WEAK_KEYS_STORAGE_KEY = weakKeysApi?.STORAGE_KEY || 'typingease-weak-keys-v1';
   const MOBILE_NOTE_KEY = 'typingease-player-mobile-note-v1';
 
@@ -66,6 +67,11 @@
     notReadyTitle: 'Bài này chưa có nội dung',
     notReadyBody: '<b>{title}</b> đã có trong lộ trình nhưng nội dung sẽ được viết ở giai đoạn sau. Hãy chọn một bài đã mở.',
     weakPage: 'Luyện phím yếu',
+    imeNote: 'Hình như bộ gõ tiếng Việt chưa bật: bạn đang gõ ra chuỗi Telex thô. Bật Unikey hoặc EVKey ở kiểu gõ Telex, hoặc chuyển bài này sang gõ không dấu.',
+    imeNoteButton: 'Gõ không dấu',
+    asciiNote: 'Bài này đang ở chế độ gõ KHÔNG DẤU. Bật bộ gõ tiếng Việt rồi bấm nút bên cạnh để quay lại bản có dấu.',
+    asciiNoteButton: 'Gõ có dấu',
+    shiftFinger: 'ngón út tay đối diện',
     testPage: 'Kiểm tra tốc độ',
     mobileNote: 'Bài học được thiết kế cho máy tính có bàn phím — 10 ngón cần 10 phím thật. Trên điện thoại bạn vẫn gõ thử được, nhưng hãy quay lại trên máy tính để học cho đủ.',
     mobileNoteClose: 'Đã hiểu',
@@ -81,7 +87,12 @@
     Object.entries(values).reduce((text, [key, value]) => text.split(`{${key}}`).join(String(value)), template);
   const escapeHtml = value => String(value).replace(/[&<>"']/g, character =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[character]));
-  const keyLabel = key => (key === ' ' ? 'Space' : String(key || '').toUpperCase());
+  const NAMED_KEY_LABELS = { shift: 'Shift', enter: 'Enter', tab: 'Tab', backspace: 'Backspace' };
+  const NAMED_INTRO_KEYS = ['shift', 'enter'];
+  // aa -> â, ow -> ơ … a Telex pair is a rule, not a key, so it is labelled by its result.
+  const TELEX_LABELS = { aa: 'aa→â', ee: 'ee→ê', oo: 'oo→ô', dd: 'dd→đ', aw: 'aw→ă', uw: 'uw→ư', ow: 'ow→ơ' };
+  const keyLabel = key => (key === ' ' ? 'Space'
+    : TELEX_LABELS[key] || NAMED_KEY_LABELS[key] || String(key || '').toUpperCase());
 
   // --- DOM ------------------------------------------------------------------------------------
   const root = document.querySelector('#player');
@@ -128,8 +139,16 @@
     if ((isPhone() || touchQuery.matches) && !mobileNoteDismissed && state !== 'loading' && state !== 'error')
       rows.push(`<p class="player-note is-info"><span>ⓘ ${T.mobileNote}</span>`
         + `<button type="button" class="note-close" id="note-close">${T.mobileNoteClose}</button></p>`);
+    if (imeNoteVisible && !asciiFallback)
+      rows.push(`<p class="player-note is-warn"><span>⚠ ${T.imeNote}</span>`
+        + `<button type="button" class="note-close" id="note-ascii">${T.imeNoteButton}</button></p>`);
+    if (asciiFallback)
+      rows.push(`<p class="player-note is-info"><span>ⓘ ${T.asciiNote}</span>`
+        + `<button type="button" class="note-close" id="note-telex">${T.asciiNoteButton}</button></p>`);
     noteEl.innerHTML = rows.join('');
     noteEl.hidden = !rows.length;
+    noteEl.querySelector('#note-ascii')?.addEventListener('click', () => setAsciiFallback(true));
+    noteEl.querySelector('#note-telex')?.addEventListener('click', () => setAsciiFallback(false));
     noteEl.querySelector('#note-close')?.addEventListener('click', () => {
       mobileNoteDismissed = true;
       try { localStorage.setItem(MOBILE_NOTE_KEY, '1'); } catch { /* storage blocked */ }
@@ -213,15 +232,17 @@
 
   const prefetch = id => { if (id && !lessonCache.has(id)) loadLesson(id).catch(() => {}); };
 
-  // Content lines are joined by a single space: the line break is presentation, the space is a
-  // real keystroke. A screen that wants a literal Enter has no schema representation yet.
-  function buildTarget(content) {
+  // Content lines are joined by one keystroke, and `linebreak` picks which one: "space" (the
+  // default, where the line break is presentation only) or "enter", where the newline is a real
+  // character of the target and only a real Enter press satisfies it (DECISIONS.md bổ sung 6).
+  function buildTarget(content, linebreak) {
+    const glue = linebreak === 'enter' ? '\n' : ' ';
     const lines = String(content ?? '').split('\n').map(line => line.trim()).filter(Boolean);
     let target = '';
     const breaks = new Set();
     lines.forEach((line, position) => {
       target += line;
-      if (position < lines.length - 1) { breaks.add(target.length); target += ' '; }
+      if (position < lines.length - 1) { breaks.add(target.length); target += glue; }
     });
     return { target, breaks };
   }
@@ -248,6 +269,9 @@
   let state = 'loading';
   let lesson = null, screens = [], screenIndex = 0, usingFixture = false;
   let run = null, runLog = [], clockTimer = null, lastDailyPing = 0;
+  // Telex (Unit 3): `asciiFallback` is the escape hatch of DECISIONS.md quyết định 1 — the
+  // same lesson with every diacritic stripped, for a machine with no Vietnamese IME.
+  let asciiFallback = false, imeNoteVisible = false, uncomposedHits = 0;
 
   const currentScreen = () => screens[screenIndex] || null;
   const screenSeconds = screen => Number(screen?.seconds ?? screen?.timeLimit) || 0;
@@ -331,10 +355,10 @@
     const flush = () => { if (word) { html += `<span class="w">${word}</span>`; word = ''; } };
     [...run.target].forEach((character, position) => {
       const status = position < typed.length
-        ? (typed[position] === character ? 'ok' : 'bad')
+        ? (run.telex && run.view ? (run.view.states[position] || 'bad') : (typed[position] === character ? 'ok' : 'bad'))
         : position === typed.length ? 'cur' : '';
       if (run.breaks.has(position)) {
-        word += `<span class="ch brk ${status}">␣</span>`;
+        word += `<span class="ch brk ${status}">${character === '\n' ? '⏎' : '␣'}</span>`;
         flush();
         html += '<br>';
         return;
@@ -349,7 +373,26 @@
     const cursor = promptEl.querySelector('.ch.cur');
     if (cursor && promptEl.scrollHeight > promptEl.clientHeight + 1)
       promptEl.scrollTop = Math.max(0, cursor.offsetTop - (promptEl.clientHeight - cursor.offsetHeight) / 2);
-    keyboard?.highlight(run.target[typed.length]);
+    keyboard?.highlight(nextKeyHint(typed));
+  }
+
+  // Which key the keyboard widget should light up next. In ascii that is simply the next
+  // character; in telex a composed character takes two or three presses ("ầ" = a, a, f), so the
+  // highlight follows the composition rather than jumping straight to the finished letter.
+  function nextKeyHint(typedValue) {
+    const position = typedValue.length;
+    if (!run.telex || !telex) return run.target[position];
+    const states = run.view?.states || [];
+    if (position > 0 && states[position - 1] === 'pending') {
+      const want = run.target[position - 1];
+      const at = telex.steps(want).indexOf(typedValue[position - 1]);
+      const keys = telex.keysFor(want);
+      if (at >= 0 && keys[at + 1]) return keys[at + 1];
+    }
+    const want = run.target[position];
+    if (!want) return want;
+    const keys = telex.keysFor(want);
+    return keys[0] || want;
   }
 
   function updateLive() {
@@ -406,13 +449,17 @@
 
   function enterTyping(screen) {
     state = 'typing';
-    const content = screen.type === 'burst'
+    // A telex screen is matched by TypingEaseTelex (composition-aware, error per syllable);
+    // with the fallback on, the very same text is stripped of its diacritics and typed as ascii.
+    const telexMode = root.dataset.inputMode === 'telex' && !!telex;
+    const plain = text => (telexMode && asciiFallback && telex ? telex.toAscii(text) : text);
+    const content = plain(screen.type === 'burst'
       ? ''
-      : screen.source === 'weak-keys' ? weakDrillContent(screen) : String(screen.content ?? '');
+      : screen.source === 'weak-keys' ? weakDrillContent(screen) : String(screen.content ?? ''));
     const tokens = screen.type === 'burst'
       ? (Array.isArray(screen.tokens) && screen.tokens.length
-        ? screen.tokens.map(String)
-        : String(screen.content || '').split(/\s+/).filter(Boolean))
+        ? screen.tokens.map(token => plain(String(token)))
+        : plain(String(screen.content || '')).split(/\s+/).filter(Boolean))
       : [];
     run = {
       type: screen.type,
@@ -420,11 +467,12 @@
       limit: screen.type === 'burst' ? (screenSeconds(screen) || DEFAULT_BURST_SECONDS) : screenSeconds(screen),
       target: '', breaks: new Set(),
       startedAt: null, endedAt: null, seen: 0, lastKeyAt: null,
-      typed: 0, correct: 0, errors: 0, keyMs: {}, timedOut: false
+      typed: 0, correct: 0, errors: 0, keyMs: {}, timedOut: false,
+      telex: telexMode && !asciiFallback, view: null, scored: []
     };
-    keyboard?.mark(screen.newKey || '');
+    keyboard?.mark(Array.isArray(screen.newKeys) && screen.newKeys.length ? screen.newKeys : (screen.newKey || ''));
     if (screen.type === 'burst') setBurstToken();
-    else Object.assign(run, buildTarget(content));
+    else Object.assign(run, buildTarget(content, screen.linebreak));
     if (!run.target) { advance(); return; }
     renderTyping(screen);
     paintPrompt();
@@ -479,6 +527,65 @@
     if (now - lastDailyPing > 1000) { lastDailyPing = now; store.recordPracticeActivity(now); }
   }
 
+  // Telex scoring is recomputed from the whole field on every input event rather than
+  // accumulated per keystroke: the IME rewrites text that is already there ("nguyên" becomes
+  // "nguyễn" when the tone key lands), so yesterday's verdict on a character is not final.
+  function scoreTelex(value) {
+    const view = telex.compare(value, run.target);
+    run.view = view;
+    run.correct = view.ok;
+    run.typed = view.ok + view.bad;
+    run.errors = view.badTokens;
+
+    view.states.forEach((state, index) => {
+      if (state === 'pending' || run.scored[index] === state) return;
+      run.scored[index] = state;
+      const expected = run.target[index];
+      if (!expected || /\s/.test(expected)) return;
+      const keys = telex.keysFor(expected);
+      const physical = keys.length ? keys : [expected];
+      physical.forEach(key => profile?.recordKeystroke(key, state === 'ok', null));
+      if (state === 'bad') noteWeakKey(physical[0]);
+    });
+
+    // Three finished syllables that arrived as raw Telex ("mas" for "má") mean no IME is running.
+    const typedTokens = value.split(/\s/);
+    const targetTokens = run.target.split(/\s/);
+    uncomposedHits = 0;
+    for (let i = 0; i < typedTokens.length - 1; i += 1)
+      if (telex.looksUncomposed(typedTokens[i], targetTokens[i])) uncomposedHits += 1;
+    if (uncomposedHits >= 3 && !imeNoteVisible) { imeNoteVisible = true; renderNotes(); }
+
+    const now = Date.now();
+    if (now - lastDailyPing > 1000) { lastDailyPing = now; store.recordPracticeActivity(now); }
+  }
+
+  // Switch the whole lesson between "có dấu" and "không dấu" and restart the current screen.
+  function setAsciiFallback(on) {
+    if (asciiFallback === on) return;
+    asciiFallback = on;
+    imeNoteVisible = false;
+    uncomposedHits = 0;
+    renderNotes();
+    if (state === 'typing' || state === 'screen-result') enterScreen(screenIndex);
+  }
+
+  // Feedback on the keyboard widget for the keystroke that just landed: the wanted key dips when
+  // it was right, the key actually hit flashes red when it was wrong. Only a field that grew by
+  // one character counts — backspace, paste and an IME rewriting earlier text say nothing about
+  // a single key. In telex a character still mid-composition ("a" on the way to "ầ") is neither.
+  let lastInputLength = 0;
+  function reactToKeystroke(value) {
+    const grew = value.length === lastInputLength + 1 || value.length === 1;
+    lastInputLength = value.length;
+    if (!grew || !keyboard) return;
+    const position = value.length - 1;
+    const verdict = run.telex && run.view ? (run.view.states[position] || 'bad')
+      : value[position] === run.target[position] ? 'ok' : 'bad';
+    if (verdict === 'ok') keyboard.press();
+    else if (verdict === 'bad') keyboard.reject(value[position]);
+  }
+
   function onInput() {
     if (state === 'intro') {
       const typed = input.value;
@@ -491,15 +598,24 @@
       return;
     }
     if (state !== 'typing' || !run) { input.value = ''; return; }
-    if (input.value.length > run.target.length) input.value = input.value.slice(0, run.target.length);
+    // Ascii runs stop the field at the length of the target. A telex run leaves a little slack:
+    // a typist whose IME is off produces LONGER text ("mas" for "má"), and cutting it off would
+    // hide the very evidence that says the IME is off.
+    const limit = run.telex ? run.target.length + 16 : run.target.length;
+    if (input.value.length > limit) input.value = input.value.slice(0, limit);
     if (!run.startedAt && input.value.length) startRun();
-    trackKeystrokes(input.value);
-    keyboard?.press();
+    if (run.telex) scoreTelex(input.value); else trackKeystrokes(input.value);
+    reactToKeystroke(input.value);
     if (run.type === 'burst') renderBurstToken(); else paintPrompt();
     updateLive();
     if (input.value.length < run.target.length) return;
+    // A syllable still mid-composition ("ma" on the way to "má") is not a finished screen.
+    if (run.telex && run.view && run.view.pending) return;
     if (run.type === 'burst') {
-      if ([...input.value].every((character, position) => character === run.target[position])) run.tokensDone += 1;
+      const clean = run.telex && telex
+        ? telex.compare(input.value, run.target).complete
+        : [...input.value].every((character, position) => character === run.target[position]);
+      if (clean) run.tokensDone += 1;
       run.tokenIndex += 1;
       setBurstToken();
       const tokenEl = stageEl.querySelector('#burst-token');
@@ -549,11 +665,18 @@
   // --- rendering: screens ---------------------------------------------------------------------
   // `screen.finger` is authored per screen (one of the ten codes LP LR LM LI LT / RT RI RM RR RP)
   // and wins over the key -> finger table, which cannot know which thumb the author meant.
+  // One chip, one or more keys: the number row is taught two keys at a time, so a `block` screen
+  // may carry `newKeys: ['4','5']` instead of a single `newKey`.
   function chipHtml(key, fingerCode) {
-    if (!key) return '';
-    const finger = keyboard?.nameOfFinger(fingerCode) || keyboard?.fingerName(key) || '';
+    const keys = (Array.isArray(key) ? key : [key]).filter(Boolean);
+    if (!keys.length) return '';
+    // Shift is the one key with no fixed finger: it is always the pinky of the hand that is not
+    // typing the letter, so naming a side here would teach the wrong habit half the time.
+    const finger = keys.length > 1 ? ''
+      : keys[0] === 'shift' ? T.shiftFinger
+        : (keyboard?.nameOfFinger(fingerCode) || keyboard?.fingerName(keys[0]) || '');
     return `<p class="key-chip"><span class="chip-label">${T.newKey}</span>`
-      + `<b class="chip-key">${escapeHtml(keyLabel(key))}</b>`
+      + keys.map(one => `<b class="chip-key">${escapeHtml(keyLabel(one))}</b>`).join('')
       + (finger ? `<span class="chip-finger">${escapeHtml(finger)}</span>` : '') + '</p>';
   }
 
@@ -571,7 +694,9 @@
   }
 
   function renderTyping(screen) {
-    const key = screen.newKey || screen.key || '';
+    const key = Array.isArray(screen.newKeys) && screen.newKeys.length
+      ? screen.newKeys
+      : (screen.newKey || screen.key || '');
     const clock = run.limit ? `<p class="player-clock" id="clock"></p>` : '';
     const lead = screen.text ? `<p class="screen-lead">${escapeHtml(screen.text)}</p>` : '';
     stageEl.className = `player-stage is-typing is-${screen.type}`;
@@ -593,12 +718,14 @@
     if (!tokenEl) return;
     const typed = input.value;
     tokenEl.innerHTML = [...run.target].map((character, position) => {
-      const status = position < typed.length ? (typed[position] === character ? 'ok' : 'bad') : position === typed.length ? 'cur' : '';
+      const status = position < typed.length
+        ? (run.telex && run.view ? (run.view.states[position] || 'bad') : (typed[position] === character ? 'ok' : 'bad'))
+        : position === typed.length ? 'cur' : '';
       return `<span class="ch ${status}">${escapeHtml(character === ' ' ? '␣' : character)}</span>`;
     }).join('');
     const nextEl = stageEl.querySelector('#burst-next');
     if (nextEl) nextEl.textContent = run.tokens[(run.tokenIndex + 1) % run.tokens.length] || '';
-    keyboard?.highlight(run.target[typed.length]);
+    keyboard?.highlight(nextKeyHint(typed));
   }
 
   function starRow(stars, max = STARS) {
@@ -665,7 +792,9 @@
       }
     }
 
-    const keys = (lesson.keysSoFar.length ? lesson.keysSoFar : lesson.newKeys).map(keyLabel);
+    // keysSoFar lists physical keys AND telex tokens, and a telex lesson repeats s f r x j as
+    // tone keys, so the summary is deduplicated and the tokens are shown with what they produce.
+    const keys = [...new Set((lesson.keysSoFar.length ? lesson.keysSoFar : lesson.newKeys).map(String))].map(keyLabel);
     const allowed = new Set((lesson.keysSoFar.length ? lesson.keysSoFar : lesson.newKeys).map(key => String(key).toLowerCase()));
     const weak = (profile?.getWeakKeys(4) || []).filter(item => allowed.has(item.key) && item.accuracy < 100);
     const nextId = nextLessonId(lesson.id);
@@ -852,9 +981,11 @@
 
   input.addEventListener('input', onInput);
   input.addEventListener('keydown', event => {
-    // Newlines are never part of a target (content line breaks are typed as a space), so Enter
-    // is a navigation key here, never a character.
-    if (event.key === 'Enter') event.preventDefault();
+    // Enter is a navigation key, except on a `linebreak: "enter"` screen at the exact position
+    // where the target carries a newline — there it has to reach the textarea as a character.
+    if (event.key !== 'Enter') return;
+    const expected = state === 'typing' && run ? run.target[input.value.length] : '';
+    if (expected !== '\n') event.preventDefault();
   });
   tapEl?.addEventListener('click', () => { try { input.focus(); } catch { /* ignore */ } });
   redoEl?.addEventListener('click', () => { if (lesson) openLesson(lesson.id, 1); });
@@ -870,6 +1001,16 @@
 
   document.addEventListener('keydown', event => {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
+    // Shift and Enter never arrive in the textarea as characters, so the intro screen that
+    // teaches one waits for the key press itself instead of for typed text.
+    if (state === 'intro' && run && !run.found && NAMED_INTRO_KEYS.includes(run.target)
+      && String(event.key).toLowerCase() === run.target) {
+      event.preventDefault();
+      run.found = true;
+      keyboard?.press();
+      renderIntro(currentScreen());
+      return;
+    }
     if (event.key === 'Enter') {
       if (state === 'screen-result' || state === 'lesson-result' || (state === 'intro' && run?.found)) {
         event.preventDefault();

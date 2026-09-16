@@ -1,0 +1,81 @@
+{
+  "id": "u2-l02",
+  "unit": "u2",
+  "group": "bat-dau",
+  "order": 2,
+  "slug": "o-va-w",
+  "title": "O và W",
+  "summary": "Ngón áp út bắt đầu rời hàng cơ sở: O bên phải, W bên trái.",
+  "newKeys": ["o", "w"],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w"],
+  "minAccuracy": 80,
+  "estMinutes": 5,
+  "inputMode": "ascii",
+  "intro": "Tới lượt ngón áp út với lên hàng trên. O nằm ngay trên L, W nằm ngay trên S. O rất hay gặp trong tiếng Việt; W thì hiếm trong chữ, nhưng là một phím dấu quan trọng của kiểu gõ Telex ở Unit 3.",
+  "congrats": "Ngón áp út yếu hơn ngón trỏ, nên rất dễ bị ngón giữa gõ hộ. Mẹo cần nhớ: khi gõ O hoặc W, hãy để ý ngón út của bàn tay đó — nếu nó bị kéo lên theo thì bạn đang dùng sai ngón.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "o",
+      "finger": "RR",
+      "text": "Phím O — ngón ÁP ÚT tay phải với thẳng lên một hàng, ngay phía trên phím L. Gõ xong hạ ngón về L.",
+      "hint": "Nhấn O để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "o",
+      "content": "oooo llll\noooo llll\nlo ol lol olo\noi oa ot og"
+    },
+    {
+      "type": "intro",
+      "key": "w",
+      "finger": "LR",
+      "text": "Phím W — ngón ÁP ÚT tay trái với thẳng lên một hàng, ngay phía trên phím S. Chữ W hiếm gặp trong tiếng Việt, nhưng ở Unit 3 nó là phím tạo ư, ơ và ă.",
+      "hint": "Nhấn W để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "w",
+      "content": "wwww ssss\nwwww ssss\nsw ws sws wsw\naw ow uw ew",
+      "text": "Bốn cụm cuối chính là cách gõ ă, ơ, ư trong Telex. Cứ làm quen tay từ bây giờ."
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["o", "w", "lo", "sw", "ol", "ws", "ow", "wo", "lol", "sws"],
+      "text": "Hai ngón áp út đối xứng nhau: một bên với lên O, một bên với lên W."
+    },
+    {
+      "type": "block",
+      "content": "lo sw lo sw\nol ws ol ws\now wo owow woow\nlow sow",
+      "text": "Đổi tay liên tục. Ngón trỏ vẫn phải chạm F và J trong suốt dòng này."
+    },
+    {
+      "type": "standard",
+      "dictation": "letters",
+      "content": "lo ol ow wo os oa\nswl low ows sol\nlo sw ol ws ow wo"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "toi doi loi hoi goi\nroi soi thoi khoi troi\nao sao gao dao lao",
+      "text": "Vần -oi và -ao xuất hiện dày đặc trong tiếng Việt. Gõ chậm và đúng ngón."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["toi", "doi", "loi", "hoi", "goi", "roi", "sao", "dao", "khoi", "troi"]
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "to lo do go ho so ro\ntho kho khoi thoi troi\nhai hoi hao hay hue"
+    },
+    {
+      "type": "standard",
+      "dictation": "words",
+      "content": "toi doi loi hoi goi roi\nao sao gao dao lao thao\nkhoi troi thoi khoai oai",
+      "text": "Đã có 19 phím. Bài sau là C và N — hai phím mở khoá rất nhiều từ tiếng Việt."
+    }
+  ]
+}

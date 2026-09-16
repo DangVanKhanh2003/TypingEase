@@ -1,0 +1,83 @@
+{
+  "id": "u2-l08",
+  "unit": "u2",
+  "group": "vuon-xa",
+  "order": 8,
+  "slug": "z-dau-cham-va-dau-phay",
+  "title": "Z, dấu chấm và dấu phẩy",
+  "summary": "Chữ cái cuối cùng và hai dấu câu bạn sẽ gõ nhiều nhất đời.",
+  "newKeys": ["z", ".", ","],
+  "keysSoFar": ["j", "f", " ", "d", "k", "s", "l", "a", ";", "g", "h", "e", "i", "r", "u", "t", "y", "o", "w", "c", "n", "m", "v", "q", "p", "b", "x", "z", ".", ","],
+  "minAccuracy": 80,
+  "estMinutes": 6,
+  "inputMode": "ascii",
+  "intro": "Ba phím hàng dưới khép lại bảng chữ cái: Z của ngón út trái, rồi dấu phẩy và dấu chấm bên tay phải. Từ bài này trở đi bạn viết câu thật, có dấu ngắt.",
+  "congrats": "Dấu chấm và dấu phẩy luôn dính liền chữ đứng trước nó, rồi mới tới một dấu cách. Mẹo cần nhớ: đừng gõ dấu cách trước dấu chấm — đó là lỗi gõ phổ biến nhất khi mới viết câu.",
+  "screens": [
+    {
+      "type": "intro",
+      "key": "z",
+      "finger": "LP",
+      "text": "Phím Z — ngón ÚT tay trái gập xuống một hàng, ngay phía dưới phím A. Chữ Z không có trong từ thuần Việt, nhưng bạn vẫn cần nó cho tên riêng và đơn vị nước ngoài.",
+      "hint": "Nhấn Z để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": "z",
+      "content": "zzzz aaaa\nzzzz aaaa\naz za aza zaz\nza ze zo zu"
+    },
+    {
+      "type": "intro",
+      "key": ".",
+      "finger": "RR",
+      "text": "Dấu chấm — ngón ÁP ÚT tay phải gập xuống một hàng, ngay phía dưới phím L. Gõ xong đưa ngón về L.",
+      "hint": "Nhấn dấu chấm để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": ".",
+      "content": "l.l. l.l.\nl.l. l.l.\n.l l. .l. l.l\nno. to. do. lo."
+    },
+    {
+      "type": "intro",
+      "key": ",",
+      "finger": "RM",
+      "text": "Dấu phẩy — ngón GIỮA tay phải gập xuống một hàng, ngay phía dưới phím K. Dấu phẩy và dấu chấm nằm cạnh nhau, hai ngón khác nhau.",
+      "hint": "Nhấn dấu phẩy để tiếp tục"
+    },
+    {
+      "type": "block",
+      "newKey": ",",
+      "content": "k,k, k,k,\nk,k, k,k,\n,k k, ,k, k,k\nnha, cua, ban, toi,"
+    },
+    {
+      "type": "burst",
+      "seconds": 20,
+      "tokens": ["az", "l.", "k,", "za", ".l", ",k", "no.", "nha,", "toi,", "hoc."],
+      "text": "Dấu câu dính liền chữ trước nó: gõ chữ, gõ dấu, rồi mới dấu cách."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "toi di hoc moi ngay.\nban be cua toi rat vui.\nnha em o gan truong, di bo mot lat la toi.",
+      "text": "Ba câu thật. Chưa có chữ hoa — bài sau bạn mới học phím Shift."
+    },
+    {
+      "type": "burst",
+      "seconds": 25,
+      "tokens": ["ngay.", "vui.", "toi,", "truong,", "hoc.", "nha,", "ban,", "xong.", "que.", "em,"]
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "buoi sang, em day som va tap the duc.\nsau do em an sang, roi di hoc.\nchieu ve, em giup me nau com.",
+      "text": "Dấu phẩy tách ý, dấu chấm kết câu. Nhịp tay cũng nghỉ theo dấu."
+    },
+    {
+      "type": "standard",
+      "dictation": "sentence",
+      "content": "mua he nam nay, ca nha em ve que tham ong ba.\nque em co dong song, co canh dong va nhieu cay xanh.\nem thich nhat la buoi chieu, khi troi mat va gio thoi.",
+      "text": "Bài sau là phím Shift và phím Enter — hai phím cuối cùng của Unit 2."
+    }
+  ]
+}
