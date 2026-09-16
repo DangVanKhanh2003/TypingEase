@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * scripts/e2e.js — kiểm thử đầu-cuối cho player, hero và các trang phụ bằng playwright-core.
+ * scripts/e2e.js — kiểm thử đầu-cuối cho player, trang chủ và các trang phụ bằng playwright-core.
  *
  * Chạy (server tĩnh phải đang phục vụ thư mục gốc của repo, ví dụ `npx http-server -p 8765 -s .`):
  *   PW=<thư mục>/node_modules/playwright-core node scripts/e2e.js [baseUrl]
@@ -259,31 +259,51 @@ test('6 telex: ký tự đang compose là pending, không nháy đỏ, highlight
   assert.ok(/\bbad\b/.test(bad), `x thay cho c phải bad: ${bad}`);
 });
 
-test('7 trang chủ hero: J sáng, gõ j nhún phím, chuyển phím kế', async page => {
+// Trang chủ không còn ô gõ thử: vào trang là thấy ngay lộ trình để chọn bài. Test này canh đúng
+// hai điều dễ vỡ khi ai đó thêm lại thứ gì vào hero — bàn phím/bàn tay quay lại, và lộ trình bị
+// đẩy xuống dưới màn hình đầu.
+const homeShape = page => page.evaluate(() => {
+  const rect = document.querySelector('#roadmap-title').getBoundingClientRect();
+  const start = document.querySelector('#hero-start');
+  return {
+    returning: document.body.classList.contains('is-returning'),
+    widgets: document.querySelectorAll('#taster, .taster-line, .hand-layer, .keyboard, .kb-widget, .tc-board').length,
+    languagePickers: document.querySelectorAll('#language, .language-select').length,
+    startVisible: Boolean(start && start.offsetParent !== null),
+    startHref: document.querySelector('#hero-go')?.getAttribute('href') ?? null,
+    railItems: document.querySelectorAll('#unit-rail a, #unit-rail button').length,
+    teasers: document.querySelectorAll('#unit-teasers li').length,
+    roadmapTop: rect.top,
+    roadmapBottom: rect.bottom,
+    viewport: innerHeight
+  };
+});
+
+test('7 trang chủ: không còn bàn phím/bàn tay, lộ trình hiện ngay', async page => {
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('#taster-keyboard .key');
-  await sleep(150);
-  assert.ok(!(await page.evaluate(() => document.body.classList.contains('is-returning'))), 'khách mới không phải is-returning');
-  let board = await boardState(page, '#taster-board');
-  assert.strictEqual(board.activeKey, 'j', 'J sáng lúc đầu');
-  assert.strictEqual(board.activeFinger, 'RI');
-  assert.ok(board.handLayer && board.fingers === 10, 'có tay ở hero desktop');
-  await watchClasses(page, '#taster-board');
-  const input = page.locator('#taster-input');
-  await input.focus();
-  await page.keyboard.type('jjj ', { delay: 30 });
-  await sleep(60);
-  const added = await addedClasses(page);
-  const presses = added.added.filter(entry => entry.className === 'is-animating');
-  assert.ok(presses.length >= 4, `is-animating ${presses.length} lần, cần ≥4`);
-  assert.ok(presses.slice(0, 3).every(entry => entry.key === 'j'), 'ba lần đầu là phím j');
-  assert.ok(!added.added.some(entry => entry.className === 'is-wrong'));
-  board = await boardState(page, '#taster-board');
-  assert.strictEqual(board.activeKey, 'f', 'sau "jjj " → f');
-  assert.strictEqual(board.activeFinger, 'LI');
-  const line = await page.evaluate(() => [...document.querySelectorAll('#taster-line span')].slice(0, 5).map(el => el.className));
-  assert.deepStrictEqual(line, ['ok', 'ok', 'ok', 'ok', 'current']);
-  assert.ok(/100%/.test(await page.locator('#taster-status').textContent()), 'trạng thái chính xác');
+  await page.waitForSelector('#unit-rail a, #unit-rail button');
+  const home = await homeShape(page);
+  assert.ok(!home.returning, 'khách mới không phải is-returning');
+  assert.strictEqual(home.widgets, 0, `hero còn ${home.widgets} widget bàn phím/bàn tay`);
+  assert.strictEqual(home.languagePickers, 0, 'không còn bộ chọn ngôn ngữ');
+  assert.ok(home.startVisible, '#hero-start hiện cho khách mới');
+  assert.ok(/hoc\/?$/.test(home.startHref || ''), `#hero-go trỏ vào player: ${home.startHref}`);
+  assert.ok(home.railItems >= 10, `rail có ${home.railItems} bài, cần ≥10`);
+  assert.ok(home.teasers >= 1, 'còn teaser của các unit sau');
+  assert.ok(home.roadmapBottom <= home.viewport, `lộ trình phải lọt màn hình đầu: bottom ${Math.round(home.roadmapBottom)} > ${home.viewport}`);
+
+  // Khách mới gõ Enter ở trang chủ → vào thẳng bài học, không cần tìm nút.
+  await page.locator('body').click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('Enter');
+  await page.waitForURL(/\/hoc\//, { timeout: 4000 });
+});
+
+test('7b trang chủ 1366x768: lộ trình vẫn lọt màn hình đầu', { viewport: { width: 1366, height: 768 } }, async page => {
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#unit-rail a, #unit-rail button');
+  const home = await homeShape(page);
+  assert.strictEqual(home.widgets, 0);
+  assert.ok(home.roadmapTop < home.viewport, `tiêu đề lộ trình phải thấy được: top ${Math.round(home.roadmapTop)} ≥ ${home.viewport}`);
 });
 
 test('8a responsive 1024: bàn phím đầy đủ + tay', { viewport: { width: 1024, height: 900 } }, async page => {
@@ -495,6 +515,31 @@ for (const route of ['/tien-do/', '/luyen-tu-do/', '/bai-hoc/', '/kiem-tra-toc-d
     assert.ok(title && !/404/.test(title), `title: ${title}`);
   });
 }
+
+// Bản tiếng Anh/Nhật đã bỏ, nhưng 9 URL cũ còn nằm trong kết quả tìm kiếm nên mỗi cái phải đưa
+// người dùng sang trang tiếng Việt tương ứng chứ không rơi vào 404.
+const REDIRECTS = {
+  '/en/': '/',
+  '/ja/': '/',
+  '/en/typing-test/': '/kiem-tra-toc-do-go/',
+  '/ja/typing-test/': '/kiem-tra-toc-do-go/',
+  '/en/what-is-wpm/': '/wpm-la-gi/',
+  '/ja/what-is-wpm/': '/wpm-la-gi/',
+  '/ja/touch-typing/': '/cach-go-10-ngon/',
+  '/en/how-to-type-faster/': '/cach-tang-wpm/',
+  '/en/average-typing-speed/': '/wpm-bao-nhieu-la-nhanh/'
+};
+test('11b URL en/ja cũ chuyển hướng về bản tiếng Việt', async page => {
+  for (const [from, to] of Object.entries(REDIRECTS)) {
+    const response = await page.goto(`${BASE}${from}`, { waitUntil: 'networkidle' });
+    assert.ok(response.ok(), `${from}: HTTP ${response.status()}`);
+    await page.waitForURL(url => new URL(url).pathname === to, { timeout: 4000 })
+      .catch(() => { throw new Error(`${from} → ${new URL(page.url()).pathname}, cần ${to}`); });
+    const title = await page.title();
+    assert.ok(title && !/404/.test(title), `${to}: title ${title}`);
+    assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'vi', `${to}: lang=vi`);
+  }
+});
 
 // --- runner ------------------------------------------------------------------------------------
 (async () => {

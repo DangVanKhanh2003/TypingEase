@@ -6,10 +6,6 @@
     <title>Luyện gõ 10 ngón online miễn phí | TypingEase</title>
     <meta name="description" content="Luyện gõ 10 ngón online miễn phí với TypingEase. Học vị trí ngón tay, luyện đánh máy, kiểm tra tốc độ WPM và cải thiện độ chính xác mỗi ngày." />
     <link rel="canonical" href="https://typingease.site/" />
-    <link rel="alternate" hreflang="vi" href="https://typingease.site/" />
-    <link rel="alternate" hreflang="en" href="https://typingease.site/en/" />
-    <link rel="alternate" hreflang="ja" href="https://typingease.site/ja/" />
-    <link rel="alternate" hreflang="x-default" href="https://typingease.site/" />
     <meta name="robots" content="index, follow" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
@@ -18,10 +14,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="keyboard.css" />
-    <link rel="stylesheet" href="hands.css" />
     <link rel="stylesheet" href="home.css" />
   </head>
   <body>
@@ -33,17 +27,20 @@
         <a href="./tien-do/">Tiến độ</a>
         <a href="./kiem-tra-toc-do-go/">Kiểm tra tốc độ</a>
       </nav>
-      <div class="header-actions"><label class="language-select"><span class="sr-only">Ngôn ngữ</span><select id="language" aria-label="Chọn ngôn ngữ"><option value="vi">Tiếng Việt</option><option value="en">English</option><option value="ja">日本語</option></select></label></div>
     </header>
 
     <main>
-      <!-- Hero có hai mặt: ô gõ thử cho người mới, continue card cho người đã học ở đây.
-           script.js quyết định mặt nào, taster.js chỉ dựng widget khi không phải người quay lại. -->
+      <!-- Hero có hai mặt: nút "Bắt đầu Bài 1" cho người mới, continue card cho người đã học ở đây.
+           script.js quyết định mặt nào qua class `is-returning` trên <body>; home.css ẩn mặt còn lại.
+           Hero cố tình ngắn để lộ trình bài học lọt ngay màn hình đầu. -->
       <section class="hero" id="luyen-go">
         <div class="hero-copy">
           <h1>Luyện gõ 10 ngón<br /><em>online miễn phí.</em></h1>
           <p class="intro">Luyện gõ 10 ngón online miễn phí — bắt đầu ngay, không cần đăng ký.</p>
-          <div class="taster" id="taster"></div>
+          <div class="hero-start" id="hero-start">
+            <a class="primary-button hero-go" id="hero-go" href="./hoc/">▶ Bắt đầu Bài 1 · Hàng phím cơ sở</a>
+            <p class="hero-note">Miễn phí, không cần đăng ký · 35 bài từ hàng phím cơ sở đến dấu tiếng Việt.</p>
+          </div>
           <div class="continue-card" id="continue-card" hidden>
             <div class="continue-top"><p class="continue-kicker" id="continue-kicker">TIẾP TỤC</p><span class="continue-streak" id="continue-streak" hidden></span></div>
             <p class="continue-name" id="continue-name"></p>
@@ -115,12 +112,10 @@
         </div>
       </section>
     </main>
-    <footer><a class="brand" href="./">Typing<span>Ease</span></a><nav class="footer-links" aria-label="Tài nguyên TypingEase"><a href="./bai-hoc/">Lộ trình</a><a href="./tien-do/">Tiến độ</a><a href="./luyen-tu-do/">Luyện tự do</a><a href="./cach-go-10-ngon/">Cách gõ 10 ngón</a><a href="./en/" lang="en" hreflang="en">English</a></nav><p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p><span>© 2024 TypingEase</span></footer>
+    <footer><a class="brand" href="./">Typing<span>Ease</span></a><nav class="footer-links" aria-label="Tài nguyên TypingEase"><a href="./bai-hoc/">Lộ trình</a><a href="./tien-do/">Tiến độ</a><a href="./luyen-tu-do/">Luyện tự do</a><a href="./cach-go-10-ngon/">Cách gõ 10 ngón</a></nav><p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p><span>© 2024 TypingEase</span></footer>
     <script src="profile.js"></script>
-    <script src="hands.js"></script>
     <script src="data/curriculum.vi.js"></script>
     <script src="progress-store.js"></script>
     <script src="script.js"></script>
-    <script src="taster.js"></script>
   </body>
 </html>

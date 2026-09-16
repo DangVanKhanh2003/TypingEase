@@ -323,3 +323,45 @@ Yêu cầu của user: bàn phím và hình bàn tay "giống hệt" bản typin
   hero và player động khác nhau. Nên gộp về một đường.
 - Tông da hơi nâu hơn gốc (gốc hồng-xám); ngón vẫn thiếu rút ngắn phối cảnh ở đầu ngón. Chấp nhận ở opacity .5.
 - Chưa có UI cho `animatedHands` (chỉ có API).
+
+---
+
+# 2026-09-16 (chiều) — TRANG CHỦ MỞ THẲNG LỘ TRÌNH + BỎ HẲN EN/JA
+
+## Quyết định của chủ site
+1. **Bỏ ô gõ thử ở đầu trang chủ.** Bàn phím + bàn tay ghost ở hero bị gỡ; vào trang là thấy ngay lộ trình
+   bài học để chọn. Hero rút còn `h1` + `.intro` + một nút `#hero-go` ("▶ Bắt đầu Bài 1 · Hàng phím cơ sở").
+2. **Site chỉ còn tiếng Việt.** Bỏ hẳn `/en/` và `/ja/`, bỏ dropdown chọn ngôn ngữ.
+
+## Cách làm (3 agent song song, mỗi agent sở hữu file tách bạch — theo cạm bẫy 9)
+- **Trang chủ** (`index.html`, `home.css`, xoá `taster.js`): thay `#taster` bằng `#hero-start`
+  (`a#hero-go` + `.hero-note`); `body.is-returning #hero-start{display:none}` giữ nguyên cơ chế hai mặt
+  của hero (người mới ↔ continue card). Bỏ `keyboard.css`, `hands.css`, `hands.js`, font Roboto Mono khỏi
+  trang chủ. Thu hero: `.hero{min-height:auto;padding:48px 24px 28px}`, `h1` 58→44px.
+- **`script.js`**: 606→425 dòng, 62,3→27,0 KB. Xoá dứt điểm nợ kỹ thuật số 1 (bảng chuỗi 8 ngôn ngữ chết):
+  mọi bảng chỉ còn khoá `vi`, các hàm `current*Ui()` trả thẳng bản vi. Xoá `homepageLocale`/
+  `isLocalizedHomepage`/`isEnglishHomepage` (base luôn `./`), xoá handler `#language`, xoá `startFromTaster`.
+  `applyLanguage(code)` → `applyCopy()` và **không còn ghi đè `h1`/`.intro`/`document.title`** — từ nay HTML
+  là nguồn sự thật cho tiêu đề trang chủ. Enter ở trang chủ: người cũ → `goContinue()`, người mới → `#hero-go`.
+- **`en/` `ja/`**: 9 trang thành trang chuyển hướng 18 dòng (`meta refresh` + `location.replace` +
+  `canonical` về đích + `robots: noindex, follow`), KHÔNG xoá trắng vì URL đã nằm trong kết quả tìm kiếm.
+  Ánh xạ: `/en/` `/ja/`→`/`; `*/typing-test/`→`/kiem-tra-toc-do-go/`; `*/what-is-wpm/`→`/wpm-la-gi/`;
+  `/ja/touch-typing/`→`/cach-go-10-ngon/`; `/en/how-to-type-faster/`→`/cach-tang-wpm/`;
+  `/en/average-typing-speed/`→`/wpm-bao-nhieu-la-nhanh/`. Xoá `en/en.css`, xoá 9 URL khỏi `sitemap.xml`.
+- **hreflang**: gỡ khỏi TẤT CẢ trang (kể cả `hreflang="vi"` và `x-default` tự trỏ vào chính nó — vô nghĩa
+  khi chỉ còn một ngôn ngữ). `canonical` giữ nguyên ở mọi trang.
+
+## Kiểm định
+`scripts/e2e.js` 23/23 PASS. Test 7 cũ (gõ thử ở hero) thay bằng:
+- **7** trang chủ: 0 phần tử khớp `#taster/.hand-layer/.keyboard/.kb-widget/.tc-board`, 0 bộ chọn ngôn ngữ,
+  `#hero-go`→`/hoc/`, rail ≥10 bài, **`#roadmap-title` nằm trọn trong màn hình đầu**, Enter → `/hoc/`.
+- **7b** lặp lại phép đo trên ở 1366×768 (màn laptop phổ biến nhất).
+- **11b** cả 9 URL en/ja cũ phải dừng ở đúng trang tiếng Việt, `lang="vi"`, không 404.
+
+## Còn lại
+- Phase 5 rút gọn: không còn `curriculum.en.js`/bài en/ja nữa. Còn huy hiệu, service worker, âm click.
+- `hands.js`/`keyboard-widget.js` vẫn dùng ở `/hoc/`, `/luyen-tu-do/`, `/tien-do/` — không đụng tới.
+- Ghi chú lịch sử trong `PLAN.md` (dòng 94, 550, 596) và các mục DECISIONS.md cũ vẫn nhắc en/ja; giữ
+  nguyên làm nhật ký, mục này là trạng thái mới nhất.
+- `activeLanguage`, `siteLanguages`, `translations`, `coachTrendHint` còn tên trong `script.js` nhưng
+  không còn ai đọc — dọn nốt khi tiện.

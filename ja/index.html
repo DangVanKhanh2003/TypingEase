@@ -1,124 +1,18 @@
 <!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>無料タイピング練習 | タッチタイピングを基礎から練習 | TypingEase</title>
-    <meta name="description" content="無料でタイピング練習ができるオンラインツール。基礎レッスン、苦手キー練習、タイピング速度・正確率の記録で、初心者からタッチタイピングを身につけられます。" />
-    <link rel="canonical" href="https://typingease.site/ja/" />
-    <link rel="alternate" hreflang="vi" href="https://typingease.site/" />
-    <link rel="alternate" hreflang="en" href="https://typingease.site/en/" />
-    <link rel="alternate" hreflang="ja" href="https://typingease.site/ja/" />
-    <link rel="alternate" hreflang="x-default" href="https://typingease.site/" />
-    <meta name="robots" content="index, follow" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="../keyboard.css" />
-    <link rel="stylesheet" href="../hands.css" />
-    <link rel="stylesheet" href="../home.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="./">Typing<span>Ease</span></a>
-      <nav aria-label="メインナビゲーション">
-        <a class="active" href="#luyen-go">タイピング練習</a>
-        <a href="../bai-hoc/">カリキュラム</a>
-        <a href="../tien-do/">記録</a>
-        <a href="./typing-test/">スピードテスト</a>
-      </nav>
-      <div class="header-actions"><label class="language-select"><span class="sr-only">言語</span><select id="language" aria-label="言語を選択"><option value="vi">Tiếng Việt</option><option value="en">English</option><option value="ja">日本語</option></select></label></div>
-    </header>
-
-    <main>
-      <section class="hero" id="luyen-go">
-        <div class="hero-copy">
-          <h1>もっと速く。<br /><em>もっと楽に。</em></h1>
-          <p class="intro">分かりやすく無料の練習で、タッチタイピングを上達させましょう。</p>
-          <div class="taster" id="taster"></div>
-          <div class="continue-card" id="continue-card" hidden>
-            <div class="continue-top"><p class="continue-kicker" id="continue-kicker">続ける</p><span class="continue-streak" id="continue-streak" hidden></span></div>
-            <p class="continue-name" id="continue-name"></p>
-            <div class="continue-track" id="continue-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
-            <p class="continue-count" id="continue-count"></p>
-            <div class="continue-actions"><button class="primary-button continue-go" id="continue-go" type="button">▶ 続ける (Enter)</button><a class="continue-redo" id="continue-redo" href="../hoc/" hidden>↻ やり直す</a><a class="continue-map" id="continue-map" href="../bai-hoc/">カリキュラムを見る</a></div>
-            <p class="continue-coach" id="continue-coach" hidden></p>
-            <p class="continue-legacy" id="continue-legacy" hidden></p>
-          </div>
-        </div>
-      </section>
-
-      <section class="home-roadmap" id="lo-trinh" aria-labelledby="roadmap-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow" id="roadmap-kicker"><i></i> 全 35 レッスン · 4 ユニット</p>
-            <h2 id="roadmap-title">ユニット 1 · ホームポジション</h2>
-          </div>
-          <div class="roadmap-aside"><p class="roadmap-count" id="roadmap-count">0/10 レッスン ✓</p><a class="roadmap-all" id="roadmap-all" href="../bai-hoc/">全 35 レッスンを見る →</a></div>
-        </div>
-        <p class="roadmap-summary" id="roadmap-summary">ホームポジションの 8 キー、続いて G H、E I、R U。</p>
-        <div class="unit-rail" id="unit-rail"></div>
-        <p class="rail-note" id="rail-note" hidden></p>
-        <ul class="unit-teasers" id="unit-teasers"></ul>
-      </section>
-
-      <section class="home-shortcuts" aria-labelledby="shortcuts-title">
-        <h2 class="shortcuts-title" id="shortcuts-title">もっと練習</h2>
-        <div class="shortcut-grid">
-          <a class="shortcut-card" id="sc-test" href="./typing-test/">
-            <b aria-hidden="true">⏱</b>
-            <span class="sc-title">スピードテスト</span>
-            <span class="sc-text">15 · 30 · 60 · 120 秒で WPM と正確率を測ります。</span>
-          </a>
-          <a class="shortcut-card" id="sc-weak" href="../luyen-phim-yeu/">
-            <b aria-hidden="true">★</b>
-            <span class="sc-title">苦手なキーの練習</span>
-            <span class="sc-text">よく間違えるキーから自動で作る練習です。</span>
-          </a>
-          <a class="shortcut-card" id="sc-free" href="../luyen-tu-do/">
-            <b aria-hidden="true">✎</b>
-            <span class="sc-title">自由入力</span>
-            <span class="sc-text">好きな文章を貼って、自分のペースで打てます。</span>
-          </a>
-        </div>
-      </section>
-
-      <section class="explore" aria-labelledby="explore-title">
-        <div class="explore-heading">
-          <p class="eyebrow" id="explore-kicker"><i></i> TypingEase の記事</p>
-          <h2 id="explore-title">TypingEase を活用する</h2>
-        </div>
-        <div class="explore-grid">
-          <a class="explore-card" href="./touch-typing/">
-            <h3>タッチタイピングの始め方</h3>
-            <p>指の置き方、ホームポジション、初心者がつまずきやすい点をまとめました。</p>
-            <span>記事を読む <b aria-hidden="true">→</b></span>
-          </a>
-          <a class="explore-card" href="./typing-test/">
-            <h3>タイピング速度テスト</h3>
-            <p>60 秒のテストで WPM と正確率、今の実力を確かめられます。</p>
-            <span>テストする <b aria-hidden="true">→</b></span>
-          </a>
-          <a class="explore-card" href="./what-is-wpm/">
-            <h3>WPM とは？</h3>
-            <p>WPM の計算方法と、正確率と一緒に見るべき理由を解説します。</p>
-            <span>WPM を知る <b aria-hidden="true">→</b></span>
-          </a>
-        </div>
-      </section>
-    </main>
-    <footer><a class="brand" href="./">Typing<span>Ease</span></a><nav class="footer-links" aria-label="TypingEase の記事"><a href="./touch-typing/">タッチタイピング</a><a href="./typing-test/">速度テスト</a><a href="./what-is-wpm/">WPM とは</a><a href="../" lang="vi" hreflang="vi">Tiếng Việt</a></nav><p>ゆっくり打てば、遠くまで行けます。</p><span>© 2024 TypingEase</span></footer>
-    <script src="../profile.js"></script>
-    <script src="../hands.js"></script>
-    <script src="../data/curriculum.vi.js"></script>
-    <script src="../progress-store.js"></script>
-    <script src="../script.js"></script>
-    <script src="../taster.js"></script>
-  </body>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="0; url=/">
+<link rel="canonical" href="https://typingease.site/">
+<meta name="robots" content="noindex, follow">
+<title>Đã chuyển sang bản tiếng Việt | TypingEase</title>
+<style>body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;text-align:center;padding:1.5rem;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1f2933;background:#f7f8fa}a{color:#2563eb}</style>
+</head>
+<body>
+<p>This page has moved. TypingEase is now Vietnamese-only.</p>
+<p>Trang này đã chuyển. TypingEase nay chỉ còn bản tiếng Việt.</p>
+<p><a href="/">Đi tới trang mới &rarr;</a></p>
+<script>location.replace('/');</script>
+</body>
 </html>

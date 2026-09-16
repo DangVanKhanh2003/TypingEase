@@ -1,84 +1,30 @@
-/* home.css — hero cua trang chu: o go thu (nguoi moi) va continue card (nguoi quay lai).
-   Nap SAU style.css / keyboard.css / hands.css / en.css nen co the ghi de cac rule 0,1,0.
-   Moi rule cua taster deu co tien to #taster de thang `.keyboard-demo{order:1}` trong keyboard.css. */
+/* home.css — trang chu: hero ngan (nut "Bat dau Bai 1" cho nguoi moi / continue card cho
+   nguoi quay lai) + lo trinh, loi tat va khoi kham pha.
+   Nap SAU style.css nen co the ghi de cac rule 0,1,0 cua style.css.
+   Trang chu KHONG con o go thu, ban phim hay ban tay — keyboard.css/hands.css khong duoc nap o day. */
 
-/* ---------- Hero mot cot: chi con h1 + intro + o go thu / continue card ---------- */
-/* Phase 3 da bo .hero-visual, .hero-actions va .trust-row khoi markup, nen o day khong con
-   rule an chung nua — con lai chi la bo cuc mot cot. */
-.hero{grid-template-columns:1fr}
+/* ---------- Hero mot cot, co tinh thap de tieu de Unit 1 cua .home-roadmap lot man hinh dau ---------- */
+.hero{grid-template-columns:1fr;min-height:auto;padding:48px 24px 28px}
 .hero>.hero-copy{max-width:860px;margin:0 auto;padding-left:0;padding-right:0;text-align:center}
-.hero>.hero-copy>h1{margin-bottom:14px}
-.hero>.hero-copy>.intro{max-width:620px;margin:0 auto 22px}
+.hero>.hero-copy>h1{margin-bottom:12px;font-size:44px;letter-spacing:-2.4px}
+.hero>.hero-copy>.intro{max-width:620px;margin:0 auto 20px}
 @media(min-width:751px){
-  .hero{min-height:0;padding:34px 24px 46px;align-items:start}
+  .hero{align-items:start}
   .hero>.hero-copy{padding-left:0}
   .en-site .hero>.hero-copy{padding-left:0}
 }
-@media(max-width:750px){.hero{padding:34px 20px 26px}.hero>.hero-copy>.intro{margin-bottom:18px}}
+@media(max-width:750px){.hero{padding:34px 20px 24px}.hero>.hero-copy>.intro{margin-bottom:18px}}
 
-/* ---------- O go thu ---------- */
-#taster{position:relative;display:grid;justify-items:center;gap:13px;width:100%;text-align:center}
-body.is-returning #taster{display:none}
-
-#taster .taster-guide{order:1;max-width:560px;margin:0;color:var(--muted);font-size:13px;line-height:1.65}
-#taster .taster-guide b{color:var(--green);font-family:"DM Mono",monospace;font-weight:500}
-
-#taster .taster-line{order:2;width:100%;margin:0;color:#93a79d;font:500 28px/1.55 "DM Mono",monospace;letter-spacing:.06em;overflow-wrap:anywhere}
-#taster .taster-line span{padding:2px 0;border-radius:3px}
-#taster .taster-line .ok{color:var(--green)}
-#taster .taster-line .wrong{color:#d35757;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
-#taster .taster-line .current{position:relative;background:var(--lime);color:var(--ink)}
-#taster .taster-line .current::after{content:"";position:absolute;left:-3px;top:1px;bottom:1px;width:2px;border-radius:2px;background:var(--green);animation:taster-caret 1.05s steps(1,end) infinite}
-@keyframes taster-caret{0%,49%{opacity:1}50%,100%{opacity:0}}
-@media(prefers-reduced-motion:reduce){#taster .taster-line .current::after{animation:none}}
-
-/* Phai nhan duoc keystroke nhung khong nhin thay — va van focus duoc, nen KHONG dung display:none. */
-#taster .taster-input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;padding:0;border:0;opacity:0;overflow:hidden;resize:none;white-space:nowrap;clip:rect(0 0 0 0);clip-path:inset(50%);font-size:16px}
-
-/* Ban phim hero: nho hon ban phim bai hoc (10 cot thay vi 14) va canh giua.
-   Khong ghi de padding-bottom cua .keyboard-demo — 104px la cho cua ghost hands. */
-#taster .taster-board{order:4;width:100%;max-width:560px}
-#taster .keyboard{width:100%;max-width:100%;margin:0 auto}
-#taster .key-row{min-width:0}
-#taster .key{max-height:44px;font-size:14px}
-#taster .key.space{flex:1 1 336px}
-#taster .key.home{border-bottom-color:#a9a9a9}
-/* Phim dang can go phai noi bat hon trong hero vi khong co con tro chuot dan duong. */
-#taster .key.active-key{background:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff;font-weight:700;box-shadow:none}
-
-#taster .taster-foot{order:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 18px;width:100%}
-#taster .taster-status{min-height:17px;margin:0;color:var(--green);font-size:12px;font-weight:700}
-#taster .taster-skip{border-bottom:1px solid #cfe1d8;color:var(--muted);font-size:12px;font-weight:700;text-decoration:none}
-#taster .taster-skip:hover,#taster .taster-skip:focus-visible{color:var(--green)}
-
-/* ---------- Ket qua + CTA: chi mot nut chinh ---------- */
-#taster .taster-done{order:3;display:none;justify-items:center;gap:11px;width:100%}
-#taster .taster-done:not([hidden]){display:grid}
-#taster .taster-result{margin:0;color:var(--green);font-size:16px;font-weight:800;letter-spacing:-.3px}
-#taster .taster-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 14px}
-#taster #taster-cta{padding:16px 26px;border-radius:10px;font-size:16px;box-shadow:0 10px 22px #157a5533}
-#taster .taster-again{border:1px solid #cfe1d8;border-radius:8px;padding:12px 14px;background:#fff;color:var(--green);font-size:12px;font-weight:700}
-#taster .taster-hint{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
-#taster .taster-hint[hidden]{display:none}
-#taster.is-finished .taster-guide,#taster.is-finished .taster-foot{display:none}
-
-/* ---------- Man cam ung: khong co ban phim vat ly de dat ngon ---------- */
-#taster .taster-tap{order:6;display:none;width:100%;max-width:420px;border:0;border-radius:12px;padding:19px 18px;background:var(--green);color:#fff;font-size:17px;font-weight:800;box-shadow:0 10px 22px #157a5533}
-#taster.is-touch .taster-tap{display:block}
-#taster.is-touch .taster-board{display:none}
-#taster.is-touch.is-finished .taster-tap{display:none}
-
-/* Duoi 700px ban phim hero bi cuon ngang nen toa do tay khong con dung — bo tay, bo cho trong. */
-@media(max-width:700px){
-  #taster .taster-board{padding-bottom:0}
-  #taster .hand-layer{display:none}
-}
+/* ---------- Khoi bat dau (nguoi moi) ---------- */
+#hero-start{display:grid;justify-items:center;gap:14px;width:100%}
+body.is-returning #hero-start{display:none}
+#hero-go{padding:16px 26px;border-radius:10px;font-size:16px;box-shadow:0 10px 22px #157a5533;
+  text-decoration:none;display:inline-block}
+.hero-note{margin:0;color:var(--muted);font-size:13px;line-height:1.65;text-align:center}
 @media(max-width:620px){
-  #taster{gap:11px}
-  #taster .taster-line{font-size:20px;letter-spacing:.04em}
-  #taster .taster-guide{font-size:12px}
-  #taster #taster-cta{padding:14px 18px;font-size:15px}
-  #taster .taster-tap{font-size:16px;padding:17px 16px}
+  #hero-start{gap:11px}
+  #hero-go{padding:14px 18px;font-size:15px}
+  .hero-note{font-size:12px}
 }
 
 /* ---------- Continue card (nguoi quay lai) ---------- */
@@ -110,11 +56,7 @@ body.is-returning #taster{display:none}
 }
 
 /* ---------- Tinh chinh sau khi xem anh that ---------- */
-/* .hero{min-height:550px} cua style.css khong duoc reset o breakpoint mobile → khoang trong lon. */
-@media(max-width:750px){.hero{min-height:0}}
 @media(max-width:620px){.hero>.hero-copy>h1{font-size:34px;letter-spacing:-1.6px}}
-/* Tren man cam ung, nut "Cham de go thu" phai dung TRUOC link phu. */
-#taster.is-touch .taster-tap{order:3}
 
 /* =============================================================================================
    Phase 3 — trang chu chi con 4 khoi. Roadmap rail, 3 loi tat va vai tinh chinh cho continue card.

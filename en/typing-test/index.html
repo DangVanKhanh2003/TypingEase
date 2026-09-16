@@ -1,46 +1,18 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Free Typing Test - Check Your WPM &amp; Typing Speed | TypingEase</title>
-    <meta name="description" content="Take a free online typing test and check your WPM, accuracy, errors and consistency. Choose a 15, 30, 60 or 120 second typing speed test." />
-    <link rel="canonical" href="https://typingease.site/en/typing-test/" />
-    <link rel="alternate" hreflang="vi" href="https://typingease.site/kiem-tra-toc-do-go/" />
-    <link rel="alternate" hreflang="en" href="https://typingease.site/en/typing-test/" />
-    <link rel="alternate" hreflang="ja" href="https://typingease.site/ja/typing-test/" />
-    <link rel="alternate" hreflang="x-default" href="https://typingease.site/kiem-tra-toc-do-go/" />
-    <meta name="robots" content="index, follow" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../../style.css" />
-    <link rel="stylesheet" href="../../kiem-tra-toc-do-go/test.css" />
-    <link rel="stylesheet" href="../../kiem-tra-toc-do-go/test-upgrade.css" />
-    <link rel="stylesheet" href="../../kiem-tra-toc-do-go/progress.css" />
-  </head>
-  <body>
-    <header class="topbar test-header"><a class="brand" href="../" aria-label="TypingEase home">Typing<span>Ease</span></a><div class="header-actions"><a class="home-link" href="../">← Typing Practice</a><a class="home-link" href="../../kiem-tra-toc-do-go/" lang="vi" hreflang="vi">Tiếng Việt</a></div></header>
-    <main class="test-main"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="../">Typing Practice</a><span aria-hidden="true">›</span><span>Typing Test</span></nav><article>
-      <header class="test-hero"><p class="eyebrow"><i></i> FREE TYPING TEST</p><h1>Free Typing Test</h1><p>Take an online typing test to check your WPM, accuracy, errors, and consistency. The timer begins when you type your first character.</p></header>
-      <section class="typing-test" aria-labelledby="test-title"><div class="test-heading"><h2 id="test-title">60-second typing test</h2><p id="test-message" aria-live="polite">Ready when you are.</p></div><div class="duration-picker" role="group" aria-label="Choose test duration"><button type="button" data-duration="15" aria-pressed="false">15 sec</button><button type="button" data-duration="30" aria-pressed="false">30 sec</button><button type="button" data-duration="60" aria-pressed="true" class="selected">60 sec</button><button type="button" data-duration="120" aria-pressed="false">120 sec</button></div><div class="test-stats" aria-label="Current test results"><div><span>Time</span><strong id="time-left">60<small>sec</small></strong></div><div><span>WPM</span><strong id="wpm">0</strong></div><div><span>Accuracy</span><strong id="accuracy">--<small>%</small></strong></div><div><span>Errors</span><strong id="errors">0</strong></div><div><span>Consistency</span><strong id="consistency">--<small>%</small></strong></div></div><p class="test-prompt" id="test-prompt" aria-label="Text to type"></p><label for="typing-input">Start typing here</label><textarea id="typing-input" rows="4" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Click here and start typing..."></textarea><div class="test-actions"><button class="primary-button" id="restart" type="button">Try again <span>↻</span></button><p>WPM is calculated from the characters you type during the timed test.</p></div><section class="test-result" id="test-result" aria-live="polite" hidden><p>Your result</p><strong id="result-wpm">0 WPM</strong><div class="result-details"><span>Accuracy <b id="result-accuracy">--%</b></span><span>Errors <b id="result-errors">0</b></span><span>Consistency <b id="result-consistency">--%</b></span></div><p class="result-comparison" id="result-comparison" hidden></p></section></section>
-      <section class="progress-section" aria-labelledby="progress-title"><div class="progress-heading"><div><p class="eyebrow"><i></i> TRACK YOUR PRACTICE</p><h2 id="progress-title">Your progress</h2></div><div class="progress-range" role="group" aria-label="Choose time range"><button type="button" data-progress-range="7" aria-pressed="true" class="selected">7 days</button><button type="button" data-progress-range="30" aria-pressed="false">30 days</button></div></div><div class="progress-metric" role="group" aria-label="Choose chart metric"><button type="button" data-progress-metric="wpm" aria-pressed="true" class="selected">WPM</button><button type="button" data-progress-metric="accuracy" aria-pressed="false">Accuracy</button></div><p class="progress-note">Results may include tests of different durations.</p><div class="progress-summary" aria-label="Progress summary"><div><span>Average WPM</span><strong id="progress-average-wpm">--</strong></div><div><span>Best WPM</span><strong id="progress-best-wpm">--</strong></div><div><span>Average accuracy</span><strong id="progress-average-accuracy">--%</strong></div><div><span>Tests taken</span><strong id="progress-test-count">0</strong></div></div><p class="progress-empty" id="progress-empty">Not enough data yet. Complete a few tests to see your progress.</p><div class="progress-chart-wrap" id="progress-chart-wrap" hidden><svg class="progress-chart" id="progress-chart" viewBox="0 0 640 220" role="img" aria-label="Progress chart"></svg></div><p class="progress-trend" id="progress-trend" aria-live="polite"></p><p class="sr-only" id="progress-summary-text" aria-live="polite"></p></section>
-      <section><h2>What is a typing test?</h2><p>A typing test measures how quickly and accurately you can reproduce a passage of text. This online typing test compares each character you enter with the prompt, then updates your WPM, accuracy, and errors while you type. Your results stay in your browser, so you can practise without an account.</p></section>
-      <section><h2>How is WPM calculated?</h2><p>WPM means words per minute. The standard calculation treats five characters as one word: divide the number of typed characters by five, then divide by the number of minutes elapsed. For example, 250 characters typed in one minute equals 50 WPM. This convention makes results easier to compare across passages of different word lengths.</p></section>
-      <section><h2>Build a better typing routine</h2><p>Not sure how a WPM result is produced? Read <a class="inline-link" href="../what-is-wpm/">our guide to what WPM means</a>. For context around a result, explore <a class="inline-link" href="../average-typing-speed/">average typing speed</a>; when you are ready to improve your technique, see <a class="inline-link" href="../how-to-type-faster/">how to type faster</a>.</p></section>
-      <section><h2>What is a good typing speed?</h2><p>A useful typing speed depends on the kind of work you do and how accurately you type. Instead of chasing a universal benchmark, use repeated typing speed tests to compare your own results. A steady improvement in WPM alongside strong accuracy is a practical sign that your technique is becoming more reliable.</p></section>
-      <section><h2>How to improve your typing speed</h2><ul><li>Learn the home-row positions and let each finger return there naturally.</li><li>Prioritise accurate keystrokes before trying to type faster.</li><li>Keep your eyes on the screen instead of looking down at the keyboard.</li><li>Practise in short, consistent sessions that are easy to repeat.</li><li>Use your results to identify which part of your technique needs attention.</li></ul></section>
-      <section><h2>Why accuracy matters</h2><p>Fast typing that creates frequent corrections can interrupt your rhythm and cost more time overall. Accuracy shows the share of characters you entered correctly, which is why it should be considered together with WPM. A good typing test result is not simply a high number; it is speed you can reproduce with control.</p></section>
-      <section><h2>How to use your typing test results</h2><p>Take the same duration more than once and look for patterns rather than judging a single attempt. If your WPM rises while accuracy drops, slow down slightly and aim for cleaner keystrokes. If your accuracy is strong but your speed feels unchanged, practise short sessions with the home row and common letter combinations. The progress panel saves recent results in your browser, making it easier to compare a week of focused practice with your previous baseline.</p></section>
-      <section><h2>Typing test FAQ</h2><div class="faq"><details><summary>What does WPM mean?</summary><p>WPM stands for words per minute, a standard way to describe typing speed.</p></details><details><summary>When does the timer start?</summary><p>The timer begins as soon as you enter your first character in the typing area.</p></details><details><summary>Can I take the test more than once?</summary><p>Yes. Use Try again to reset the test, or choose a different duration before you begin.</p></details><details><summary>Why is accuracy shown with WPM?</summary><p>It helps you see whether your speed is supported by correct, reliable typing.</p></details></div></section>
-      <section class="test-cta"><p class="eyebrow"><i></i> KEEP PRACTISING</p><h2>Build your touch-typing skills</h2><p>Use structured lessons and focused practice to make your next typing test feel more natural.</p><a class="primary-button" href="../">Practice Typing <span>→</span></a></section>
-    </article></main>
-    <footer class="test-footer"><a class="brand" href="../">Typing<span>Ease</span></a><p>Practise steadily, type with ease.</p></footer>
-    <script src="../../kiem-tra-toc-do-go/typing-test.js"></script>
-  </body>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="0; url=/kiem-tra-toc-do-go/">
+<link rel="canonical" href="https://typingease.site/kiem-tra-toc-do-go/">
+<meta name="robots" content="noindex, follow">
+<title>Đã chuyển sang bản tiếng Việt | TypingEase</title>
+<style>body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;text-align:center;padding:1.5rem;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1f2933;background:#f7f8fa}a{color:#2563eb}</style>
+</head>
+<body>
+<p>This page has moved. TypingEase is now Vietnamese-only.</p>
+<p>Trang này đã chuyển. TypingEase nay chỉ còn bản tiếng Việt.</p>
+<p><a href="/kiem-tra-toc-do-go/">Đi tới trang mới &rarr;</a></p>
+<script>location.replace('/kiem-tra-toc-do-go/');</script>
+</body>
 </html>
