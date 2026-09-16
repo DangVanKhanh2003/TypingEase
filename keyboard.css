@@ -1,59 +1,75 @@
-.lesson-path{background:#fff;border:1px solid var(--line);border-radius:10px;padding:15px 18px;margin-bottom:22px}.path-title{display:flex;justify-content:space-between;margin-bottom:12px;font-size:11px}.path-title strong{color:var(--ink)}.path-title span{color:var(--green);font-weight:700}.lesson-levels{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}.level{min-height:48px;border:1px solid #dce9e2;background:white;border-radius:6px;color:#82968c;padding:5px 3px;font-size:9px;text-align:center}.level b{display:block;font-size:13px;margin-bottom:3px}.level:hover,.level.active{color:var(--green);border-color:var(--green);background:#e9f7df}.level.complete:after{content:'✓';font-weight:800;color:var(--green);margin-left:2px}.keyboard-lab{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:29px 31px;display:grid;grid-template-columns:230px 1fr;gap:28px}.keyboard-copy h3{font-size:20px;letter-spacing:-.8px;margin-bottom:10px}.keyboard-copy>p:not(.eyebrow){font-size:12px;color:var(--muted);line-height:1.7}.finger-legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px}.finger-legend span{font-size:9px;padding:4px 7px;border-radius:4px;color:#234438}.pinky{background:#f5d8d8}.ring{background:#ffe9bd}.middle{background:#dcedbe}.index{background:#cbece4}.thumb{background:#dcd8f4}.keyboard-demo{min-width:0}.hand-row{display:flex;justify-content:space-between;gap:20px;margin:0 24px 12px}.hand{display:flex;align-items:flex-end;gap:3px;position:relative;padding-bottom:18px}.hand span{position:absolute;bottom:0;width:100%;text-align:center;font-size:8px;color:#8ba097}.keyboard{display:grid;gap:4px;padding:10px;background:#dfe8e3;border-radius:8px;overflow:auto}.key-row{display:flex;gap:4px;justify-content:center;min-width:480px}.key{height:28px;min-width:27px;padding:0 5px;display:grid;place-items:center;border:1px solid #d0dfd7;border-bottom-width:2px;border-radius:4px;background:white;color:#607a6e;font:10px "DM Mono",monospace}.key.wide{min-width:48px}.key.space{min-width:170px}.key.active-key{color:var(--green);border-color:var(--green);background:var(--lime);box-shadow:0 0 0 2px #c8f05a66}.key.home{border-bottom-color:var(--green)}@media(max-width:750px){.lesson-levels{grid-template-columns:repeat(5,1fr)}.keyboard-lab{grid-template-columns:1fr;padding:23px 18px}.hand-row{margin:0 5px 12px}.keyboard-copy h3{font-size:19px}}
-.next-lesson{display:none;margin-top:14px;border:0;border-radius:6px;padding:10px 14px;background:var(--green);color:#fff;font-size:12px;font-weight:700}.lesson-finished .prompt,.lesson-finished .typing-label,.lesson-finished textarea{display:none}.lesson-finished .next-lesson{display:inline-block}.lesson-finished .feedback{margin-top:24px;color:var(--green);font-weight:700;font-size:12px}
-.retry-lesson{display:none;margin:14px 0 0 7px;border:1px solid #cfe1d8;border-radius:6px;padding:9px 12px;background:#fff;color:var(--green);font-size:12px;font-weight:700}.lesson-finished .retry-lesson{display:inline-block}.typing-card.free-mode>#retry-lesson{display:none}
-.prompt{white-space:pre-wrap;min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word}@media(min-width:751px){.hero{min-height:360px;padding:42px 24px 34px;gap:28px}.hero-copy{padding-left:40px}h1{font-size:clamp(46px,4vw,52px);line-height:1.1;margin-bottom:16px}.intro{line-height:1.65;margin-bottom:22px}.hero-actions{gap:16px}.trust-row{margin-top:18px}.hero-visual{min-height:280px}.c1{width:330px;height:330px;right:-25px;top:-18px}.c2{width:220px;height:220px;right:28px;top:34px}.c3{width:72px;height:72px;top:21px;right:16px}.visual-card{width:290px;right:45px;top:35px;padding:21px 23px}.progress{margin:14px 0}.visual-card p{font-size:15px;line-height:1.45;margin-bottom:19px}.keys{gap:7px}.keys span{width:35px;height:33px}.spark{width:42px;height:42px;font-size:18px}.practice{padding-top:56px}.section-heading{margin-bottom:22px}}
-.enter-cue{display:inline-flex;align-items:center;gap:5px;margin:3px 0;padding:3px 8px;border:1px solid #b7d9ca;border-radius:5px;background:#e8f6ed;color:var(--green);font:700 11px "Be Vietnam Pro",sans-serif;letter-spacing:0}.prompt .current.enter-cue{background:var(--lime);border-color:#a9cf38}.prompt .wrong.enter-cue{color:#a23d3d;border-color:#e3aaaa;background:#fff1f1}
-.header-actions{display:flex;align-items:center;gap:8px}.language-select select{max-width:150px;border:1px solid #cde0d7;border-radius:8px;background:#fff;color:var(--green);padding:10px 28px 10px 10px;font:700 11px "Be Vietnam Pro",sans-serif;cursor:pointer}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}html[dir="rtl"] .topbar,html[dir="rtl"] .hero,html[dir="rtl"] .section-heading,html[dir="rtl"] .results-heading{direction:rtl}@media(max-width:750px){.language-select select{max-width:74px;padding:9px 4px}.header-actions{gap:5px}.login{padding:9px 8px}}
-.practice-grid{grid-template-columns:minmax(0,1fr) 265px}.typing-card,.free-practice{min-width:0}.free-sample{max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word}.free-practice textarea{max-width:100%;overflow-wrap:anywhere}@media(max-width:750px){.practice-grid{grid-template-columns:1fr}}
-.keyboard-lab{grid-template-columns:minmax(0,1fr) 230px}.keyboard-demo{order:1}.keyboard-copy{order:2}@media(max-width:750px){.keyboard-lab{grid-template-columns:1fr}.keyboard-demo{order:1}.keyboard-copy{order:2}}
-.free-practice #free-feedback{display:none}
-.game-practice{display:none}.typing-card.game-mode>.stats,.typing-card.game-mode>.lesson-label,.typing-card.game-mode>.prompt,.typing-card.game-mode>label,.typing-card.game-mode>#typing-input,.typing-card.game-mode>#feedback,.typing-card.game-mode>#next-lesson,.typing-card.game-mode>#retry-lesson,.typing-card.game-mode>.free-practice{display:none}.typing-card.game-mode .game-practice{display:block}.game-top{display:flex;justify-content:space-between;gap:20px}.game-kicker{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--green);margin-bottom:6px}.game-top h3{font-size:21px;letter-spacing:-1px;margin-bottom:7px}.game-top p:not(.game-kicker){font-size:12px;color:var(--muted);line-height:1.6}.game-trophy{display:grid;place-items:center;flex:0 0 47px;height:47px;border-radius:14px;background:var(--lime);color:var(--green);font-size:23px}.game-scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:17px 0}.game-scoreboard div{padding:10px;border:1px solid var(--line);border-radius:7px;background:#f8fcf9}.game-scoreboard span{display:block;font-size:9px;color:#7a9085}.game-scoreboard b{display:block;margin-top:3px;font-size:18px;color:var(--green)}.game-sample{min-height:54px;margin:0;font:14px/1.8 "DM Mono",monospace;white-space:normal;overflow-wrap:anywhere}.game-sample .current{background:var(--lime);color:var(--green)}.game-sample .wrong{color:#c34848;text-decoration:underline}.game-actions{display:flex;align-items:center;gap:12px;margin-top:10px}.game-start{border:0;border-radius:6px;padding:10px 13px;background:var(--green);color:#fff;font-size:12px;font-weight:700}.game-actions p{margin:0;font-size:10px;color:#7a9085}@media(max-width:500px){.game-actions{align-items:flex-start;flex-direction:column}}
-.hand-row{margin-top:8px;margin-bottom:18px}.hand{height:94px;min-width:178px;align-items:flex-end;gap:4px;padding:6px 17px 30px;isolation:isolate}.hand span{z-index:2;bottom:0;font-weight:700;color:#67887a}
-@media(max-width:500px){.hand-row{flex-wrap:wrap;justify-content:center}.hand-row .hand{flex:0 0 178px}}
-.free-practice{display:none}.typing-card.free-mode>.stats,.typing-card.free-mode>.lesson-label,.typing-card.free-mode>.prompt,.typing-card.free-mode>label,.typing-card.free-mode>#typing-input,.typing-card.free-mode>#feedback,.typing-card.free-mode>#next-lesson{display:none}.typing-card.free-mode .free-practice{display:block}.free-intro{margin:2px 0 15px}.free-intro strong{display:block;font-size:16px;margin-bottom:4px}.free-intro span{font-size:11px;color:var(--muted)}.free-practice textarea{font:13px "DM Mono",monospace}.free-actions{display:flex;gap:8px;margin:8px 0 17px}.free-actions button{border-radius:6px;padding:8px 10px;font-size:11px;font-weight:700}.use-text{background:var(--green);color:#fff;border:1px solid var(--green)}.random-text{color:var(--green);background:#fff;border:1px solid #cfe1d8}.free-stats{display:flex;gap:17px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:14px}.free-stats span{color:#7a8e85;font-size:10px}.free-stats b{display:block;font-size:13px;color:var(--ink);margin-top:3px}.free-sample{font:14px/1.8 "DM Mono",monospace;min-height:50px;margin:0;color:var(--ink)}.free-sample .current{background:#dff5d5;color:var(--green)}.free-sample .wrong{color:#d35757;text-decoration:underline}@media(max-width:500px){.free-stats{gap:10px}.free-actions{flex-direction:column}}
-.secondary-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid #cde0d7;border-radius:8px;padding:11px 15px;color:var(--green);background:#fff;font-size:13px;font-weight:700;text-decoration:none}.secondary-button span{margin-left:8px;font-size:17px}.continue-button{border:0;border-radius:8px;padding:11px 14px;color:var(--green);background:#e5f5df;font-size:13px;font-weight:800}.continue-button:not([hidden]){display:inline-flex;align-items:center}.hero-actions{flex-wrap:wrap}.trust-row{margin-top:24px}.lesson-path:not(.is-expanded) .level:nth-child(n+7):not(.active){display:none}.toggle-lessons{display:block;margin:13px auto 0;border:0;background:transparent;color:var(--green);font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px}.lesson-result{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px;padding:13px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.lesson-result div{min-width:0}.lesson-result span{display:block;color:#7d9188;font-size:9px}.lesson-result strong{display:block;margin-top:4px;color:var(--ink);font-size:14px}.lesson-finished .lesson-result{display:grid}.lesson-finished.is-last-lesson .next-lesson{display:none}@media(max-width:750px){.hero-actions{gap:10px}.primary-button,.secondary-button,.continue-button{min-height:46px}.lesson-result{grid-template-columns:repeat(2,1fr);gap:13px}.lesson-levels{grid-template-columns:repeat(3,1fr)}.lesson-path.is-expanded .level{min-height:46px}}@media(max-width:420px){.hero-actions>*{width:100%}.secondary-button,.continue-button{justify-content:center}}
-.weak-keys-result{display:none;margin-top:16px;padding:14px;border:1px solid #d6e9df;border-radius:8px;background:#f8fcf9}.lesson-finished .weak-keys-result{display:block}.weak-keys-result h3{margin:0 0 6px;font-size:14px;letter-spacing:-.3px}.weak-keys-result>p{margin:0;color:#6e8179;font-size:11px;line-height:1.55}.weak-keys-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.weak-key{display:flex;align-items:center;gap:6px;border:1px solid #c9e2d5;border-radius:6px;background:#fff;padding:6px 8px;color:#527469;font-size:10px}.weak-key b{display:grid;min-width:23px;height:23px;place-items:center;border-radius:4px;background:#e5f5df;color:var(--green);font:800 12px "DM Mono",monospace}.practice-weak-keys{margin-top:12px;border:0;border-radius:6px;padding:9px 12px;background:var(--green);color:#fff;font-size:11px;font-weight:800}.practice-weak-keys:not([hidden]){display:inline-flex}@media(max-width:500px){.weak-keys-result{padding:13px}.weak-key{flex:1 1 82px;justify-content:space-between}}
-.results{max-width:1068px;margin:0 auto;padding:84px 0}.results-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}.results-heading .eyebrow{margin-bottom:10px}.results-heading p:not(.eyebrow){font-size:12px;color:var(--muted);margin:9px 0 0}.clear-results{border:1px solid #d5e5dd;border-radius:6px;background:#fff;color:#698178;padding:8px 11px;font-size:11px;font-weight:700}.results-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.results-summary div{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#f8fcf9}.results-summary span{display:block;color:#7d9188;font-size:10px;margin-bottom:5px}.results-summary strong{font-size:18px}.results-table-wrap{max-height:400px;overflow:auto;border:1px solid var(--line);border-radius:8px}.results-table{width:100%;border-collapse:collapse;font-size:12px}.results-table th{position:sticky;top:0;background:#edf7ef;color:#5f786d;font-size:10px;text-align:left;padding:12px 15px}.results-table td{padding:12px 15px;border-top:1px solid var(--line)}.results-table td:first-child{font-weight:700}.results-table .empty{color:#9aaba3}@media(max-width:750px){.results{padding:60px 24px}.results-heading{align-items:flex-start;gap:16px}.results-summary{grid-template-columns:1fr}.results-table{min-width:620px}}
-body .lesson-path:not(.is-expanded) .level:nth-child(n+7):not(.active){display:block}body .lesson-path:not(.is-expanded) .level:nth-child(n+11):not(.active){display:none}
-.lesson-path:not(.is-expanded) .level:nth-child(-n+10){display:block!important}.lesson-path:not(.is-expanded) .level:nth-child(n+11){display:none!important}
-.lesson-path .level.roadmap-hidden{display:none!important}
-@media(min-width:751px){.hero{min-height:360px;align-items:center}.hero-copy{min-width:0;padding-left:clamp(0px,3.4vw,40px)}.hero .eyebrow{margin-bottom:12px}.hero h1{max-width:100%;font-size:clamp(40px,3.2vw,48px);line-height:1.08;letter-spacing:clamp(-3px,-.2vw,-1.8px);margin-bottom:12px;text-wrap:balance}.hero .intro{max-width:min(100%,500px);font-size:clamp(13px,1.05vw,15px);line-height:1.55;margin-bottom:16px}.hero-actions{gap:8px 12px}.hero-actions .primary-button,.hero-actions .secondary-button,.hero-actions .continue-button{font-size:clamp(11px,.94vw,14px);padding:12px 14px}.trust-row{gap:9px;margin-top:14px}.trust-row p{font-size:clamp(10px,.8vw,11px);line-height:1.35}.hero-visual{min-width:0}}
+/* keyboard.css — CHỈ bàn phím minh hoạ. Nạp sau tokens.css + base.css.
+   Dùng ở /hoc/ (bàn phím bài học), /tien-do/ (heatmap) và /luyen-tu-do/ (bàn phím chỉ ngón).
 
-/* Shift held for an uppercase letter: marked, but no finger animation (keyboard-widget.js markShift). */
-.kb-widget .key.active-mod{color:var(--green);border-color:var(--green);background:var(--lime);opacity:.75}
+   Vì sao file này co lại từ 18,6 KB xuống còn chừng này: bản cũ là 59 dòng "vá chồng vá" —
+   mỗi lần sửa giao diện lại append một dòng ghi đè style.css, nên 38 selector bị khai báo lại
+   ngay trong chính nó và ~37% là CSS chết (.game-*, .lesson-path, .hand-row, .tc-board...).
+   Mọi thứ không phải về phím đã chuyển sang base.css; phần vá style.css đã bỏ vì style.css
+   không còn tồn tại.
 
-/* ===== Bàn phím kiểu typing.com — dùng cho widget bài học (.kb-widget) và bàn phím hero (#taster .tc-board).
-   Thông số lấy từ CSS gốc của họ: panel #d9dadb bo 20px, phím trắng bo 5px viền trên #fff / dưới #a9a9a9,
-   chữ Roboto Mono đậm viết hoa #4a4a4a, nhãn shifted xếp trên nhãn chính, phím cần gõ xanh #3295db.
-   Phím vuông (padding-top 100%) và không cao quá 50px; mọi phím giãn đều, flex-basis chỉ giữ tỉ lệ. ===== */
-.kb-widget .keyboard,.tc-board.keyboard{display:flex;flex-direction:column;gap:5px;padding:15px 15px 10px;background:#d9dadb;border:1px solid rgba(0,0,0,.07);border-radius:20px;overflow:visible;box-shadow:none}
-.kb-widget .key-row,.tc-board .key-row{display:flex;justify-content:space-between;gap:0;min-width:0;max-height:50px}
-.kb-widget .key,.tc-board .key{position:relative;display:block;flex:1 1 50px;height:auto;min-width:0;max-height:50px;margin-right:5px;padding:0;border:0;border-top:1px solid #fff;border-bottom:1px solid #a9a9a9;border-radius:5px;background:#fff;color:#4a4a4a;font:700 16px/1 "Roboto Mono","DM Mono","Courier New",monospace;text-transform:uppercase;box-shadow:none;line-height:1}
-.kb-widget .key:last-child,.tc-board .key:last-child{margin-right:0}
-.kb-widget .key:after,.tc-board .key:after{content:"";display:block;padding-top:100%}
-.kb-widget .key-label,.tc-board .key-label{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-weight:700}
-.kb-widget .key--duo,.tc-board .key--duo{font-size:12px}
-.kb-widget .key--duo .key-label:first-child,.tc-board .key--duo .key-label:first-child{height:50%}
-.kb-widget .key--duo .key-label:last-child,.tc-board .key--duo .key-label:last-child{height:50%;top:50%}
-.kb-widget .key--special,.tc-board .key--special{text-transform:lowercase}
-.kb-widget .key--special .key-label,.tc-board .key--special .key-label{top:auto;bottom:5px;left:5px;width:calc(100% - 10px);height:calc(100% - 5px);align-items:flex-end;font-size:11px}
-.kb-widget .key--special-l .key-label,.tc-board .key--special-l .key-label{justify-content:flex-start}
-.kb-widget .key--special-r .key-label,.tc-board .key--special-r .key-label{justify-content:flex-end}
-.kb-widget .key.home,.tc-board .key.home{border-bottom-color:#a9a9a9}
-.kb-widget .key.active-key,.tc-board .key.active-key,.kb-widget .key.active-mod{background:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff;box-shadow:none;opacity:1;font-weight:700}
+   Hai lớp chồng nhau ở đây là CÓ CHỦ Ý:
+   1. lớp chung (.keyboard/.key/.key-row) — kích thước mặc định;
+   2. lớp .kb-widget — giao diện kiểu typing.com, đè lên lớp 1.
+   keyboard-widget.js luôn gắn class `kb-widget` vào host, nên thực tế lớp 2 luôn thắng.
+   (Lớp 1 hiện bị lớp 2 che gần như hoàn toàn — ứng viên dọn tiếp ở phase sau.) */
+
+/* ===== Lớp chung ============================================================================== */
+.keyboard{display:grid;gap:4px;padding:10px;background:var(--key-bg);border-radius:8px;overflow:auto}
+.key-row{display:flex;gap:4px;justify-content:center;min-width:480px}
+.key{height:28px;min-width:27px;padding:0 5px;display:grid;place-items:center;border:1px solid var(--border-soft);border-bottom-width:2px;border-radius:4px;background:var(--surface);color:var(--muted);font:10px "DM Mono",monospace}
+.key.wide{min-width:48px}
+.key.space{min-width:170px}
+.key.home{border-bottom-color:var(--green)}
+.key.active-key{color:var(--green);border-color:var(--green);background:var(--lime);box-shadow:0 0 0 2px #c8f05a66}
+
+/* ===== Lớp typing.com =========================================================================
+   Thông số chép từ CSS gốc của họ: panel #d9dadb bo 20px, phím trắng bo 5px viền trên #fff /
+   dưới #a9a9a9, chữ Roboto Mono đậm viết hoa #4a4a4a, nhãn shifted xếp trên nhãn chính, phím cần
+   gõ xanh #3295db. Phím vuông (padding-top 100%) và không cao quá 50px; mọi phím giãn đều,
+   flex-basis chỉ giữ tỉ lệ.
+   Đây là bảng màu MƯỢN, cố ý không quy về token thương hiệu — đổi chúng là lệch khỏi bản gốc. */
+.kb-widget .keyboard{display:flex;flex-direction:column;gap:5px;padding:15px 15px 10px;background:#d9dadb;border:1px solid rgba(0,0,0,.07);border-radius:20px;overflow:visible;box-shadow:none}
+.kb-widget .key-row{display:flex;justify-content:space-between;gap:0;min-width:0;max-height:50px}
+.kb-widget .key{position:relative;display:block;flex:1 1 50px;height:auto;min-width:0;max-height:50px;margin-right:5px;padding:0;border:0;border-top:1px solid #fff;border-bottom:1px solid #a9a9a9;border-radius:5px;background:#fff;color:#4a4a4a;font:700 16px/1 "Roboto Mono","DM Mono","Courier New",monospace;text-transform:uppercase;box-shadow:none;line-height:1}
+.kb-widget .key:last-child{margin-right:0}
+.kb-widget .key:after{content:"";display:block;padding-top:100%}
+.kb-widget .key.home{border-bottom-color:#a9a9a9}
+
+/* Nhãn phím: phủ kín mặt phím rồi căn giữa, nên chữ không đẩy kích thước phím. */
+.kb-widget .key-label{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-weight:700}
+.kb-widget .key--duo{font-size:12px}
+.kb-widget .key--duo .key-label:first-child{height:50%}
+.kb-widget .key--duo .key-label:last-child{height:50%;top:50%}
+.kb-widget .key--special{text-transform:lowercase}
+/* Nhãn phím chức năng để nhạt thay vì ẩn hẳn như bản gốc: người mới cần biết Shift/Enter ở đâu. */
+.kb-widget .key--special .key-label{top:auto;bottom:5px;left:5px;width:calc(100% - 10px);height:calc(100% - 5px);align-items:flex-end;color:#a9a9a9;font-size:10px}
+.kb-widget .key--special-l .key-label{justify-content:flex-start}
+.kb-widget .key--special-r .key-label{justify-content:flex-end}
+
+/* Phím đang cần gõ, và Shift giữ cho chữ hoa (keyboard-widget.js markShift) — cùng một kiểu. */
+.kb-widget .key.active-key,.kb-widget .key.active-mod{background:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff;box-shadow:none;opacity:1;font-weight:700}
 .kb-widget .key.is-new{box-shadow:inset 0 0 0 2px #82c0f1}
 .kb-widget .key.is-new.active-key{box-shadow:none}
-@media(min-height:690px) and (min-width:650px){.kb-widget .keyboard{gap:10px}}
-@media(max-width:599px){.kb-widget .keyboard,.tc-board.keyboard{padding:8px;border-radius:12px;gap:4px}.kb-widget .key,.tc-board .key{margin-right:3px;font-size:12px;border-radius:4px}.kb-widget .key--duo{font-size:10px}}
 
-/* ===== Phím nhún / nháy đỏ — keyframes chép thông số từ typing.com (keyPressDefault, keyRejected, .25s).
-   Nhãn phím chức năng để nhạt (#a9a9a9, 10px) thay vì ẩn hẳn như bản gốc: người mới cần biết Shift/Enter ở đâu. ===== */
+/* ===== Phím nhún / nháy đỏ ====================================================================
+   Keyframes chép thông số từ typing.com (keyPressDefault, keyRejected, .25s). */
 @keyframes keyPressDefault{0%,to{background-color:#3295db;border-color:#47a0df #3295db #2d86c5;color:#fff}50%{background-color:#2d86c5;border-bottom-width:0;transform:translateY(1px)}}
 @keyframes keyRejected{0%,50%{background-color:#ce3e44;border-color:#d35157 #ce3e44 #b9383d;color:#fff}to{background-color:#fff;border-color:#a9a9a9;color:#4a4a4a}}
 @keyframes keyRejectedLabel{0%,50%{color:#fff}to{color:#4a4a4a}}
-.kb-widget .key.is-animating,.tc-board .key.is-animating{animation:keyPressDefault .25s}
-.kb-widget .key.is-wrong,.tc-board .key.is-wrong{animation:keyRejected .25s}
-.kb-widget .key.is-wrong .key-label,.tc-board .key.is-wrong .key-label{animation:keyRejectedLabel .25s}
-.kb-widget .key--special .key-label,.tc-board .key--special .key-label{color:#a9a9a9;font-size:10px}
-.tc-board.keyboard--shadow{box-shadow:0 10px 30px rgba(0,0,0,.3)}
-@media(prefers-reduced-motion:reduce){.kb-widget .key.is-animating,.tc-board .key.is-animating,.kb-widget .key.is-wrong,.tc-board .key.is-wrong,.kb-widget .key.is-wrong .key-label,.tc-board .key.is-wrong .key-label{animation:none}}
+.kb-widget .key.is-animating{animation:keyPressDefault .25s}
+.kb-widget .key.is-wrong{animation:keyRejected .25s}
+.kb-widget .key.is-wrong .key-label{animation:keyRejectedLabel .25s}
+
+/* ===== Đáp ứng ================================================================================ */
+/* Màn hình cao và rộng thì nới khe giữa các hàng phím cho dễ nhìn. */
+@media (min-height:690px) and (min-width:901px){
+  .kb-widget .keyboard{gap:10px}
+}
+@media (max-width:620px){
+  .kb-widget .keyboard{padding:8px;border-radius:12px;gap:4px}
+  .kb-widget .key{margin-right:3px;font-size:12px;border-radius:4px}
+  .kb-widget .key--duo{font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .kb-widget .key.is-animating,.kb-widget .key.is-wrong,.kb-widget .key.is-wrong .key-label{animation:none}
+}

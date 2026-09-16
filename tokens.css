@@ -1,0 +1,35 @@
+/* tokens.css — bảng token dùng chung cho TOÀN BỘ site. Nạp đầu tiên, trước mọi CSS khác.
+   Vì sao tách riêng: trước đây 193 mã màu nằm rải rác trong 14 file CSS, mỗi trang tự chế một
+   sắc "xanh nhạt" khác nhau. Gom về một chỗ để đổi một lần là cả site đổi theo.
+   QUY ƯỚC: không trang nào được khai báo màu mới — thiếu token thì thêm vào đây. */
+:root{
+  /* Màu thương hiệu — giá trị đã chốt ở PLAN.md, không đổi. */
+  --green:#157a55; --lime:#c8f05a; --ink:#15352b; --muted:#6e8179;
+  --line:#deebe5; --cream:#f6faf7;
+
+  /* Bề mặt & viền — thay cho 9 sắc "xanh nhạt nền" và 11 biến thể "viền xanh nhạt" đếm được
+     trong bản cũ. --surface-tint là nền hover/nhấn nhẹ, --border-soft là viền đậm hơn --line. */
+  --surface:#fff; --surface-soft:#f6faf7; --surface-tint:#eef8f1;
+  --border-soft:#cfe1d8;
+
+  /* Trạng thái. Bốn biến này trước đây chỉ khai báo trong player.css, mà keyboard.css lại gọi
+     var(--key-bg) — nên trên /tien-do/ và /luyen-tu-do/ (hai trang nạp keyboard.css nhưng KHÔNG
+     nạp player.css) biến là undefined. Đưa lên đây là sửa luôn lỗi đó. */
+  --key-bg:#dfe8e3; --star:#f4b400; --danger:#d35757; --ok:#2f8f68;
+
+  /* Độ rộng — --w-page cho khối full-width, --w-read cho cột chữ dài dễ đọc. */
+  --w-page:1120px; --w-read:760px; --pad-x:24px;
+
+  /* Hình khối — gom 18 giá trị border-radius và 17 box-shadow của bản cũ về 3 + 3. */
+  --r-sm:6px; --r:10px; --r-pill:999px;
+  --shadow-card:0 3px 14px #244b3d08;
+  --shadow-lift:0 10px 24px #174c3912;
+  --shadow-focus:0 0 0 3px #157a5518;
+
+  /* Chữ — 42 font-size rút về 6 bậc. */
+  --fs-h1:44px; --fs-h2:28px; --fs-h3:18px;
+  --fs-body:15px; --fs-sm:13px; --fs-xs:11px;
+
+  /* Nhịp dọc giữa các section lớn. */
+  --gap-section:64px;
+}

@@ -1,0 +1,166 @@
+/* base.css — khung dùng chung cho mọi trang: reset, topbar, chữ, nút, form, footer và vài khối
+   xuất hiện ở nhiều trang (explore, bảng thành tích, keyboard-lab, luyện tự do).
+   Nạp sau tokens.css và trước CSS riêng của từng trang.
+
+   Vì sao có file này: nó thay cho style.css cũ — một dòng nén 9,5 KB trong đó ~55% là CSS của
+   landing page đã bị xoá khỏi markup từ lâu (hero-visual, tip-card, benefits, practice-grid...).
+   Phần chết đã bỏ; phần dùng chung trước đây nằm rải trong keyboard.css (lớp vá) đã gom về đây,
+   để keyboard.css chỉ còn lo đúng bàn phím.
+
+   QUY ƯỚC: mỗi rule một dòng để diff theo dòng và đọc bằng mắt. Mọi @media gom ở cuối file,
+   chỉ hai ngưỡng 900px / 620px. */
+
+/* ===== Reset & document ======================================================================= */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:"Be Vietnam Pro",sans-serif;background:var(--surface)}
+button{font:inherit;cursor:pointer}
+
+/* ===== Topbar ================================================================================= */
+/* max-width 1180px rộng hơn --w-page (1120px) một chút vì topbar cần thở hơn phần thân trang. */
+.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:auto;padding:0 var(--pad-x)}
+.brand{font-size:26px;font-weight:800;letter-spacing:-1.8px;color:var(--ink);text-decoration:none}
+.brand span{color:var(--green)}
+nav{display:flex;gap:34px;margin-left:100px}
+nav a{font-size:14px;font-weight:600;color:#789087;text-decoration:none;padding:9px 0}
+nav a.active{color:var(--green);border-bottom:2px solid var(--green)}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+/* ===== Chữ ==================================================================================== */
+h1,h2,h3,p{margin-top:0}
+h1{font-size:58px;line-height:1.13;letter-spacing:-3.4px;margin-bottom:20px}
+h2{font-size:32px;line-height:1.2;letter-spacing:-1.7px;margin-bottom:0}
+em{font-style:normal;color:var(--green)}
+.eyebrow{font-size:var(--fs-xs);font-weight:800;letter-spacing:1.3px;color:var(--green);margin:0 0 18px}
+.eyebrow i{display:inline-block;width:16px;height:2px;vertical-align:middle;background:var(--lime);margin:0 8px 0 0}
+.intro{line-height:1.75;color:var(--muted);font-size:var(--fs-body);max-width:425px;margin-bottom:29px}
+
+/* ===== Nút ==================================================================================== */
+.primary-button{border:0;border-radius:8px;padding:14px 17px;background:var(--green);color:var(--surface);font-size:14px;font-weight:700;box-shadow:0 7px 14px #157a5520}
+.primary-button span{font-size:20px;margin-left:13px;vertical-align:-1px}
+.secondary-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--border-soft);border-radius:8px;padding:11px 15px;color:var(--green);background:var(--surface);font-size:var(--fs-sm);font-weight:700;text-decoration:none}
+.secondary-button span{margin-left:8px;font-size:17px}
+.home-link{color:var(--green);font-size:var(--fs-sm);font-weight:700;text-decoration:none}
+
+/* ===== Điều hướng phụ ========================================================================= */
+/* article.css và test.css đều tự khai báo .breadcrumb với margin riêng; bản ở đây là nền chung
+   để các trang sau này bỏ bớt bản sao của mình. */
+.breadcrumb{display:flex;align-items:center;gap:9px;margin:0 0 44px;color:var(--muted);font-size:12px}
+.breadcrumb a{color:var(--green);font-weight:700;text-decoration:none}
+
+/* ===== Form =================================================================================== */
+textarea{resize:none;width:100%;border:1px solid var(--border-soft);border-radius:var(--r-sm);padding:11px 12px;line-height:1.5;color:var(--ink);margin-top:7px;outline:0;font:14px "DM Mono",monospace}
+textarea:focus{border-color:var(--green);box-shadow:var(--shadow-focus)}
+.typing-label{display:block;font-size:10px;color:var(--muted);font-weight:700;margin-top:13px}
+.feedback{margin:10px 0 0;color:var(--muted);font-size:10px}
+
+/* ===== Hero & tiêu đề section ================================================================= */
+/* .hero chỉ còn dùng ở trang chủ; home.css ghi đè lưới và padding, nên ở đây chỉ giữ phần khung. */
+.hero{min-height:550px;overflow:hidden;display:grid;grid-template-columns:1fr .82fr;gap:32px;max-width:1180px;padding:90px var(--pad-x) 72px;margin:auto}
+.hero-copy{padding-left:56px}
+.section-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:27px}
+.section-heading .eyebrow{margin-bottom:10px}
+
+/* ===== Khối "khám phá thêm" (trang chủ, bai-hoc, tien-do, luyen-tu-do) ========================= */
+.explore{max-width:1068px;margin:0 auto;padding:0 0 72px}
+.explore-heading{margin-bottom:22px}
+.explore-heading .eyebrow{margin-bottom:10px}
+.explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.explore-card{display:flex;min-height:188px;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:23px;text-decoration:none;box-shadow:var(--shadow-card);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.explore-card:hover,.explore-card:focus-visible{border-color:#8fc9af;box-shadow:var(--shadow-lift);transform:translateY(-2px);outline:none}
+.explore-card h3{margin:0 0 10px;color:var(--ink);font-size:var(--fs-h3);letter-spacing:-.6px}
+.explore-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+.explore-card span{margin-top:auto;padding-top:18px;color:var(--green);font-size:12px;font-weight:800}
+.explore-card b{margin-left:6px;font-size:16px;vertical-align:-1px}
+
+/* ===== Bảng thành tích (tien-do) ============================================================== */
+.results{max-width:1068px;margin:0 auto;padding:84px 0}
+.results-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}
+.results-heading .eyebrow{margin-bottom:10px}
+.results-heading p:not(.eyebrow){font-size:12px;color:var(--muted);margin:9px 0 0}
+.clear-results{border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);color:#698178;padding:8px 11px;font-size:var(--fs-xs);font-weight:700}
+.results-table-wrap{max-height:400px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.results-table{width:100%;border-collapse:collapse;font-size:12px}
+.results-table th{position:sticky;top:0;background:var(--surface-tint);color:#5f786d;font-size:10px;text-align:left;padding:12px 15px}
+.results-table td{padding:12px 15px;border-top:1px solid var(--line)}
+.results-table td:first-child{font-weight:700}
+.results-table .empty{color:#9aaba3}
+
+/* ===== Khung quanh bàn phím minh hoạ (tien-do, luyen-tu-do) ====================================
+   Đây là phần "hộp + chú thích ngón", KHÔNG phải bản thân bàn phím — phím nằm ở keyboard.css.
+   Bản cũ khai báo .keyboard-lab bốn lần rải rác; gộp lại, giữ đúng giá trị cuối cùng có hiệu lực. */
+.keyboard-lab{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:29px 31px}
+.keyboard-copy{order:2}
+.keyboard-copy h3{font-size:20px;letter-spacing:-.8px;margin-bottom:10px}
+.keyboard-copy>p:not(.eyebrow){font-size:12px;color:var(--muted);line-height:1.7}
+.keyboard-demo{order:1;min-width:0}
+.finger-legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px}
+.finger-legend span{font-size:9px;padding:4px 7px;border-radius:4px;color:#234438}
+/* Năm màu ngón tay là màu ngữ nghĩa (mỗi ngón một sắc), không quy về token thương hiệu được. */
+.pinky{background:#f5d8d8}
+.ring{background:#ffe9bd}
+.middle{background:#dcedbe}
+.index{background:#cbece4}
+.thumb{background:#dcd8f4}
+
+/* ===== Luyện tự do (luyen-tu-do) ==============================================================
+   free.css bật lại .free-practice bằng .free-page, nên ở đây không cần rule display nào nữa. */
+.free-practice{min-width:0}
+.free-intro{margin:2px 0 15px}
+.free-intro strong{display:block;font-size:16px;margin-bottom:4px}
+.free-intro span{font-size:var(--fs-xs);color:var(--muted)}
+.free-practice textarea{max-width:100%;overflow-wrap:anywhere;font:13px "DM Mono",monospace}
+.free-actions{display:flex;gap:8px;margin:8px 0 17px}
+.free-actions button{border-radius:var(--r-sm);padding:8px 10px;font-size:var(--fs-xs);font-weight:700}
+.use-text{background:var(--green);color:var(--surface);border:1px solid var(--green)}
+.random-text{color:var(--green);background:var(--surface);border:1px solid var(--border-soft)}
+.free-stats{display:flex;gap:17px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:14px}
+.free-stats span{color:var(--muted);font-size:10px}
+.free-stats b{display:block;font-size:var(--fs-sm);color:var(--ink);margin-top:3px}
+.free-sample{max-width:100%;min-height:50px;margin:0;color:var(--ink);font:14px/1.8 "DM Mono",monospace;white-space:normal;overflow-wrap:anywhere;word-break:break-word}
+.free-sample .current{background:#dff5d5;color:var(--green)}
+.free-sample .wrong{color:var(--danger);text-decoration:underline}
+
+/* ===== Footer ================================================================================= */
+footer{max-width:1068px;border-top:1px solid var(--line);margin:auto;padding:23px 0 34px;display:flex;align-items:center;justify-content:space-between}
+footer .brand{font-size:var(--fs-h3)}
+footer p,footer span{font-size:10px;color:#90a39a;margin:0}
+.footer-links{display:flex;gap:14px;margin:0 auto}
+.footer-links a{color:var(--green);font-size:10px;font-weight:700;text-decoration:none}
+.footer-links a:hover{text-decoration:underline}
+
+/* ===== Tiện ích =============================================================================== */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ===== Đáp ứng ================================================================================
+   Bản cũ dùng 12 ngưỡng (750/900/620/600/599/520/500/420/380...), nhiều cặp lệch 1px vô nghĩa.
+   Nay chỉ hai: 900px cho máy tính bảng / cửa sổ hẹp, 620px cho điện thoại. */
+@media (max-width:900px){
+  .topbar{height:68px}
+  .topbar nav{display:none}
+  .hero{grid-template-columns:1fr;padding:60px var(--pad-x) 25px}
+  .hero-copy{padding:0}
+  h1{font-size:var(--fs-h1)}
+  .section-heading{align-items:flex-start;gap:18px}
+  .header-actions{gap:5px}
+  .primary-button,.secondary-button{min-height:46px}
+  .explore{margin:0 var(--pad-x)}
+  .explore-grid{grid-template-columns:repeat(2,1fr)}
+  .explore-card:last-child{grid-column:span 2}
+  .results{padding:60px var(--pad-x)}
+  .results-heading{align-items:flex-start;gap:16px}
+  .results-table{min-width:620px}
+  .keyboard-lab{grid-template-columns:1fr;padding:23px 18px}
+  .keyboard-copy h3{font-size:19px}
+  footer{margin:0 var(--pad-x);gap:13px;flex-wrap:wrap}
+  .footer-links{order:3;width:100%;margin:0;flex-wrap:wrap;gap:8px 14px}
+}
+@media (max-width:620px){
+  .explore{padding-bottom:52px}
+  .explore-grid{grid-template-columns:1fr}
+  .explore-card{min-height:0}
+  .explore-card:last-child{grid-column:auto}
+  .secondary-button{justify-content:center}
+  .free-stats{gap:10px}
+  .free-actions{flex-direction:column}
+}
