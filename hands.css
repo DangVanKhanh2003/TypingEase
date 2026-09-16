@@ -1,7 +1,10 @@
 /* hands.css — bàn tay phủ lên bàn phím, theo cách typing.com xử lý lớp tay 3D của họ:
    opacity .5, mờ dần ở cổ tay, bóng mỏng, ngón đang gõ nhuộm xanh. Hình vẽ là SVG của mình
    (hands.js), không dùng mô hình/texture của Teaching.com. Khối "3D" là giả: gradient ống trên
-   từng ngón, dải tối ở khớp, bóng đổ của ngón lên ngón cạnh và lòng bàn tay, gờ khớp sáng. */
+   từng ngón, dải tối ở khớp, bóng đổ của ngón lên ngón cạnh và lòng bàn tay, gờ khớp sáng.
+   Bảng màu ở đây CỐ Ý nằm ngoài tokens.css: nâu da (#4a2823, #6b3a33, #e9c6bd, #7a4a43) và lam
+   ngón-đang-gõ (#37b3d6, #a9e6f4, #1f7f99, #0f5d73) là màu minh hoạ, đổi theo brand thì tay hỏng.
+   Ngưỡng 620px dưới đây đã trùng chuẩn site và trùng @media của keyboard.css. */
 .keyboard-demo{position:relative;padding-bottom:104px}
 .hand-layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2;
   opacity:.5;

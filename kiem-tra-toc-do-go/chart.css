@@ -1,0 +1,53 @@
+/* kiem-tra-toc-do-go/chart.css — biểu đồ tiến bộ WPM/Accuracy trên trang kiểm tra tốc độ.
+   Nạp sau tokens.css / base.css / test.css.
+
+   Đổi tên từ progress.css (2026-09-16): trùng tên với tien-do/progress.css dù nội dung khác hẳn
+   (bên kia là cả trang tiến độ, bên này chỉ là một biểu đồ) — mở nhầm file là chuyện thường xuyên.
+
+   Bảy !important cũ (.progress-note ×3, .progress-empty ×2, .progress-trend ×2) đã bỏ: chúng chỉ để thắng
+   `article p` của test.css, mà selector một class (0,1,0) vốn đã thắng hai type (0,0,2). */
+
+.progress-section{margin:34px 0 48px;padding:26px 30px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow-lift)}
+.progress-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
+.progress-heading .eyebrow{margin-bottom:8px}
+.progress-heading h2{margin:0}
+
+/* ---------- hai bộ nút phân đoạn (khoảng thời gian · chỉ số) ---------- */
+.progress-range,.progress-metric{display:flex;gap:6px;padding:4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}
+.progress-range button,.progress-metric button{border:0;border-radius:4px;padding:8px 11px;background:transparent;color:var(--muted);font-size:var(--fs-xs);font-weight:800}
+/* #e5f5df = nền "đang chọn" dùng chung toàn site; ngả vàng hơn --surface-tint nên giữ literal. */
+.progress-range button.selected,.progress-metric button.selected{background:#e5f5df;color:var(--green)}
+.progress-metric{width:max-content;margin:18px 0 0}
+.progress-note{margin:11px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
+
+/* ---------- 4 ô tóm tắt ---------- */
+.progress-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:20px 0}
+.progress-summary div{padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-soft)}
+.progress-summary span{display:block;color:var(--muted);font-size:9px}
+.progress-summary strong{display:block;margin-top:4px;color:var(--ink);font-size:18px;letter-spacing:-.7px}
+.progress-empty{margin:0;padding:22px 12px;color:var(--muted);text-align:center;font-size:12px;background:var(--surface-soft);border-radius:var(--r-sm)}
+
+/* ---------- biểu đồ ---------- */
+.progress-chart-wrap{margin-top:6px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.progress-chart{display:block;width:100%;height:auto;min-height:190px}
+.progress-chart .grid{stroke:var(--line);stroke-width:1}
+.progress-chart .axis-label{fill:var(--muted);font:10px "Be Vietnam Pro",sans-serif}
+.progress-chart .line{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.progress-chart .point{fill:var(--lime);stroke:var(--green);stroke-width:2}
+.progress-trend{min-height:20px;margin:14px 0 0;color:var(--muted);font-size:12px;font-weight:700}
+.progress-trend.positive{color:var(--green)}
+.progress-trend.negative{color:var(--danger)}
+
+/* ---------- đáp ứng ----------
+   Gộp về hai ngưỡng chung: 900px (bản cũ dùng 750px) và 620px (bản cũ dùng 380px). */
+@media (max-width:900px){
+  .progress-section{margin:28px 0 40px;padding:21px 17px}
+  .progress-heading{align-items:flex-start;flex-direction:column}
+  .progress-summary{grid-template-columns:repeat(2,1fr)}
+  .progress-chart{min-height:155px}
+  .progress-chart .axis-label{font-size:9px}
+}
+@media (max-width:620px){
+  .progress-range button,.progress-metric button{padding:8px 9px}
+  .progress-summary strong{font-size:16px}
+}

@@ -113,8 +113,10 @@
 
   // --- viewport -------------------------------------------------------------------------------
   // Hands need room to read; a phone gets three rows of letters and no hands at all (PLAN.md B8).
-  const wideQuery = global.matchMedia('(min-width: 900px)');
-  const phoneQuery = global.matchMedia('(max-width: 599px)');
+  // Hai ngưỡng này phải khớp CHÍNH XÁC với player.css, nếu không sẽ có dải bề rộng mà JS và CSS
+  // bất đồng: ở đúng 900px, JS từng vẽ tay trong khi CSS đã kéo padding đáy về 0 → tay biến mất.
+  const wideQuery = global.matchMedia('(min-width: 901px)');
+  const phoneQuery = global.matchMedia('(max-width: 620px)');
   const touchQuery = global.matchMedia('(hover: none)');
   const isPhone = () => phoneQuery.matches;
 

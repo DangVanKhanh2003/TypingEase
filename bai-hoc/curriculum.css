@@ -1,78 +1,83 @@
 /* bai-hoc/curriculum.css — trang lộ trình (PLAN.md B7).
-   Nạp sau style.css + keyboard.css; dùng lại token brand và .explore/.explore-card của chúng. */
+   Nạp sau tokens.css + base.css + keyboard.css; dùng lại token của tokens.css và .explore/.explore-card
+   của base.css. */
 
-.curriculum{max-width:1180px;margin:0 auto;padding:0 24px 20px}
+.curriculum{max-width:var(--w-page);margin:0 auto;padding:0 var(--pad-x) 20px}
 
 /* ---------- đầu trang ---------- */
 .cur-head{padding:34px 0 26px}
+/* 40px nhỏ hơn --fs-h1 (44px) một bậc vì h1 trang lộ trình dài hơn h1 hero — giữ literal. */
 .cur-head h1{margin:0 0 14px;font-size:40px;line-height:1.15;letter-spacing:-2.2px}
 .cur-intro{max-width:640px;margin:0;color:var(--muted);font-size:14px;line-height:1.75}
 .cur-status{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:20px 0 0}
 .cur-status p{margin:0}
-.cur-count{color:var(--green);font-size:13px;font-weight:800}
+.cur-count{color:var(--green);font-size:var(--fs-sm);font-weight:800}
 .cur-legacy{color:var(--muted);font-size:12px}
 .cur-legacy[hidden]{display:none}
 .cur-cta{margin:18px 0 0}
-.cur-cta .primary-button{display:inline-flex;align-items:center;padding:14px 20px;border-radius:9px;font-size:15px;text-decoration:none}
+.cur-cta .primary-button{display:inline-flex;align-items:center;padding:14px 20px;border-radius:var(--r);font-size:var(--fs-body);text-decoration:none}
 
 /* ---------- bố cục hai cột ---------- */
 .cur-layout{display:grid;grid-template-columns:214px minmax(0,1fr);gap:26px;align-items:start;padding-bottom:56px}
 
-.cur-side{position:sticky;top:16px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:16px 15px}
+.cur-side{position:sticky;top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:16px 15px}
 .side-kicker{margin:0 0 9px;color:var(--green);font-size:10px;font-weight:800;letter-spacing:1.2px}
 .side-units,.side-other{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:5px}
 .side-other{margin-bottom:0}
-.side-units a{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 10px;border:1px solid #e6f0ea;border-radius:7px;color:var(--ink);text-decoration:none}
-.side-units a:hover,.side-units a:focus-visible{border-color:#8fc9af;background:#f6fbf8;outline:none}
+.side-units a{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink);text-decoration:none}
+/* var(--border-hover) la xanh vien hover dung chung ca site (home.css cung the) — chua co token. */
+.side-units a:hover,.side-units a:focus-visible{border-color:var(--border-hover);background:var(--surface-soft);outline:none}
 .side-name{display:grid;gap:2px;min-width:0}
-.side-units b{font-size:11px;font-weight:800;color:var(--green)}
+.side-units b{font-size:var(--fs-xs);font-weight:800;color:var(--green)}
+/* #5f7a6f nhat hon --ink nhung dam hon --muted — bac chu phu thu ba, chua co token. */
 .side-name>span{font-size:12px;line-height:1.4;color:#5f7a6f}
 .side-units em{flex:0 0 auto;font-style:normal;font:700 11px "DM Mono",monospace;color:var(--muted)}
-.side-other a{display:block;padding:7px 10px;border-radius:7px;color:#5f7a6f;font-size:12px;font-weight:600;text-decoration:none}
-.side-other a:hover,.side-other a:focus-visible{background:#f2f9f5;color:var(--green);outline:none}
+.side-other a{display:block;padding:7px 10px;border-radius:var(--r-sm);color:#5f7a6f;font-size:12px;font-weight:600;text-decoration:none}
+.side-other a:hover,.side-other a:focus-visible{background:var(--surface-soft);color:var(--green);outline:none}
 
 .cur-main{display:grid;gap:20px;min-width:0}
 
 /* ---------- thẻ unit ---------- */
-.unit-card{border:1px solid var(--line);border-radius:11px;background:#fff;padding:22px 24px 24px;scroll-margin-top:16px}
-.unit-card.is-locked{background:#fbfdfc}
+.unit-card{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:22px 24px 24px;scroll-margin-top:16px}
+.unit-card.is-locked{background:var(--surface-soft)}
 .unit-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
 .unit-kicker{margin:0 0 6px;color:var(--green);font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
-.unit-lock{padding:2px 7px;border-radius:999px;background:#f1f6f3;color:var(--muted);font-size:9px;letter-spacing:.6px}
+.unit-lock{padding:2px 7px;border-radius:var(--r-pill);background:var(--surface-soft);color:var(--muted);font-size:9px;letter-spacing:.6px}
 .unit-card .unit-head h2{margin:0 0 7px;font-size:23px;letter-spacing:-1.1px}
 .unit-summary{margin:0;max-width:520px;color:var(--muted);font-size:12px;line-height:1.7}
 .unit-score{flex:0 0 auto;text-align:right}
 .unit-score b{display:block;font:800 20px "DM Mono",monospace;color:var(--green);letter-spacing:-.5px}
 .unit-score span{font-size:10px;color:var(--muted)}
-.unit-track{height:7px;margin:15px 0 0;overflow:hidden;border-radius:999px;background:#e9f2ed}
+.unit-track{height:7px;margin:15px 0 0;overflow:hidden;border-radius:var(--r-pill);background:var(--line)}
 .unit-track i{display:block;width:var(--unit-progress,0%);height:100%;border-radius:inherit;background:var(--green)}
-.unit-note{margin:11px 0 0;padding:9px 11px;border-radius:7px;background:#f8fbf9;color:var(--muted);font-size:11px;line-height:1.6}
+.unit-note{margin:11px 0 0;padding:9px 11px;border-radius:var(--r-sm);background:var(--surface-soft);color:var(--muted);font-size:var(--fs-xs);line-height:1.6}
 .unit-note[hidden]{display:none}
 .unit-open{margin:12px 0 0}
-.unit-open button{border:1px solid #cfe1d8;border-radius:7px;padding:8px 11px;background:#fff;color:var(--green);font-size:11px;font-weight:800}
-.unit-open button:hover{background:#eef8f1}
+.unit-open button{border:1px solid var(--border-soft);border-radius:var(--r-sm);padding:8px 11px;background:var(--surface);color:var(--green);font-size:var(--fs-xs);font-weight:800}
+.unit-open button:hover{background:var(--surface-tint)}
 
-.group-title{margin:20px 0 8px;color:#6e8179;font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
+.group-title{margin:20px 0 8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
 .lesson-rows{list-style:none;margin:0;padding:0;display:grid;gap:5px}
 
-.lesson-row a,.lesson-row .lr-link{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:11px 13px;border:1px solid #e6f0ea;border-radius:8px;color:var(--ink);text-decoration:none}
-.lesson-row a:hover,.lesson-row a:focus-visible{border-color:#8fc9af;background:#f6fbf8;outline:none}
-.lr-mark{color:var(--green);font-size:15px;text-align:center}
+.lesson-row a,.lesson-row .lr-link{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line);border-radius:var(--r);color:var(--ink);text-decoration:none}
+.lesson-row a:hover,.lesson-row a:focus-visible{border-color:var(--border-hover);background:var(--surface-soft);outline:none}
+.lr-mark{color:var(--green);font-size:var(--fs-body);text-align:center}
 .lr-body{min-width:0}
 .lr-title{display:block;font-size:14px;font-weight:700;letter-spacing:-.3px;overflow-wrap:anywhere}
 .lr-meta{display:block;margin-top:2px;color:var(--muted);font:11px "DM Mono",monospace}
-.lr-stars{color:var(--star,#f4b400);font-size:12px;letter-spacing:1px;white-space:nowrap}
-.lr-state{color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap}
+.lr-stars{color:var(--star);font-size:12px;letter-spacing:1px;white-space:nowrap}
+.lr-state{color:var(--muted);font-size:var(--fs-xs);font-weight:700;white-space:nowrap}
 
-.lesson-row.is-done a{background:#f4fbf6;border-color:#d3ebdd}
+.lesson-row.is-done a{background:var(--surface-soft);border-color:var(--border-soft)}
 .lesson-row.is-done .lr-state{color:var(--green)}
-.lesson-row.is-current a{border-color:var(--green);background:#eef8f1;box-shadow:0 0 0 2px #157a5518}
+.lesson-row.is-current a{border-color:var(--green);background:var(--surface-tint);box-shadow:var(--shadow-focus)}
 .lesson-row.is-current .lr-state{color:var(--green)}
-.lesson-row.is-soon .lr-link{background:#fafcfb;border-style:dashed;color:#8ea69a;cursor:not-allowed}
+/* #8ea69a — chu "chua mo khoa", nhat hon --muted; dung chung voi .rail-chip.is-soon o home.css. */
+.lesson-row.is-soon .lr-link{background:var(--surface-soft);border-style:dashed;color:#8ea69a;cursor:not-allowed}
 .lesson-row.is-soon .lr-title{color:#8ea69a;font-weight:600}
 
 /* ---------- explore dùng lại keyboard.css nhưng ở đây nằm trong .curriculum ---------- */
-.curriculum .explore{max-width:none;padding:8px 0 64px}
+.curriculum .explore{max-width:none;padding:8px 0 var(--gap-section)}
 
 @media(max-width:900px){
   .cur-layout{grid-template-columns:1fr}

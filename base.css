@@ -17,12 +17,14 @@ body{margin:0;color:var(--ink);font-family:"Be Vietnam Pro",sans-serif;backgroun
 button{font:inherit;cursor:pointer}
 
 /* ===== Topbar ================================================================================= */
-/* max-width 1180px rộng hơn --w-page (1120px) một chút vì topbar cần thở hơn phần thân trang. */
-.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:auto;padding:0 var(--pad-x)}
+/* Topbar dùng ĐÚNG --w-page như thân trang. Trước đây topbar 1180px còn nội dung 1068px, nên trên
+   gần như mọi trang header thò ra hai bên rộng hơn nội dung 112px — một trong những thứ làm site
+   trông lệch lạc. Logo và nav phải thẳng hàng với mép nội dung. */
+.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;max-width:var(--w-page);margin:auto;padding:0 var(--pad-x)}
 .brand{font-size:26px;font-weight:800;letter-spacing:-1.8px;color:var(--ink);text-decoration:none}
 .brand span{color:var(--green)}
 nav{display:flex;gap:34px;margin-left:100px}
-nav a{font-size:14px;font-weight:600;color:#789087;text-decoration:none;padding:9px 0}
+nav a{font-size:14px;font-weight:600;color:var(--muted-soft);text-decoration:none;padding:9px 0}
 nav a.active{color:var(--green);border-bottom:2px solid var(--green)}
 .header-actions{display:flex;align-items:center;gap:8px}
 
@@ -36,9 +38,9 @@ em{font-style:normal;color:var(--green)}
 .intro{line-height:1.75;color:var(--muted);font-size:var(--fs-body);max-width:425px;margin-bottom:29px}
 
 /* ===== Nút ==================================================================================== */
-.primary-button{border:0;border-radius:8px;padding:14px 17px;background:var(--green);color:var(--surface);font-size:14px;font-weight:700;box-shadow:0 7px 14px #157a5520}
+.primary-button{border:0;border-radius:var(--r-sm);padding:14px 17px;background:var(--green);color:var(--surface);font-size:14px;font-weight:700;box-shadow:var(--shadow-cta)}
 .primary-button span{font-size:20px;margin-left:13px;vertical-align:-1px}
-.secondary-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--border-soft);border-radius:8px;padding:11px 15px;color:var(--green);background:var(--surface);font-size:var(--fs-sm);font-weight:700;text-decoration:none}
+.secondary-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--border-soft);border-radius:var(--r-sm);padding:11px 15px;color:var(--green);background:var(--surface);font-size:var(--fs-sm);font-weight:700;text-decoration:none}
 .secondary-button span{margin-left:8px;font-size:17px}
 .home-link{color:var(--green);font-size:var(--fs-sm);font-weight:700;text-decoration:none}
 
@@ -56,35 +58,35 @@ textarea:focus{border-color:var(--green);box-shadow:var(--shadow-focus)}
 
 /* ===== Hero & tiêu đề section ================================================================= */
 /* .hero chỉ còn dùng ở trang chủ; home.css ghi đè lưới và padding, nên ở đây chỉ giữ phần khung. */
-.hero{min-height:550px;overflow:hidden;display:grid;grid-template-columns:1fr .82fr;gap:32px;max-width:1180px;padding:90px var(--pad-x) 72px;margin:auto}
+.hero{min-height:550px;overflow:hidden;display:grid;grid-template-columns:1fr .82fr;gap:32px;max-width:var(--w-page);padding:90px var(--pad-x) 72px;margin:auto}
 .hero-copy{padding-left:56px}
 .section-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:27px}
 .section-heading .eyebrow{margin-bottom:10px}
 
 /* ===== Khối "khám phá thêm" (trang chủ, bai-hoc, tien-do, luyen-tu-do) ========================= */
-.explore{max-width:1068px;margin:0 auto;padding:0 0 72px}
+.explore{max-width:var(--w-page);margin:0 auto;padding:0 0 var(--gap-section)}
 .explore-heading{margin-bottom:22px}
 .explore-heading .eyebrow{margin-bottom:10px}
 .explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .explore-card{display:flex;min-height:188px;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:23px;text-decoration:none;box-shadow:var(--shadow-card);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
-.explore-card:hover,.explore-card:focus-visible{border-color:#8fc9af;box-shadow:var(--shadow-lift);transform:translateY(-2px);outline:none}
+.explore-card:hover,.explore-card:focus-visible{border-color:var(--border-hover);box-shadow:var(--shadow-lift);transform:translateY(-2px);outline:none}
 .explore-card h3{margin:0 0 10px;color:var(--ink);font-size:var(--fs-h3);letter-spacing:-.6px}
 .explore-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
 .explore-card span{margin-top:auto;padding-top:18px;color:var(--green);font-size:12px;font-weight:800}
 .explore-card b{margin-left:6px;font-size:16px;vertical-align:-1px}
 
 /* ===== Bảng thành tích (tien-do) ============================================================== */
-.results{max-width:1068px;margin:0 auto;padding:84px 0}
+.results{max-width:var(--w-page);margin:0 auto;padding:84px 0}
 .results-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}
 .results-heading .eyebrow{margin-bottom:10px}
 .results-heading p:not(.eyebrow){font-size:12px;color:var(--muted);margin:9px 0 0}
-.clear-results{border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);color:#698178;padding:8px 11px;font-size:var(--fs-xs);font-weight:700}
-.results-table-wrap{max-height:400px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.clear-results{border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);color:var(--ink-soft);padding:8px 11px;font-size:var(--fs-xs);font-weight:700}
+.results-table-wrap{max-height:400px;overflow:auto;border:1px solid var(--line);border-radius:var(--r-sm)}
 .results-table{width:100%;border-collapse:collapse;font-size:12px}
-.results-table th{position:sticky;top:0;background:var(--surface-tint);color:#5f786d;font-size:10px;text-align:left;padding:12px 15px}
+.results-table th{position:sticky;top:0;background:var(--surface-tint);color:var(--ink-soft);font-size:var(--fs-2xs);text-align:left;padding:12px 15px}
 .results-table td{padding:12px 15px;border-top:1px solid var(--line)}
 .results-table td:first-child{font-weight:700}
-.results-table .empty{color:#9aaba3}
+.results-table .empty{color:var(--muted-soft)}
 
 /* ===== Khung quanh bàn phím minh hoạ (tien-do, luyen-tu-do) ====================================
    Đây là phần "hộp + chú thích ngón", KHÔNG phải bản thân bàn phím — phím nằm ở keyboard.css.
@@ -122,9 +124,9 @@ textarea:focus{border-color:var(--green);box-shadow:var(--shadow-focus)}
 .free-sample .wrong{color:var(--danger);text-decoration:underline}
 
 /* ===== Footer ================================================================================= */
-footer{max-width:1068px;border-top:1px solid var(--line);margin:auto;padding:23px 0 34px;display:flex;align-items:center;justify-content:space-between}
+footer{max-width:var(--w-page);border-top:1px solid var(--line);margin:auto;padding:23px 0 34px;display:flex;align-items:center;justify-content:space-between}
 footer .brand{font-size:var(--fs-h3)}
-footer p,footer span{font-size:10px;color:#90a39a;margin:0}
+footer p,footer span{font-size:var(--fs-2xs);color:var(--muted-soft);margin:0}
 .footer-links{display:flex;gap:14px;margin:0 auto}
 .footer-links a{color:var(--green);font-size:10px;font-weight:700;text-decoration:none}
 .footer-links a:hover{text-decoration:underline}

@@ -1,1 +1,99 @@
-.test-header{border-bottom:1px solid var(--line)}.home-link{color:var(--green);font-size:13px;font-weight:700;text-decoration:none}.test-main{max-width:800px;margin:0 auto;padding:30px 24px 82px}.breadcrumb{display:flex;align-items:center;gap:9px;margin:0 0 42px;color:#81958b;font-size:12px}.breadcrumb a{color:var(--green);font-weight:700;text-decoration:none}.test-hero{padding-bottom:34px;margin-bottom:28px;border-bottom:1px solid var(--line)}.test-hero .eyebrow{margin-bottom:14px}.test-hero h1{font-size:47px;line-height:1.15;letter-spacing:-2.4px;margin-bottom:17px}.test-hero>p:not(.eyebrow){max-width:670px;color:var(--muted);font-size:16px;line-height:1.75;margin:0}article section:not(.typing-test){margin:46px 0}article h2{font-size:27px;letter-spacing:-1.1px;line-height:1.3;margin:0 0 14px}article p,article li{font-size:15px;line-height:1.8}article p{margin:0 0 15px}article ul{margin:0;padding-left:22px}article li{margin:7px 0}.typing-test{padding:27px 30px 24px;border:1px solid #d8e8df;border-radius:12px;background:#fff;box-shadow:0 10px 24px #214c3c0c}.test-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}.test-heading h2{font-size:22px;margin:0}.test-heading p{max-width:220px;margin:3px 0 0;color:var(--muted);font-size:11px;line-height:1.5;text-align:right}.test-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:13px 0;margin-bottom:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.test-stats span{display:block;color:#7d9188;font-size:10px}.test-stats strong{display:block;margin-top:3px;font-size:21px;letter-spacing:-1px}.test-stats small{font-size:10px;color:var(--green);letter-spacing:0;margin-left:2px}.test-prompt{min-height:102px;margin:0 0 14px;padding:17px;border-radius:8px;background:#f5faf7;color:var(--ink);font:15px/1.85 "DM Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere}.test-prompt .current{background:var(--lime);color:var(--green);border-radius:2px}.test-prompt .wrong{color:#bf4545;text-decoration:underline;text-decoration-thickness:2px}label{display:block;color:#6f877c;font-size:11px;font-weight:700;margin-bottom:7px}textarea{min-height:112px;font:14px/1.7 "DM Mono",monospace}.test-actions{display:flex;align-items:center;gap:15px;margin-top:13px}.test-actions .primary-button{padding:10px 14px}.test-actions .primary-button span{font-size:16px;margin-left:8px}.test-actions p{margin:0;color:#7d9188;font-size:10px;line-height:1.5}.faq{border-top:1px solid var(--line)}details{padding:15px 0;border-bottom:1px solid var(--line)}summary{cursor:pointer;color:var(--ink);font-size:15px;font-weight:700}details p{margin:10px 0 0;color:var(--muted);font-size:14px}.test-cta{padding:31px;border-radius:12px;background:var(--cream)}.test-cta .eyebrow{margin-bottom:10px}.test-cta h2{margin-bottom:10px}.test-cta p:not(.eyebrow){color:var(--muted)}.test-cta .primary-button{display:inline-block;margin-top:4px;text-decoration:none}.test-footer{max-width:1068px;border-top:1px solid var(--line);margin:0 auto;padding:23px 0 34px;display:flex;align-items:center;justify-content:space-between}.test-footer .brand{font-size:18px}.test-footer p{margin:0;color:#90a39a;font-size:10px}@media(max-width:750px){.test-header{height:68px}.test-main{padding:25px 20px 60px}.breadcrumb{margin-bottom:30px}.test-hero h1{font-size:36px;letter-spacing:-1.8px}.typing-test{padding:21px 17px}.test-heading{display:block}.test-heading p{text-align:left;margin-top:7px}.test-stats{grid-template-columns:repeat(2,1fr);gap:14px}.test-prompt{font-size:13px}.test-actions{align-items:flex-start;flex-direction:column}.test-footer{margin:0 20px;gap:14px;flex-wrap:wrap}}
+/* kiem-tra-toc-do-go/test.css — trang kiểm tra tốc độ gõ. Nạp sau tokens.css và base.css.
+
+   Gộp test-upgrade.css vào đây (2026-09-16): hai file cùng nạp trên đúng trang này và cùng khai
+   báo .test-stats (4 cột ở file này, 5 cột ở file kia) — tách ra chỉ tạo bẫy đọc nhầm. Giá trị
+   giữ lại là giá trị cuối cùng từng có hiệu lực, giao diện không đổi.
+
+   Đã xoá các bản sao của .breadcrumb / .home-link / footer: base.css có sẵn bản nền y hệt. */
+
+.test-header{border-bottom:1px solid var(--line)}
+.test-main{max-width:var(--w-read);margin:0 auto;padding:30px var(--pad-x) 82px}
+
+/* ---------- hero ---------- */
+.test-hero{padding-bottom:34px;margin-bottom:28px;border-bottom:1px solid var(--line)}
+.test-hero .eyebrow{margin-bottom:14px}
+.test-hero h1{font-size:47px;line-height:1.15;letter-spacing:-2.4px;margin-bottom:17px}
+.test-hero>p:not(.eyebrow){max-width:670px;color:var(--muted);font-size:16px;line-height:1.75;margin:0}
+
+/* ---------- thân bài ----------
+   base.css chưa có kiểu cho <article>, nên bốn rule dưới đây vẫn phải nằm ở file trang.
+   Chúng gần trùng với article.css (chỉ lệch margin-bottom của h2: 14 vs 15px) — chỗ đúng của
+   chúng là base.css, nhưng file đó do người khác giữ trong đợt này. */
+article section:not(.typing-test){margin:46px 0}
+article h2{font-size:var(--fs-h2);letter-spacing:-1.1px;line-height:1.3;margin:0 0 14px}
+article p,article li{font-size:var(--fs-body);line-height:1.8}
+article p{margin:0 0 15px}
+article ul{margin:0;padding-left:22px}
+article li{margin:7px 0}
+
+/* ---------- công cụ gõ thử ---------- */
+.typing-test{padding:27px 30px 24px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow-lift)}
+.test-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}
+.test-heading h2{font-size:22px;margin:0}
+.test-heading p{max-width:220px;margin:3px 0 0;color:var(--muted);font-size:var(--fs-xs);line-height:1.5;text-align:right}
+
+/* Bộ chọn thời lượng (từ test-upgrade.css). */
+.duration-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:-4px 0 18px}
+.duration-picker button{min-height:38px;border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);color:var(--muted);font-size:var(--fs-xs);font-weight:800}
+/* #e5f5df = nền "đang chọn" dùng chung với /tien-do/; ngả vàng hơn --surface-tint nên giữ literal. */
+.duration-picker button.selected{border-color:var(--green);background:#e5f5df;color:var(--green)}
+.duration-picker button:disabled{cursor:not-allowed;opacity:.58}
+
+/* 5 cột: giá trị của test-upgrade.css, là cái thực sự có hiệu lực trước khi gộp. */
+.test-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:13px 0;margin-bottom:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.test-stats span{display:block;color:var(--muted);font-size:10px}
+.test-stats strong{display:block;margin-top:3px;font-size:21px;letter-spacing:-1px}
+.test-stats small{font-size:10px;color:var(--green);letter-spacing:0;margin-left:2px}
+
+.test-prompt{min-height:102px;margin:0 0 14px;padding:17px;border-radius:var(--r);background:var(--surface-soft);color:var(--ink);font:15px/1.85 "DM Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.test-prompt .current{background:var(--lime);color:var(--green);border-radius:2px}
+.test-prompt .wrong{color:var(--danger);text-decoration:underline;text-decoration-thickness:2px}
+label{display:block;color:var(--muted);font-size:var(--fs-xs);font-weight:700;margin-bottom:7px}
+textarea{min-height:112px;font:14px/1.7 "DM Mono",monospace}
+.test-actions{display:flex;align-items:center;gap:15px;margin-top:13px}
+.test-actions .primary-button{padding:10px 14px}
+.test-actions .primary-button span{font-size:16px;margin-left:8px}
+.test-actions p{margin:0;color:var(--muted);font-size:10px;line-height:1.5}
+
+/* ---------- ô kết quả (từ test-upgrade.css) ---------- */
+.test-result{margin-top:19px;padding:18px;border:1px solid var(--border-soft);border-radius:var(--r);background:var(--surface-soft)}
+.test-result[hidden]{display:none}
+.test-result>p:first-child{margin:0 0 4px;color:var(--muted);font-size:var(--fs-xs);font-weight:800}
+.test-result>strong{display:block;color:var(--green);font-size:30px;letter-spacing:-1.5px}
+.result-details{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.result-details span{color:var(--muted);font-size:10px}
+.result-details b{display:block;margin-top:3px;color:var(--ink);font-size:14px}
+/* Ba !important cũ ở đây là thừa: .result-comparison (0,1,0) vốn đã thắng `article p` (0,0,2). */
+.result-comparison{margin:14px 0 0;color:var(--green);font-size:12px;font-weight:800}
+.result-comparison[hidden]{display:none}
+
+/* ---------- FAQ & CTA ---------- */
+.faq{border-top:1px solid var(--line)}
+details{padding:15px 0;border-bottom:1px solid var(--line)}
+summary{cursor:pointer;color:var(--ink);font-size:var(--fs-body);font-weight:700}
+details p{margin:10px 0 0;color:var(--muted);font-size:14px}
+.test-cta{padding:31px;border-radius:var(--r);background:var(--cream)}
+.test-cta .eyebrow{margin-bottom:10px}
+.test-cta h2{margin-bottom:10px}
+.test-cta p:not(.eyebrow){color:var(--muted)}
+.test-cta .primary-button{display:inline-block;margin-top:4px;text-decoration:none}
+
+/* ---------- đáp ứng ----------
+   Một ngưỡng duy nhất, trùng ngưỡng 900px của base.css (bản cũ dùng 750px ở cả hai file). */
+@media (max-width:900px){
+  .test-header{height:68px}
+  .test-main{padding:25px 20px 60px}
+  /* base.css để breadcrumb cách 44px; trên màn hẹp khối hero cần sát hơn. */
+  .breadcrumb{margin-bottom:30px}
+  .test-hero h1{font-size:36px;letter-spacing:-1.8px}
+  .typing-test{padding:21px 17px}
+  .test-heading{display:block}
+  .test-heading p{text-align:left;margin-top:7px}
+  .duration-picker{grid-template-columns:repeat(2,1fr)}
+  .test-stats{grid-template-columns:repeat(2,1fr);gap:14px}
+  .test-stats div:last-child{grid-column:span 2}
+  .test-prompt{font-size:13px}
+  .test-actions{align-items:flex-start;flex-direction:column}
+  .result-details{grid-template-columns:1fr;gap:10px}
+  .test-result>strong{font-size:27px}
+}

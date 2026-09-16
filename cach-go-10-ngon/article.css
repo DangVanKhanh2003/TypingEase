@@ -1,3 +1,72 @@
-.article-header{border-bottom:1px solid var(--line)}.home-link{color:var(--green);font-size:13px;font-weight:700;text-decoration:none}.article-main{max-width:760px;margin:0 auto;padding:30px 24px 82px}.breadcrumb{display:flex;align-items:center;gap:9px;margin:0 0 44px;color:#81958b;font-size:12px}.breadcrumb a{color:var(--green);font-weight:700;text-decoration:none}.article-hero{padding-bottom:42px;border-bottom:1px solid var(--line);margin-bottom:41px}.article-hero .eyebrow{margin-bottom:14px}.article-hero h1{font-size:48px;line-height:1.15;letter-spacing:-2.5px;margin-bottom:18px}.article-lead{max-width:660px;margin:0;color:var(--muted);font-size:17px;line-height:1.75}article section{margin:0 0 42px}article h2{font-size:27px;line-height:1.3;letter-spacing:-1.1px;margin:0 0 15px}article h3{font-size:15px;margin:0 0 9px}article p,article li{font-size:15px;line-height:1.8}article p{margin:0 0 15px}article ul{margin:0;padding-left:22px}article li{margin:7px 0}.home-row{display:flex;justify-content:space-between;max-width:510px;padding:16px 19px;border:1px solid #d6e7dd;border-radius:8px;background:#f4faf6;color:var(--green);font:600 20px "DM Mono",monospace;letter-spacing:3px}.home-row span{color:#397f62}.hand-map{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}.hand-map>div{padding:18px 20px;border:1px solid var(--line);border-radius:8px;background:#fff}.hand-map ul{font-size:13px}.hand-map li{font-size:13px;line-height:1.6;margin:5px 0}.tip-box{padding:17px 19px;border-left:3px solid var(--lime);border-radius:0 8px 8px 0;background:#f4faf6;font-size:14px;line-height:1.7}.article-cta{padding:32px;margin-top:52px;border-radius:12px;background:var(--cream)}.article-cta .eyebrow{margin-bottom:10px}.article-cta h2{margin-bottom:10px}.article-cta p:not(.eyebrow){color:var(--muted)}.article-cta .primary-button{display:inline-block;margin-top:5px;text-decoration:none}.article-footer{max-width:1068px;border-top:1px solid var(--line);margin:0 auto;padding:23px 0 34px;display:flex;align-items:center;justify-content:space-between}.article-footer .brand{font-size:18px}.article-footer p{margin:0;color:#90a39a;font-size:10px}@media(max-width:750px){.article-header{height:68px}.article-main{padding:25px 20px 60px}.breadcrumb{margin-bottom:30px}.article-hero{padding-bottom:30px;margin-bottom:31px}.article-hero h1{font-size:36px;letter-spacing:-1.8px}.article-lead{font-size:15px}article section{margin-bottom:32px}article h2{font-size:24px}.home-row{font-size:16px;letter-spacing:1px}.hand-map{grid-template-columns:1fr}.article-cta{padding:24px 20px}.article-footer{margin:0 20px;gap:14px;flex-wrap:wrap}}
-.article-main .inline-link{color:var(--green);font-weight:700;text-decoration:underline;text-decoration-color:#b6dbca;text-underline-offset:3px}
-.wpm-table{width:100%;table-layout:fixed;border-collapse:collapse;margin:20px 0 0}.wpm-table th,.wpm-table td{padding:13px 15px;border:1px solid var(--line);vertical-align:top;text-align:left;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.wpm-table th{background:#f4faf6;color:var(--green);font-size:12px}.wpm-table th:first-child,.wpm-table td:first-child{width:31%;font-weight:700}.article-cta-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:5px}@media(max-width:750px){.wpm-table th,.wpm-table td{padding:11px 10px;font-size:13px}.wpm-table th:first-child,.wpm-table td:first-child{width:34%}}
+/* cach-go-10-ngon/article.css — khung bài viết dài. Nạp sau tokens.css và base.css.
+
+   CẢNH BÁO: file này được 5 trang nạp, 4 trong số đó qua đường dẫn chéo
+   ../cach-go-10-ngon/article.css — /wpm-la-gi/, /cach-tang-wpm/, /wpm-bao-nhieu-la-nhanh/ và
+   /luyen-phim-yeu/. Sửa một dòng ở đây là đổi cả 5 trang.
+
+   Đã xoá các bản sao của .breadcrumb / .home-link / .article-footer: base.css có sẵn bản nền
+   với đúng những giá trị đó (footer khớp qua selector phần tử `footer`). */
+
+.article-header{border-bottom:1px solid var(--line)}
+.article-main{max-width:var(--w-read);margin:0 auto;padding:30px var(--pad-x) 82px}
+
+/* ---------- hero ---------- */
+.article-hero{padding-bottom:42px;border-bottom:1px solid var(--line);margin-bottom:41px}
+.article-hero .eyebrow{margin-bottom:14px}
+.article-hero h1{font-size:48px;line-height:1.15;letter-spacing:-2.5px;margin-bottom:18px}
+.article-lead{max-width:660px;margin:0;color:var(--muted);font-size:17px;line-height:1.75}
+
+/* ---------- thân bài ----------
+   base.css chưa có kiểu cho <article>, nên sáu rule dưới đây vẫn phải ở file trang; chúng gần
+   trùng với test.css nhưng /kiem-tra-toc-do-go/ không nạp file này nên chưa bỏ được. */
+article section{margin:0 0 42px}
+article h2{font-size:var(--fs-h2);line-height:1.3;letter-spacing:-1.1px;margin:0 0 15px}
+article h3{font-size:var(--fs-body);margin:0 0 9px}
+article p,article li{font-size:var(--fs-body);line-height:1.8}
+article p{margin:0 0 15px}
+article ul{margin:0;padding-left:22px}
+article li{margin:7px 0}
+.article-main .inline-link{color:var(--green);font-weight:700;text-decoration:underline;text-decoration-color:var(--border-soft);text-underline-offset:3px}
+
+/* ---------- khối minh hoạ ---------- */
+/* #397f62 là xanh nhạt hơn --green một bậc, chỉ dùng cho ký tự phụ của hàng phím cơ sở. */
+.home-row{display:flex;justify-content:space-between;max-width:510px;padding:16px 19px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-soft);color:var(--green);font:600 20px "DM Mono",monospace;letter-spacing:3px}
+.home-row span{color:#397f62}
+.hand-map{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.hand-map>div{padding:18px 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.hand-map ul{font-size:var(--fs-sm)}
+.hand-map li{font-size:var(--fs-sm);line-height:1.6;margin:5px 0}
+.tip-box{padding:17px 19px;border-left:3px solid var(--lime);border-radius:0 var(--r) var(--r) 0;background:var(--surface-soft);font-size:14px;line-height:1.7}
+
+/* ---------- bảng mốc WPM (dùng ở /wpm-bao-nhieu-la-nhanh/) ---------- */
+.wpm-table{width:100%;table-layout:fixed;border-collapse:collapse;margin:20px 0 0}
+.wpm-table th,.wpm-table td{padding:13px 15px;border:1px solid var(--line);vertical-align:top;text-align:left;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.wpm-table th{background:var(--surface-soft);color:var(--green);font-size:12px}
+.wpm-table th:first-child,.wpm-table td:first-child{width:31%;font-weight:700}
+
+/* ---------- CTA cuối bài ---------- */
+.article-cta{padding:32px;margin-top:52px;border-radius:var(--r);background:var(--cream)}
+.article-cta .eyebrow{margin-bottom:10px}
+.article-cta h2{margin-bottom:10px}
+.article-cta p:not(.eyebrow){color:var(--muted)}
+.article-cta .primary-button{display:inline-block;margin-top:5px;text-decoration:none}
+.article-cta-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:5px}
+
+/* ---------- đáp ứng ----------
+   Một ngưỡng duy nhất 900px, trùng base.css (bản cũ dùng 750px ở cả hai khối @media). */
+@media (max-width:900px){
+  .article-header{height:68px}
+  .article-main{padding:25px 20px 60px}
+  /* base.css để breadcrumb cách 44px; trên màn hẹp khối hero cần sát hơn. */
+  .breadcrumb{margin-bottom:30px}
+  .article-hero{padding-bottom:30px;margin-bottom:31px}
+  .article-hero h1{font-size:36px;letter-spacing:-1.8px}
+  .article-lead{font-size:var(--fs-body)}
+  article section{margin-bottom:32px}
+  article h2{font-size:24px}
+  .home-row{font-size:16px;letter-spacing:1px}
+  .hand-map{grid-template-columns:1fr}
+  .wpm-table th,.wpm-table td{padding:11px 10px;font-size:var(--fs-sm)}
+  .wpm-table th:first-child,.wpm-table td:first-child{width:34%}
+  .article-cta{padding:24px 20px}
+}

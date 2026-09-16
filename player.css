@@ -1,28 +1,33 @@
 /* Lesson player — focus mode (PLAN.md B5/B6/B8).
    Nothing on this page competes with the line being typed: a thin topbar, the text, the
-   keyboard. No nav, no marketing, no footer. Brand tokens come from style.css. */
-:root{--key-bg:#dfe8e3;--star:#f4b400;--danger:#d35757;--ok:#2f8f68}
+   keyboard. No nav, no marketing, no footer. Brand tokens come from tokens.css (nạp đầu tiên),
+   layout/typography chung từ base.css — kể cả --key-bg/--star/--danger/--ok, bốn biến trước đây
+   khai báo ngay trong file này. */
 html,body{height:100%}
 body.player-page{background:var(--cream);overflow-x:hidden}
 
 .player{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 
 /* --- topbar ------------------------------------------------------------------------------- */
-.player-topbar{display:flex;align-items:center;gap:14px;padding:10px 20px;background:#fff;border-bottom:1px solid var(--line)}
-.pt-back{flex:0 0 auto;color:var(--green);font-size:12px;font-weight:800;text-decoration:none;padding:8px 10px;border-radius:7px}
-.pt-back:hover,.pt-back:focus-visible{background:#eef8f1;outline:none}
+.player-topbar{display:flex;align-items:center;gap:14px;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.pt-back{flex:0 0 auto;color:var(--green);font-size:12px;font-weight:800;text-decoration:none;padding:8px 10px;border-radius:var(--r-sm)}
+.pt-back:hover,.pt-back:focus-visible{background:var(--surface-tint);outline:none}
 .pt-title{flex:1 1 auto;min-width:0;text-align:center;line-height:1.25}
+/* 10px: nhãn micro in hoa trên tiêu đề, nhỏ hơn bậc --fs-xs (11px) một nấc — chưa có token. */
 .pt-title span{display:block;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
-.pt-title strong{display:block;color:var(--ink);font-size:15px;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pt-title strong{display:block;color:var(--ink);font-size:var(--fs-body);letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pt-right{flex:0 0 auto;display:flex;align-items:center;gap:8px}
-.pt-screen{color:var(--muted);font:700 11px "DM Mono",monospace;white-space:nowrap}
-.pt-redo{width:34px;height:34px;display:grid;place-items:center;border:1px solid #cde0d7;border-radius:8px;background:#fff;color:var(--green);font-size:15px}
-.pt-redo:hover{background:#eef8f1}
+.pt-screen{color:var(--muted);font:700 var(--fs-xs) "DM Mono",monospace;white-space:nowrap}
+/* 8px: cùng bán kính nút của base.css (.primary-button/.secondary-button), không phải --r. */
+.pt-redo{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--border-soft);border-radius:8px;background:var(--surface);color:var(--green);font-size:var(--fs-body)}
+.pt-redo:hover{background:var(--surface-tint)}
 
 /* --- segmented progress ------------------------------------------------------------------- */
-.progress-segments{display:flex;gap:3px;padding:6px 20px 0;background:#fff}
-.progress-segments .seg{flex:1 1 0;height:6px;border-radius:3px;background:#e4eee8}
+.progress-segments{display:flex;gap:3px;padding:6px 20px 0;background:var(--surface)}
+/* 3px trên thanh cao 6px: bo tròn hẳn hai đầu, không phải bậc --r-sm. */
+.progress-segments .seg{flex:1 1 0;height:6px;border-radius:3px;background:var(--line)}
 .progress-segments .seg.is-done{background:var(--green)}
+/* #a9cf38 = --lime đậm hơn một nấc, chỉ dùng để viền khối lime cho khỏi chìm vào nền sáng. */
 .progress-segments .seg.is-current{background:var(--lime);box-shadow:inset 0 0 0 1px #a9cf38}
 
 /* --- notices ------------------------------------------------------------------------------ */
@@ -30,40 +35,49 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 .player-notes[hidden]{display:none}
 .player-note{display:flex;align-items:center;gap:12px;margin:0;padding:10px 20px;font-size:12px;line-height:1.55}
 .player-note[hidden]{display:none}
-.player-note.is-info{background:#eef8f1;color:#2b5346;border-bottom:1px solid #d6e9df}
+/* #2b5346: chữ trên nền --surface-tint, nhạt hơn --ink để không đọc như tiêu đề. */
+.player-note.is-info{background:var(--surface-tint);color:#2b5346;border-bottom:1px solid var(--border-soft)}
+/* Bộ vàng cảnh báo (nền/chữ/viền) không nằm trong bảng token — giữ literal, dùng lại ở .no-more. */
 .player-note.is-warn{background:#fff8e6;color:#6d5510;border-bottom:1px solid #f0e0b4}
-.player-note code{font:11px "DM Mono",monospace}
-.note-close{flex:0 0 auto;border:1px solid #bcd9c8;border-radius:6px;background:#fff;color:var(--green);padding:6px 9px;font-size:11px;font-weight:800}
+.player-note code{font:var(--fs-xs) "DM Mono",monospace}
+.note-close{flex:0 0 auto;border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);color:var(--green);padding:6px 9px;font-size:var(--fs-xs);font-weight:800}
 
 /* --- stage -------------------------------------------------------------------------------- */
 .player-stage{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;width:100%;max-width:820px;margin:0 auto;padding:26px 20px 6px}
 .player-stage.is-result,.player-stage.is-lesson-result,.player-stage.is-error,.player-stage.is-loading{justify-content:center}
-.card{width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px 28px;box-shadow:0 3px 16px #244b3d0a}
+.card{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px 28px;box-shadow:var(--shadow-card)}
 
 /* new-key chip */
-.key-chip{display:flex;align-items:center;justify-content:center;gap:10px;margin:0;font-size:11px}
+.key-chip{display:flex;align-items:center;justify-content:center;gap:10px;margin:0;font-size:var(--fs-xs)}
 .chip-label{color:var(--green);font-weight:800;letter-spacing:1.1px}
-.chip-key{display:grid;min-width:30px;height:30px;place-items:center;padding:0 7px;border-radius:6px;background:var(--lime);color:#2b5b1f;font:800 15px "DM Mono",monospace}
+/* #2b5b1f: chữ trên nền --lime; --ink quá tối và ngả lam, chữ trên lime cần ngả ô-liu. */
+.chip-key{display:grid;min-width:30px;height:30px;place-items:center;padding:0 7px;border-radius:var(--r-sm);background:var(--lime);color:#2b5b1f;font:800 var(--fs-body) "DM Mono",monospace}
 .chip-finger{color:var(--muted);font-weight:700}
 
 /* --- intro screen ------------------------------------------------------------------------- */
 .intro-card{text-align:center}
 .intro-card .key-chip{margin-bottom:16px}
 .intro-text{margin:0 auto;max-width:52ch;color:var(--ink);font-size:17px;line-height:1.7}
-.intro-found{margin:0 0 8px;color:var(--green);font-size:28px;letter-spacing:-1px}
-.intro-hint{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
-.intro-hint b{display:inline-grid;min-width:26px;height:26px;place-items:center;padding:0 8px;margin:0 2px;border:1px solid #cde0d7;border-radius:6px;background:#f6faf7;color:var(--green);font:800 13px "DM Mono",monospace;vertical-align:-6px}
+.intro-found{margin:0 0 8px;color:var(--green);font-size:var(--fs-h2);letter-spacing:-1px}
+.intro-hint{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:var(--fs-sm)}
+.intro-hint b{display:inline-grid;min-width:26px;height:26px;place-items:center;padding:0 8px;margin:0 2px;border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface-soft);color:var(--green);font:800 var(--fs-sm) "DM Mono",monospace;vertical-align:-6px}
+/* #fbfff4: nền "đã tìm thấy phím" ngả lime, không phải sắc bạc hà của --surface-soft. */
 .intro-card.is-found{border-color:#a9cf38;background:#fbfff4}
 
 /* --- typing prompt ----------------------------------------------------------------------- */
-.screen-lead{margin:0;max-width:56ch;color:var(--muted);font-size:13px;line-height:1.65;text-align:center}
+.screen-lead{margin:0;max-width:56ch;color:var(--muted);font-size:var(--fs-sm);line-height:1.65;text-align:center}
 .prompt-card{padding:30px 28px}
+/* Cỡ chữ vùng gõ đã cân ở PLAN.md B9 (26px desktop / 22px mobile, line-height 1.9,
+   letter-spacing .04em) — không token-hoá. #8c9d95 là chữ CHƯA gõ: phải nhạt hơn --muted
+   rõ rệt thì phần đã gõ mới nổi lên. */
 .prompt-lines{position:relative;display:block;margin:0;max-height:5.7em;overflow:hidden;font-family:"DM Mono",monospace;font-size:26px;line-height:1.9;letter-spacing:.04em;text-align:center;color:#8c9d95;overflow-wrap:anywhere;scroll-behavior:smooth}
 @media(prefers-reduced-motion:reduce){.prompt-lines{scroll-behavior:auto}}
 .prompt-lines .w{display:inline-block;white-space:pre}
 .prompt-lines .ch{border-radius:3px}
 .prompt-lines .ch.ok{color:var(--green)}
+/* #fdeeee: nền đỏ rất nhạt của ký tự sai, chưa có token "danger soft". */
 .prompt-lines .ch.bad{color:var(--danger);background:#fdeeee;text-decoration:underline}
+/* #25452f chữ trên lime; #c8f05a66 = --lime ở 40% — viền sáng quanh con trỏ. */
 .prompt-lines .ch.cur{background:var(--lime);color:#25452f;box-shadow:0 0 0 2px #c8f05a66}
 .prompt-lines .ch.brk{opacity:.4;font-size:.7em}
 .prompt-lines .ch.brk.cur{opacity:1}
@@ -71,10 +85,11 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 /* dictation: letters get room to breathe, sentences read as a paragraph */
 .prompt-lines.as-letters{letter-spacing:.14em}
 .prompt-lines.as-sentence{text-align:left;font-size:22px;letter-spacing:.02em;max-height:7.6em}
-.no-more{margin:20px auto 0;max-width:52ch;padding:14px;border:1px solid #f0e0b4;border-radius:9px;background:#fff8e6;color:#6d5510;font-size:13px;line-height:1.65}
+.no-more{margin:20px auto 0;max-width:52ch;padding:14px;border:1px solid #f0e0b4;border-radius:var(--r);background:#fff8e6;color:#6d5510;font-size:var(--fs-sm);line-height:1.65}
 
 /* --- burst -------------------------------------------------------------------------------- */
 .burst-card{text-align:center}
+/* 56/44/34px: cỡ chữ vùng gõ, giữ nguyên như .prompt-lines. */
 .burst-token{margin:0;font-family:"DM Mono",monospace;font-size:56px;letter-spacing:.1em;line-height:1.2;color:#8c9d95}
 .burst-token .ch.ok{color:var(--green)}
 .burst-token .ch.bad{color:var(--danger)}
@@ -82,46 +97,50 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 .burst-token.pop{animation:burst-pop .22s ease-out}
 @keyframes burst-pop{0%{transform:scale(.82);opacity:.4}100%{transform:scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.burst-token.pop{animation:none}}
-.burst-next{margin:14px 0 0;font-family:"DM Mono",monospace;font-size:15px;color:#a8b7b0;letter-spacing:.1em}
-.burst-next:not(:empty):before{content:'tiếp: ';font-family:"Be Vietnam Pro",sans-serif;font-size:11px;letter-spacing:0}
+/* #a8b7b0: ký tự KẾ TIẾP, còn nhạt hơn cả chữ chưa gõ — một bậc nữa dưới --muted. */
+.burst-next{margin:14px 0 0;font-family:"DM Mono",monospace;font-size:var(--fs-body);color:#a8b7b0;letter-spacing:.1em}
+.burst-next:not(:empty):before{content:'tiếp: ';font-family:"Be Vietnam Pro",sans-serif;font-size:var(--fs-xs);letter-spacing:0}
 
 /* --- clock -------------------------------------------------------------------------------- */
-.player-clock{margin:0;font:800 15px "DM Mono",monospace;color:var(--green);padding:5px 13px;border:1px solid #cde0d7;border-radius:20px;background:#fff}
-.player-clock.is-low{color:#fff;background:var(--danger);border-color:var(--danger)}
+.player-clock{margin:0;font:800 var(--fs-body) "DM Mono",monospace;color:var(--green);padding:5px 13px;border:1px solid var(--border-soft);border-radius:var(--r-pill);background:var(--surface)}
+.player-clock.is-low{color:var(--surface);background:var(--danger);border-color:var(--danger)}
 
 /* --- result cards ------------------------------------------------------------------------- */
 .result-card,.lesson-result-card{text-align:center}
 .star-row{display:flex;justify-content:center;gap:8px;margin:0 0 12px;font-size:38px;line-height:1}
-.star-row .star{color:#dbe6e0}
+.star-row .star{color:var(--line)}
 .star-row .star.is-on{color:var(--star)}
 .result-headline{margin:0 0 8px;font-size:26px;letter-spacing:-1px}
-.result-stats{margin:0;color:var(--ink);font-size:15px;font-weight:700}
-.result-hint{margin:14px auto 0;max-width:50ch;color:var(--muted);font-size:13px;line-height:1.65}
+.result-stats{margin:0;color:var(--ink);font-size:var(--fs-body);font-weight:700}
+.result-hint{margin:14px auto 0;max-width:50ch;color:var(--muted);font-size:var(--fs-sm);line-height:1.65}
 .result-hint b,.technique b{color:var(--ink)}
 .result-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:22px}
-.primary-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:0;border-radius:8px;padding:12px 20px;background:var(--green);color:#fff;font-size:14px;font-weight:800;text-decoration:none}
+.primary-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:0;border-radius:8px;padding:12px 20px;background:var(--green);color:var(--surface);font-size:14px;font-weight:800;text-decoration:none}
+/* #0f6244 = --green tối hơn một nấc cho trạng thái hover; chưa có token. */
 .primary-button:hover{background:#0f6244}
-.ghost-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid #cde0d7;border-radius:8px;padding:12px 16px;background:#fff;color:var(--green);font-size:13px;font-weight:700;text-decoration:none}
-.ghost-button:hover{background:#eef8f1}
+.ghost-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;border:1px solid var(--border-soft);border-radius:8px;padding:12px 16px;background:var(--surface);color:var(--green);font-size:var(--fs-sm);font-weight:700;text-decoration:none}
+.ghost-button:hover{background:var(--surface-tint)}
 
 .lesson-done-kicker{margin:0 0 14px;color:var(--green);font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
-.learned-keys{margin:6px 0 20px;color:var(--muted);font-size:13px}
-.learned-keys b{color:var(--ink);font:800 15px "DM Mono",monospace;letter-spacing:.14em}
+.learned-keys{margin:6px 0 20px;color:var(--muted);font-size:var(--fs-sm)}
+.learned-keys b{color:var(--ink);font:800 var(--fs-body) "DM Mono",monospace;letter-spacing:.14em}
 .stat-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat-tile{border:1px solid var(--line);border-radius:9px;background:#f8fcf9;padding:13px 10px}
-.stat-tile span{display:block;color:#7d9188;font-size:10px;font-weight:700}
+.stat-tile{border:1px solid var(--line);border-radius:var(--r);background:var(--surface-soft);padding:13px 10px}
+.stat-tile span{display:block;color:var(--muted);font-size:10px;font-weight:700}
 .stat-tile strong{display:block;margin-top:5px;color:var(--ink);font-size:17px}
-.technique{margin:20px auto 0;max-width:58ch;color:var(--muted);font-size:13px;line-height:1.7;text-align:left}
-.weak-block{margin-top:20px;padding:15px;border:1px solid #d6e9df;border-radius:9px;background:#f8fcf9}
+.technique{margin:20px auto 0;max-width:58ch;color:var(--muted);font-size:var(--fs-sm);line-height:1.7;text-align:left}
+.weak-block{margin-top:20px;padding:15px;border:1px solid var(--border-soft);border-radius:var(--r);background:var(--surface-soft)}
 .weak-title{margin:0 0 10px;font-size:12px;font-weight:800;color:var(--ink)}
 .weak-list{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:0 0 12px}
-.weak-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #c9e2d5;border-radius:6px;background:#fff;padding:5px 9px;color:#527469;font-size:11px;font-weight:700}
+/* #527469: chữ trên chip phím yếu, đậm hơn --muted để đọc được ở 11px. */
+.weak-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);padding:5px 9px;color:#527469;font-size:var(--fs-xs);font-weight:700}
+/* #e5f5df: nền ô phím ngả lime (họ --lime), không phải sắc bạc hà của --surface-tint. */
 .weak-chip b{display:grid;min-width:23px;height:23px;place-items:center;border-radius:4px;background:#e5f5df;color:var(--green);font:800 12px "DM Mono",monospace}
 .unit-progress{margin:18px 0 0;color:var(--muted);font-size:12px;font-weight:700}
 .error-card{text-align:center}
 .error-card h2{margin:0 0 10px;font-size:22px;letter-spacing:-.8px}
-.error-card p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.7}
-.error-card code{font:12px "DM Mono",monospace;color:var(--ink);background:#f1f6f3;padding:2px 5px;border-radius:4px}
+.error-card p{margin:0 0 14px;color:var(--muted);font-size:var(--fs-sm);line-height:1.7}
+.error-card code{font:12px "DM Mono",monospace;color:var(--ink);background:var(--surface-soft);padding:2px 5px;border-radius:4px}
 
 /* --- keyboard + hands -------------------------------------------------------------------- */
 /* Bottom room for the ghost hands: the shorthand above used to reset the 104px that
@@ -136,12 +155,16 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 .tap-to-type{display:none}
 
 /* --- pause menu --------------------------------------------------------------------------- */
+/* #15352bcc = --ink ở 80%; không viết được bằng var() nên giữ literal. */
 .player-menu{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:#15352bcc}
 .menu-card{max-width:320px;display:flex;flex-direction:column;gap:9px;text-align:center}
 .menu-card h2{margin:0 0 6px;font-size:20px;letter-spacing:-.6px}
 
 /* --- 900px: keyboard stays, hands go ------------------------------------------------------ */
-@media(max-width:899px){
+/* Ngưỡng ở đây phải khớp CHÍNH XÁC với player.js: JS bật bàn tay ở min-width 901px, nên block này
+   dừng ở 900px. Lệch một pixel thôi là có dải bề rộng mà JS vẽ tay còn CSS đã kéo padding đáy về 0
+   → lòng bàn tay bị cắt mất. */
+@media(max-width:900px){
   .player-board{padding-bottom:0}
   .prompt-lines{font-size:22px}
   .is-block .prompt-lines{font-size:28px}
@@ -149,18 +172,19 @@ body.player-page{background:var(--cream);overflow-x:hidden}
   .stat-tiles{grid-template-columns:repeat(2,1fr)}
 }
 
-/* --- 600px: phone (PLAN.md B8) ------------------------------------------------------------ */
-@media(max-width:599px){
+/* --- 620px: phone (PLAN.md B8) ------------------------------------------------------------ */
+@media(max-width:620px){
   .player-topbar{gap:8px;padding:8px 12px}
   .pt-back{padding:8px 6px;font-size:0}
   .pt-back:before{content:'←';font-size:16px}
-  .pt-title strong{font-size:13px}
+  .pt-title strong{font-size:var(--fs-sm)}
   .pt-screen{font-size:10px}
   .progress-segments{padding:6px 12px 0}
-  .player-note{padding:10px 12px;font-size:11px}
+  .player-note{padding:10px 12px;font-size:var(--fs-xs)}
   .player-stage{gap:10px;padding:16px 12px 8px}
-  .card{padding:18px 15px;border-radius:10px}
-  .intro-text{font-size:15px}
+  /* .card giữ nguyên bán kính --r ở đây; bản cũ ghi lại 10px, nay trùng token nên bỏ. */
+  .card{padding:18px 15px}
+  .intro-text{font-size:var(--fs-body)}
   .prompt-lines{font-size:20px;line-height:1.85}
   .is-block .prompt-lines{font-size:24px;letter-spacing:.1em}
   .burst-token{font-size:34px}
@@ -169,7 +193,7 @@ body.player-page{background:var(--cream);overflow-x:hidden}
   .player-board{padding:0 8px}
   .player-board .keyboard{padding:8px;gap:4px}
   .player-board .key-row{min-width:0}
-  .player-board .key{max-height:34px;font-size:11px}
+  .player-board .key{max-height:34px;font-size:var(--fs-xs)}
   .player-board .key.space{flex:1 1 336px}
   .player-live{margin:8px 0 0;padding:0 12px 8px}
   .result-actions{flex-direction:column}
@@ -179,15 +203,16 @@ body.player-page{background:var(--cream);overflow-x:hidden}
      on-screen keyboard over the page the moment the lesson loads. */
   /* A fixed bar under the keyboard, not a sticky one: sticky would float up over the keys
      as soon as the page stopped scrolling. */
-  .tap-to-type{display:block;position:fixed;left:0;right:0;bottom:0;z-index:10;width:100%;border:0;border-top:1px solid #0f6244;padding:15px;background:var(--green);color:#fff;font-size:14px;font-weight:800}
+  .tap-to-type{display:block;position:fixed;left:0;right:0;bottom:0;z-index:10;width:100%;border:0;border-top:1px solid #0f6244;padding:15px;background:var(--green);color:var(--surface);font-size:14px;font-weight:800}
   .player{padding-bottom:58px}
 }
 @media(hover:none){
   /* A fixed bar under the keyboard, not a sticky one: sticky would float up over the keys
      as soon as the page stopped scrolling. */
-  .tap-to-type{display:block;position:fixed;left:0;right:0;bottom:0;z-index:10;width:100%;border:0;border-top:1px solid #0f6244;padding:15px;background:var(--green);color:#fff;font-size:14px;font-weight:800}
+  .tap-to-type{display:block;position:fixed;left:0;right:0;bottom:0;z-index:10;width:100%;border:0;border-top:1px solid #0f6244;padding:15px;background:var(--green);color:var(--surface);font-size:14px;font-weight:800}
   .player{padding-bottom:58px}
 }
 
 /* Telex: a character still being composed ("ma" on its way to "má") is neither right nor wrong yet. */
+/* Cặp hổ phách #9a6b00/#fff3cd mang nghĩa riêng "đang tổ hợp", không thuộc bảng token. */
 .prompt-lines .ch.pending,.burst-token .ch.pending{color:#9a6b00;background:#fff3cd;border-radius:3px}

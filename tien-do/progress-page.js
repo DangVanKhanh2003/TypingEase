@@ -137,7 +137,7 @@
     const host = document.querySelector('#heat-board');
     if (!host || !global.TypingEaseKeyboard) return;
     // Không vẽ ghost hands ở đây: bàn tay che đúng những phím mà trang này muốn cho xem màu.
-    if (!keyboard) keyboard = global.TypingEaseKeyboard.create({ host, compact: global.innerWidth < 700, hands: false });
+    if (!keyboard) keyboard = global.TypingEaseKeyboard.create({ host, compact: global.innerWidth <= 900, hands: false });
     const stats = new Map(profile.getKeyStats().map(item => [item.key, item]));
     let measured = false;
     host.querySelectorAll('.key[data-pkey]').forEach(key => {
@@ -200,7 +200,7 @@
   global.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      keyboard?.layout({ compact: global.innerWidth < 700, hands: false });
+      keyboard?.layout({ compact: global.innerWidth <= 900, hands: false });
       renderHeat();
     }, 150);
   });

@@ -20,15 +20,24 @@
   /* Độ rộng — --w-page cho khối full-width, --w-read cho cột chữ dài dễ đọc. */
   --w-page:1120px; --w-read:760px; --pad-x:24px;
 
-  /* Hình khối — gom 18 giá trị border-radius và 17 box-shadow của bản cũ về 3 + 3. */
+  /* Bậc phụ, thêm sau khi token-hoá 14 file: mỗi cái đều xuất hiện ở ÍT NHẤT 3 file khác nhau với
+     cùng một vai trò — đó là lý do chúng xứng đáng có tên, còn những màu chỉ dùng một chỗ thì không. */
+  --border-hover:#8fc9af;   /* viền khi rê chuột, đậm hơn --border-soft một bậc */
+  --muted-soft:#90a39a;     /* chữ chú thích 9-11px, nhạt hơn --muted */
+  --ink-soft:#5f786d;       /* chữ phụ, đậm hơn --muted nhưng chưa tới --ink */
+  --green-dark:#0f6244;     /* --green khi rê chuột */
+  --surface-active:#e5f5df; /* nền nút/pill đang được chọn — ngả lime, không phải bạc hà */
+
+  /* Hình khối — gom 18 giá trị border-radius và 17 box-shadow của bản cũ về 3 + 4. */
   --r-sm:6px; --r:10px; --r-pill:999px;
   --shadow-card:0 3px 14px #244b3d08;
   --shadow-lift:0 10px 24px #174c3912;
   --shadow-focus:0 0 0 3px #157a5518;
+  --shadow-cta:0 7px 14px #157a5520;  /* bóng XANH của nút chính, khác hẳn bóng xám của thẻ */
 
-  /* Chữ — 42 font-size rút về 6 bậc. */
+  /* Chữ — 42 font-size rút về 7 bậc. */
   --fs-h1:44px; --fs-h2:28px; --fs-h3:18px;
-  --fs-body:15px; --fs-sm:13px; --fs-xs:11px;
+  --fs-body:15px; --fs-sm:13px; --fs-xs:11px; --fs-2xs:10px;
 
   /* Nhịp dọc giữa các section lớn. */
   --gap-section:64px;
