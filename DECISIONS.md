@@ -552,6 +552,11 @@ Rủi ro bản quyền vẫn nguyên như mô tả cũ; nó chỉ được **ch�
   còn liên kết về dạng viên thuốc căn giữa (chính hình dạng mà lớp `.keyboard-link--hidden` của
   stylesheet vendor mô tả). Test 17b canh đúng điều này: ẩn → liên kết vẫn đo được bề rộng → bấm vào
   đó bật lại được 60 phím.
+- **Ẩn bàn phím thì khung bài về giữa màn hình.** `.player-stage` căn `justify-content:flex-end` để
+  bài nằm ngay trên bàn phím; bỏ bàn phím mà vẫn căn đáy thì cả bài tụt xuống mép dưới, chừa một
+  khoảng trống bằng nửa màn hình phía trên. `player.js` gắn `.no-keyboard` lên `#player` và
+  player.css đưa khung về `center`. Test 17b đo vị trí tâm thẻ bài trong khung (phải nằm trong
+  khoảng 0,3–0,7 chiều cao).
 
 ## Kiểm định
 - `scripts/e2e.js` **29/29 PASS** (`PW=<…>/playwright-core CHROME=<…> node scripts/e2e.js http://127.0.0.1:8765`).

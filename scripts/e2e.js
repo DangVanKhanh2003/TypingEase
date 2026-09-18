@@ -544,17 +544,27 @@ test('17b ẩn bàn phím: liên kết Cài đặt ở lại để còn bật l�
   const hidden = await page.evaluate(() => {
     const board = document.querySelector('#board .nt-player-keyboard');
     const link = board.querySelector('.js-keyboard-settings a').getBoundingClientRect();
+    const stage = document.querySelector('#stage');
+    const card = document.querySelector('#stage .card').getBoundingClientRect();
+    const box = stage.getBoundingClientRect();
     return {
       hide: board.classList.contains('hide'),
       rows: board.querySelector('.keyboard-row').getBoundingClientRect().height,
       hands: Boolean(board.querySelector('.hands canvas')),
-      link: { w: Math.round(link.width), h: Math.round(link.height) }
+      link: { w: Math.round(link.width), h: Math.round(link.height) },
+      justify: getComputedStyle(stage).justifyContent,
+      // 0 = bài nằm sát mép trên khung, 1 = sát mép dưới.
+      drop: (card.top + card.height / 2 - box.top) / box.height
     };
   });
   assert.ok(hidden.hide, 'board mang class hide');
   assert.strictEqual(hidden.rows, 0, 'hàng phím biến mất');
   assert.ok(!hidden.hands, 'bàn tay cũng tắt theo');
   assert.ok(hidden.link.w > 0 && hidden.link.h > 0, `liên kết Cài đặt PHẢI còn thấy được: ${JSON.stringify(hidden.link)}`);
+  // Khung bài căn sát đáy để nằm ngay trên bàn phím; bỏ bàn phím mà vẫn căn đáy thì cả bài tụt
+  // xuống mép dưới màn hình.
+  assert.strictEqual(hidden.justify, 'center', 'không còn bàn phím thì bài phải về giữa khung');
+  assert.ok(hidden.drop > 0.3 && hidden.drop < 0.7, `bài không được tụt xuống đáy (ở ${hidden.drop.toFixed(2)} chiều cao khung)`);
 
   // Và nó phải thật sự mở lại được bàn phím — đây là cửa duy nhất.
   await setKeyboard(true);

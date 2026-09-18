@@ -134,7 +134,11 @@
   const boardPreferences = () => ({ ...preferences, showHands: preferences.showHands && !isPhone() });
 
   function applyBoardPreferences() {
-    if (board) NT.applyKeyboardPreferences(board, boardPreferences());
+    if (!board) return;
+    NT.applyKeyboardPreferences(board, boardPreferences());
+    // Khung bài học căn sát đáy để nằm ngay trên bàn phím; ẩn bàn phím đi mà vẫn căn đáy thì cả
+    // bài tụt xuống mép dưới, chừa một khoảng trống to tướng phía trên (đúng như ảnh chụp 18/09).
+    root.classList.toggle('no-keyboard', !preferences.showKeyboard);
   }
 
   async function mountKeyboard() {
