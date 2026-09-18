@@ -157,6 +157,33 @@
     document.querySelector('#heat-empty').hidden = measured;
   }
 
+  // --- huy hiệu --------------------------------------------------------------------------------
+  // Huy hiệu không có kho riêng: `badges.evaluate()` đọc lại chính ba nguồn ở trên rồi so với
+  // bảng luật trong badges.js, nên nó luôn khớp với các con số hiện trên trang này.
+  const formatNumber = value => value.toLocaleString('vi-VN');
+  const formatDate = at => {
+    const date = new Date(at);
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  };
+
+  function renderBadges() {
+    const badges = global.TypingEaseBadges;
+    const grid = document.querySelector('#badge-grid');
+    if (!badges || !grid) return;
+    const list = badges.evaluate({ store, profile, curriculum });
+    document.querySelector('#badges-count').textContent = `${list.filter(item => item.earned).length} / ${list.length}`;
+    grid.innerHTML = list.map(badge => {
+      const meta = badge.earned
+        ? `<span class="badge-meta">Mở khoá ${badge.at ? formatDate(badge.at) : 'rồi'}</span>`
+        : `<span class="badge-track" style="--badge-progress:${badge.percent}%"><i></i></span>`
+          + `<span class="badge-meta">${formatNumber(badge.value)} / ${formatNumber(badge.target)}</span>`;
+      return `<li class="badge${badge.earned ? ' is-earned' : ''}" data-badge="${escapeHtml(badge.id)}">`
+        + `<span class="badge-icon" aria-hidden="true">${badge.icon}</span>`
+        + `<span class="badge-body"><b>${escapeHtml(badge.title)}</b>`
+        + `<span class="badge-hint">${escapeHtml(badge.hint)}</span>${meta}</span></li>`;
+    }).join('');
+  }
+
   // --- mục tiêu ngày ---------------------------------------------------------------------------
   function renderDaily() {
     const daily = store.loadDaily();
@@ -192,8 +219,10 @@
     if (!confirm('Xoá toàn bộ tiến độ và thành tích trên thiết bị này?')) return;
     store.reset();
     profile.reset();
-    try { localStorage.removeItem(store.LEGACY_KEY); } catch { /* storage blocked */ }
-    renderSummary(); renderTable(); renderCoach(); renderHeat();
+    // Streak và mục tiêu ngày cũng là "thành tích trên thiết bị này" — giữ lại chúng sau khi
+    // người dùng bấm xoá sẽ để lại huy hiệu chuỗi ngày đứng trơ một mình, không còn gì đỡ.
+    try { localStorage.removeItem(store.LEGACY_KEY); localStorage.removeItem(DAILY_KEY); } catch { /* storage blocked */ }
+    renderSummary(); renderTable(); renderCoach(); renderHeat(); renderDaily(); renderBadges();
   });
 
   let resizeTimer = null;
@@ -211,4 +240,5 @@
   renderCoach();
   renderHeat();
   renderDaily();
+  renderBadges();
 })(window);

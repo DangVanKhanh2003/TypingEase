@@ -1,97 +1,18 @@
 /* =================================================================================================
-   BẢNG CHUỖI VÀ DỮ LIỆU.
+   BẢNG CHUỖI CÒN LẠI CỦA TRANG CHỦ.
    Site chỉ còn MỘT ngôn ngữ: tiếng Việt. /en/ và /ja/ đã thành trang chuyển hướng, dropdown chọn
-   ngôn ngữ đã gỡ khỏi trang chủ — nên mọi bảng chuỗi dưới đây chỉ còn đúng khoá `vi`; các bản
-   en/ja/zh/ru/pt/pt-BR/ar/ms (~45 KB chuỗi chết, nợ kỹ thuật số 1 trong DECISIONS.md) đã xoá hẳn.
-   `lessons`, `lessonSecondLines`, `translations`, `homeActionText`, `weakKeyUi`, `coachUi`,
-   `coachTrendHint`, `dailyGoalUi`, `rows`, `fingerMap`, `localizedLessonName` là DI SẢN của
-   engine 30 bài cũ. Trang chủ không dùng nữa, nhưng TÊN HÀM/BIẾN được giữ nguyên phòng khi file
-   khác còn gọi tới — `siteLanguages` và `activeLanguage` (nay là hằng `'vi'`) giữ lại vì lý do đó.
-   Phần trang chủ mới bắt đầu ở khối "TRANG CHỦ (Phase 3)" phía dưới và chỉ dùng `formatUi`,
-   `currentLocalizedUi` và `homeUi`.
+   ngôn ngữ đã gỡ — nên bảng dưới đây chỉ còn đúng khoá `vi`.
+   Ngày 18/09/2026 dọn nốt di sản của engine 30 bài cũ (77 dòng): `lessons`, `lessonSecondLines`,
+   `translations`, `siteLanguages`, `activeLanguage`, `homeActionText`, `weakKeyUi`, `coachUi`,
+   `coachTrendHint`, `dailyGoalUi`, `rows`, `fingerMap`, `localizedLessonName` đã xoá hẳn — không
+   file nào còn gọi tới (mỗi trang mới có bảng chuỗi của riêng nó), giữ lại chỉ tốn công đọc.
+   Còn đúng ba thứ vì trang chủ thật sự dùng: `localizedUi`, `currentLocalizedUi`, `formatUi`.
 ================================================================================================= */
-const lessons = [
-  ['Cơ sở: ASDF JKL;', 'asdf jkl; asdf jkl; asdf jkl; asdf jkl;'],
-  ['Cơ sở: đổi tay', 'a s d f j k l; f d s a ; l k j'],
-  ['Ngón trỏ trái', 'f f f r r r v v v f r v f r v'],
-  ['Ngón trỏ phải', 'j j j u u u m m m j u m j u m'],
-  ['Hai ngón trỏ', 'fj fj rf uj vm jm fr ju fv um'],
-  ['Ngón giữa', 'd k d k e i c , d e c k i ,'],
-  ['Ngón áp út', 's l s l w o x . s w x l o .'],
-  ['Ngón út', 'a ; a ; q p z / a q z ; p /'],
-  ['Hàng cơ sở dài', 'sad fall ask dad; all lads fall;'],
-  ['Từ đơn giản', 'fall all ask sad dad flask salad'],
-  ['Hàng trên: trái', 'q w e r t q w e r t tree water'],
-  ['Hàng trên: phải', 'y u i o p y u i o p you type'],
-  ['Hàng trên phối hợp', 'type writer quiet power your time'],
-  ['Hàng dưới: trái', 'z x c v b z x c v b brave cave'],
-  ['Hàng dưới: phải', 'n m , . / n m , . / minimum'],
-  ['Hàng dưới phối hợp', 'zoom can move very calmly now'],
-  ['Ba hàng: trái', 'read fast cave wax bad red face'],
-  ['Ba hàng: phải', 'jump into moon pool milk kind'],
-  ['Từ thông dụng 1', 'the quick brown fox jumps over'],
-  ['Từ thông dụng 2', 'practice makes progress every day'],
-  ['Câu ngắn 1', 'keep your hands on the home row.'],
-  ['Câu ngắn 2', 'slow is smooth and smooth is fast.'],
-  ['Chữ hoa', 'Hello World. Good Typing Starts Here.'],
-  ['Số hàng trên', '123 456 789 0 123 456 789 0'],
-  ['Dấu câu', 'hello, world. are you ready? yes!'],
-  ['Email cơ bản', 'hello@example.com is a simple address.'],
-  ['Tốc độ 1', 'focus on accuracy before you type faster'],
-  ['Tốc độ 2', 'small daily practice builds strong habits'],
-  ['Đoạn văn ngắn', 'typing with all ten fingers saves time every day.'],
-  ['Thử thách cuối', 'keep calm, look ahead, and type with confidence!']
-];
-const lessonSecondLines = [
-  'jkl; asdf jkl; asdf jkl; asdf', 'j f d s a ; l k j f d s a', 'v f r v f r v f r v f r',
-  'm j u m j u m j u m j u', 'ju fr vm fj uj fr vm fj uj', 'e d c k i , e d c k i ,',
-  'x s w l o . x s w l o .', 'z a q ; p / z a q ; p /', 'all dads ask; fall salad fast;',
-  'glass flask falls; sad lads ask;', 'water tree were quiet at work', 'you type up your input properly',
-  'write your quiet reply to power', 'cave brave wax can be exact', 'minimum memory moves normally', 'move now, zoom very calmly',
-  'face red wax can be fast', 'milk and moon jump into room', 'over the lazy dog with ease',
-  'daily practice makes typing easy', 'rest your wrists and relax now.', 'accuracy comes before quick speed.',
-  'Typing Well Needs Calm Focus.', '098 765 432 1 098 765 432 1', 'wait; type, then check it.',
-  'sample.user@typing.com is ready.', 'steady hands create better results', 'repeat good habits every morning',
-  'each lesson helps your fingers learn.', 'finish with focus and enjoy progress!'
-];
-lessons.forEach((lesson, index) => { lesson[1] = `${lesson[1]}\n${lessonSecondLines[index]}`; });
-const translations = {
-  vi: {navPractice:'Luyện gõ',navGuide:'Hướng dẫn',navResults:'Thành tích',login:'Đăng nhập',dailyPractice:'Luyện gõ mỗi ngày',intro:'Cải thiện kỹ năng gõ 10 ngón với những bài tập ngắn, rõ ràng và hoàn toàn miễn phí.',start:'Bắt đầu luyện gõ',ready:'Sẵn sàng chưa?',practiceNow:'Luyện ngay bây giờ',basic:'Bài cơ bản',free:'Tự do',path:'Lộ trình 10 ngón',speed:'Tốc độ',accuracy:'Độ chính xác',time:'Thời gian',startHere:'Bắt đầu gõ tại đây'}
-};
-const siteLanguages = {
-  vi:{nav:['Luyện gõ','Hướng dẫn','Thành tích'],login:'Đăng nhập',daily:'Luyện gõ mỗi ngày',hero:['Luyện gõ 10 ngón','online miễn phí.'],intro:'Luyện gõ 10 ngón online miễn phí — bắt đầu ngay, không cần đăng ký.',start:'Bắt đầu luyện gõ',learn:'Tìm hiểu cách luyện',ready:'Sẵn sàng chưa?',practice:'Luyện ngay bây giờ',basic:'Bài cơ bản',free:'Tự do',path:'Lộ trình 10 ngón',speed:'Tốc độ',accuracy:'Độ chính xác',time:'Thời gian',keyboard:'Bàn phím & ngón tay',results:'Thành tích bài học',benefits:'Tiến bộ từng phím bấm.'}
-};
-// Site chỉ còn tiếng Việt — hằng này vẫn là khoá tra cứu của các bảng chuỗi phía trên.
-const activeLanguage = 'vi';
-const homeActionText = {
-  vi: { start:'Bắt đầu bài 1', speedTest:'Kiểm tra tốc độ 60 giây', continue:'Tiếp tục bài', trust:'Luyện gõ miễn phí, không cần đăng ký.', showAll:'Xem toàn bộ 30 bài', collapse:'Thu gọn' }
-};
-function currentHomeActionText() { return homeActionText.vi; }
 const localizedUi = {
   vi: { errors:'Số lỗi', notYet:'Chưa có', next:'Bài tiếp theo →', retry:'↻ Làm lại bài này', perfect:'Hoàn thành xuất sắc! Bạn có thể sang bài tiếp theo hoặc luyện lại.', accuracy:'Bạn đã hoàn thành với độ chính xác {accuracy}%. Hãy luyện lại để cải thiện nhé.', exploreTag:'Tài nguyên TypingEase', exploreTitle:'Khám phá TypingEase', explore:[['Cách gõ 10 ngón','Hướng dẫn vị trí ngón tay, hàng phím cơ sở và cách luyện gõ đúng kỹ thuật cho người mới.','Xem hướng dẫn'],['Kiểm tra tốc độ đánh máy','Làm bài typing test 60 giây để kiểm tra WPM, độ chính xác và tốc độ gõ hiện tại của bạn.','Kiểm tra ngay'],['WPM là gì?','Tìm hiểu WPM, cách tính tốc độ đánh máy và vì sao WPM nên được xem cùng độ chính xác.','Tìm hiểu WPM']], game:{tab:'Trò chơi',kicker:'THỬ THÁCH 30 GIÂY',title:'Đấu tốc độ',description:'Gõ càng đúng và nhanh, điểm thành tích càng cao.',time:'Thời gian',score:'Điểm',best:'Kỷ lục',idle:'Nhấn bắt đầu để nhận thử thách.',placeholder:'Gõ tại đây khi thử thách bắt đầu...',start:'Bắt đầu thử thách',running:'Đang thi đấu...',status:'Mỗi lượt thi kéo dài 30 giây.',focus:'Tập trung, gõ nhanh và chính xác!',finish:'Hoàn thành! Bạn đạt {score} điểm.',replay:'Chơi lại'} }
 };
 function currentLocalizedUi() { return localizedUi.vi; }
 function formatUi(template, values) { return Object.entries(values).reduce((text, [key, value]) => text.replace(`{${key}}`, value), template); }
-const weakKeyUi = {
-  vi:{title:'Phím cần luyện thêm',empty:'Bạn chưa có phím yếu nổi bật trong bài này.',practice:'Luyện phím yếu',mode:'Luyện phím yếu',mistakes:'{count} lỗi'}
-};
-function currentWeakKeyUi() { return weakKeyUi.vi; }
-const coachUi = {
-  vi:{kicker:'Huấn luyện cá nhân',title:'Trình độ của bạn',levels:['Mới bắt đầu','Đang lên tay','Ổn định','Nhanh','Thành thạo'],statSpeed:'WPM gần đây',statAccuracy:'Chính xác',statSessions:'Lượt luyện',target:'Mục tiêu kế tiếp: {wpm} WPM · {accuracy}% chính xác',heatTitle:'Độ chính xác từng phím',heat:['Chắc tay','Tạm ổn','Cần luyện'],
-    advice:{start:'Gõ thử một bài để hệ thống đo trình độ của bạn.',next:'Bạn đang tiến đều, sang bài {lesson} thôi.',repeat:'Độ chính xác bài {lesson} còn dưới mục tiêu, làm lại một lượt nữa nhé.',review:'Bài {lesson} còn yếu, ôn lại sẽ chắc tay hơn.',weak:'Phím {keys} đang kéo tốc độ xuống, luyện riêng một phút.'},
-    action:{start:'Bắt đầu bài {lesson}',next:'Học bài {lesson}',repeat:'Làm lại bài {lesson}',review:'Ôn bài {lesson}',weak:'Luyện phím {keys}'}}
-};
-function currentCoachUi() { return coachUi.vi; }
-const coachTrendHint = {
-  vi:'Cần thêm {count} bài nữa để vẽ biểu đồ tiến bộ.'
-};
-const dailyGoalUi = {
-  vi:{kicker:'Mục tiêu hôm nay',minutes:'{done} / {goal} phút',streak:'🔥 {count} ngày liên tục',best:'Kỷ lục: {count} ngày',goal:'{count} phút'}
-};
-function currentDailyGoalUi() { return dailyGoalUi.vi; }
-function localizedLessonName(index) { return lessons[index][0]; }
-const rows = [['`','1','2','3','4','5','6','7','8','9','0','-','=','Back'],['Tab','q','w','e','r','t','y','u','i','o','p','[',']','\\'],['Caps','a','s','d','f','g','h','j','k','l',';','\'','Enter'],['Shift','z','x','c','v','b','n','m',',','.','/','Shift'],['Ctrl','Alt',' ' ,'Alt','Ctrl']];
-const fingerMap = {q:'LP',a:'LP',z:'LP',w:'LR',s:'LR',x:'LR',e:'LM',d:'LM',c:'LM',r:'LI',f:'LI',v:'LI',t:'LI',g:'LI',b:'LI',y:'RI',h:'RI',n:'RI',u:'RI',j:'RI',m:'RI',i:'RM',k:'RM',',':'RM',o:'RR',l:'RR','.':'RR',p:'RP',';':'RP','/':'RP',' ':'LT',enter:'RP'};
 
 /* =================================================================================================
    TRANG CHỦ (Phase 3) — engine 30 bài cũ đã ra khỏi đây.

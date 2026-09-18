@@ -43,6 +43,27 @@
    nên không snap; đề nghị thêm --surface-active. */
 .daily-goal-options button.selected{border-color:var(--green);background:#e5f5df;color:var(--green)}
 
+/* ---------- huy hiệu ---------- */
+.badges{margin:0 0 22px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.badges-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.badges-heading h2{margin:4px 0 6px;color:var(--ink);font-size:20px;letter-spacing:-.7px}
+.badges-heading p{margin:0;max-width:520px;color:var(--muted);font-size:var(--fs-xs);line-height:1.6}
+.badges-count{padding:5px 11px;border:1px solid var(--green);border-radius:var(--r-pill);background:var(--surface-active);color:var(--green);font:800 var(--fs-2xs)/1 "DM Mono",monospace;white-space:nowrap}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+/* Huy hiệu chưa đạt vẫn hiện đủ tên + điều kiện: người dùng cần biết đích ở đâu, "???" chỉ gây tò mò
+   một lần rồi thành bực. Khác biệt đạt/chưa đạt nằm ở nền, viền và độ đậm của biểu tượng. */
+.badge{display:flex;gap:11px;padding:12px 13px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-soft)}
+.badge-icon{flex:none;display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--surface);font-size:17px;filter:grayscale(1);opacity:.5}
+.badge-body{display:grid;gap:4px;min-width:0}
+.badge-body b{color:var(--ink);font-size:var(--fs-sm);line-height:1.3}
+.badge-hint{color:var(--muted);font-size:var(--fs-2xs);line-height:1.5}
+.badge-meta{color:var(--muted-soft);font:var(--fs-2xs)/1.4 "DM Mono",monospace}
+.badge-track{height:5px;margin-top:2px;overflow:hidden;border-radius:var(--r-pill);background:var(--line)}
+.badge-track i{display:block;width:var(--badge-progress,0%);height:100%;border-radius:inherit;background:var(--border-hover)}
+.badge.is-earned{border-color:var(--border-hover);background:var(--surface-tint)}
+.badge.is-earned .badge-icon{border-color:var(--border-hover);filter:none;opacity:1}
+.badge.is-earned .badge-meta{color:var(--green);font-weight:700}
+
 /* ---------- coach (gộp từ coach.css) ---------- */
 .coach{display:grid;gap:13px;margin:0 0 22px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 .coach p{margin:0}
@@ -119,6 +140,7 @@
   .daily-goal{grid-template-columns:1fr;gap:12px}
   .daily-goal-options{display:grid;grid-template-columns:repeat(4,1fr)}
   .daily-goal-options button{padding:9px 4px}
+  .badge-grid{grid-template-columns:repeat(auto-fill,minmax(178px,1fr))}
   .coach-body{grid-template-columns:1fr;gap:12px}
   .coach-stats{gap:8px}
   .coach-action{justify-self:stretch;text-align:center}
@@ -127,4 +149,6 @@
 }
 @media (max-width:620px){
   .prog-summary{grid-template-columns:1fr}
+  .badge-grid{grid-template-columns:1fr}
+  .badges-heading{flex-direction:column}
 }

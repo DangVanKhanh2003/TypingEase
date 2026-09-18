@@ -21,6 +21,12 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 /* 8px: cùng bán kính nút của base.css (.primary-button/.secondary-button), không phải --r. */
 .pt-redo{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--border-soft);border-radius:8px;background:var(--surface);color:var(--green);font-size:var(--fs-body)}
 .pt-redo:hover{background:var(--surface-tint)}
+/* Hai công tắc (âm click, bàn tay động) mượn đúng hình dáng của .pt-redo — cùng hàng, cùng cỡ.
+   Trạng thái TẮT thể hiện bằng biểu tượng xám mờ: nhìn lướt là biết cái nào đang chạy. */
+.pt-toggle{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--border-soft);border-radius:8px;background:var(--surface);font-size:var(--fs-sm);line-height:1}
+.pt-toggle:hover{background:var(--surface-tint)}
+.pt-toggle[aria-pressed=true]{border-color:var(--border-hover);background:var(--surface-tint)}
+.pt-toggle[aria-pressed=false]{filter:grayscale(1);opacity:.45}
 
 /* --- segmented progress ------------------------------------------------------------------- */
 .progress-segments{display:flex;gap:3px;padding:6px 20px 0;background:var(--surface)}

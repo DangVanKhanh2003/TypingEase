@@ -109,7 +109,32 @@
   const input = root.querySelector('#player-input');
   const tapEl = root.querySelector('#tap-to-type');
 
-  const keyboard = global.TypingEaseKeyboard?.create({ host: boardEl, hands: true });
+  const soundEl = root.querySelector('#pt-sound');
+  const handsEl = root.querySelector('#pt-hands');
+  const sound = global.TypingEaseSound;
+
+  // Hai công tắc của người học, nhớ giữa các phiên. Bàn tay động mặc định BẬT (giống typing.com),
+  // âm click mặc định TẮT — mặc định của mỗi cái nằm ở phía ít làm phiền hơn.
+  const HANDS_KEY = 'typingease-hands-v1';
+  const readHands = () => { try { return global.localStorage.getItem(HANDS_KEY) !== 'off'; } catch { return true; } };
+  let animatedHands = readHands();
+
+  const keyboard = global.TypingEaseKeyboard?.create({ host: boardEl, hands: true, animatedHands });
+
+  function syncToggles() {
+    soundEl?.setAttribute('aria-pressed', String(Boolean(sound?.isOn())));
+    handsEl?.setAttribute('aria-pressed', String(animatedHands));
+  }
+
+  function setAnimatedHands(value) {
+    animatedHands = Boolean(value);
+    try { global.localStorage.setItem(HANDS_KEY, animatedHands ? 'on' : 'off'); } catch { /* storage blocked */ }
+    keyboard?.layout({ animatedHands });
+    syncToggles();
+  }
+
+  soundEl?.addEventListener('click', () => { sound?.toggle(); syncToggles(); focusInput(); });
+  handsEl?.addEventListener('click', () => { setAnimatedHands(!animatedHands); focusInput(); });
 
   // --- viewport -------------------------------------------------------------------------------
   // Hands need room to read; a phone gets three rows of letters and no hands at all (PLAN.md B8).
@@ -586,6 +611,7 @@
       : value[position] === run.target[position] ? 'ok' : 'bad';
     if (verdict === 'ok') keyboard.press();
     else if (verdict === 'bad') keyboard.reject(value[position]);
+    if (verdict !== 'pending') sound?.click(verdict);
   }
 
   function onInput() {
@@ -1002,6 +1028,14 @@
   });
 
   document.addEventListener('keydown', event => {
+    // Phím tắt phải đi kèm Alt: mọi phím trần đều là ký tự cần gõ, và Ctrl/Cmd đã thuộc về
+    // trình duyệt. Alt+S / Alt+H bấm được ngay giữa lúc gõ mà không làm hỏng dòng đang dở.
+    if (event.altKey && !event.ctrlKey && !event.metaKey) {
+      const shortcut = String(event.key).toLowerCase();
+      if (shortcut === 's') { event.preventDefault(); sound?.toggle(); syncToggles(); return; }
+      if (shortcut === 'h') { event.preventDefault(); setAnimatedHands(!animatedHands); return; }
+      if (shortcut === 'r' && lesson) { event.preventDefault(); openLesson(lesson.id, 1); return; }
+    }
     if (event.metaKey || event.ctrlKey || event.altKey) return;
     // Shift and Enter never arrive in the textarea as characters, so the intro screen that
     // teaches one waits for the key press itself instead of for typed text.
@@ -1033,6 +1067,7 @@
   // --- boot -----------------------------------------------------------------------------------
   (async () => {
     await ensureCurriculum();
+    syncToggles();
     applyViewport();
     await route();
   })();

@@ -365,3 +365,108 @@ Yêu cầu của user: bàn phím và hình bàn tay "giống hệt" bản typin
   nguyên làm nhật ký, mục này là trạng thái mới nhất.
 - `activeLanguage`, `siteLanguages`, `translations`, `coachTrendHint` còn tên trong `script.js` nhưng
   không còn ai đọc — dọn nốt khi tiện.
+
+---
+
+# 2026-09-16/17 — MỘT BỘ TOKEN CHO TOÀN BỘ CSS (ghi bù ngày 18/09)
+
+Ba commit `97764b0` → `caff911` → `1fa2ef9` làm xong trước khi mục này được viết; chi tiết số liệu
+nằm trong chính thông điệp commit, đây là phần quyết định.
+
+## Vì sao
+CSS đã thành ba tầng chồng nhau: `style.css` của landing page cũ, `keyboard.css` vá lên nó, rồi CSS
+từng trang phủ lên trên. `keyboard.css` chỉ nạp ở 4/11 trang → nửa site chạy trên nền CHƯA vá, và đó
+là lý do thật sự của việc "mỗi trang trông hơi khác nhau" — không phải do thiếu chăm chút từng trang.
+
+## Quyết định
+1. **`tokens.css` là nguồn duy nhất của màu, bo góc, bóng, cỡ chữ.** Quy ước cứng: không trang nào
+   được khai báo màu mới — thiếu thì thêm token. 193 mã màu → 89, và phần còn lại đều có nghĩa
+   (bảng phím mượn của typing.com, tông da bàn tay, thang nhiệt heatmap, màu cảnh báo).
+2. **`style.css` chết hẳn**, phần còn sống chuyển sang `base.css` viết mỗi rule một dòng.
+3. **Ba ngưỡng đáp ứng cho cả site: 620px, 900px, 901px.** Các cặp lệch một pixel (900/899, 600/599)
+   là nguồn của lỗi "ở đúng 900px bàn tay bị cắt" — JS vẽ tay từ 900px trong khi CSS đã bỏ padding
+   đáy từ 899px.
+4. **Gộp file cùng khai báo một selector**: `coach.css` → `tien-do/progress.css`, `test-upgrade.css`
+   → `test.css`. Đọc một file phải đủ biết khối đó trông thế nào.
+
+## Còn lại
+- Vài màu literal vẫn nằm trong `tien-do/progress.css` (`#4c6b5f`, `#e5f5df`, `#8ba396`) tuy token
+  tương ứng (`--ink-soft`, `--surface-active`, `--muted-soft`) đã có. Đổi nốt khi động vào file.
+
+---
+
+# 2026-09-18 — PHASE 5: HUY HIỆU, SERVICE WORKER, ÂM CLICK, DỌN `script.js`
+
+Phase 5 theo PLAN.md, đã trừ phần en/ja (bỏ từ 16/09). Bốn việc, không việc nào đụng vào engine gõ.
+
+## 1. Huy hiệu (`badges.js` → `/tien-do/`)
+- 10 huy hiệu, luật `{field, operand, value}` đúng như PLAN.md: bài đầu tiên · xong một unit ·
+  30 sao · 90 sao · 3 ngày · 7 ngày · 40 WPM sạch · 60 WPM sạch · 5.000 phím · gõ được dấu.
+- **Không có kho dữ liệu riêng.** `evaluate()` đọc lại chính ba nguồn mà trang tiến độ đang hiện
+  (TypingEaseProgress, TypingEaseProfile, mục tiêu ngày) rồi so với bảng luật, nên huy hiệu không
+  bao giờ lệch với con số ngay bên cạnh nó. Thứ duy nhất được lưu (`typingease-badges-v1`) là NGÀY
+  mở khoá lần đầu — số liệu gốc không nhớ nổi mốc đó.
+- **"40 WPM sạch" đo trên MỘT lượt**: max(wpm) của các lượt có accuracy ≥ 95, chứ không ghép
+  max(wpm) của lượt này với max(accuracy) của lượt kia — ghép thế là tặng huy hiệu cho việc chưa ai
+  làm được.
+- **Huy hiệu chưa đạt vẫn hiện đủ tên + điều kiện + thanh tiến trình** ("60 / 90"). Giấu đi thành
+  "???" chỉ gây tò mò đúng một lần rồi thành bực.
+- Nút "Xoá lịch sử" nay xoá luôn `typingease-daily-goal-v1`. Trước đây nó chừa streak lại, mà hộp
+  xác nhận thì viết "Xoá toàn bộ tiến độ và thành tích trên thiết bị này" — và huy hiệu chuỗi ngày
+  sẽ đứng trơ một mình sau khi mọi thứ khác biến mất.
+
+## 2. Service worker (`sw.js` + `sw-register.js`, nạp ở cả 11 trang)
+- **Không precache cả site.** Site tĩnh, người dùng chỉ đi vài trang; tải sẵn 35 file bài cho người
+  mới vào là tiêu băng thông của họ. PRECACHE đúng 9 file đủ mở trang chủ + vào học.
+- **HTML: mạng trước.** Bài viết và lộ trình đổi theo mỗi lần deploy; cache trước là người dùng thấy
+  site cũ cả tuần. **CSS/JS/JSON: cache trước, cập nhật nền.**
+- **Trang chưa từng mở mà mất mạng → trang offline tự chứa (503)**, KHÔNG phục vụ bản cache của
+  trang chủ dưới URL đó: trang chủ dùng đường dẫn tương đối nên đặt nó ở `/luyen-phim-yeu/` là mọi
+  liên kết lệch một cấp, vừa vỡ giao diện vừa nói dối người dùng về chỗ họ đang đứng.
+- Đổi `VERSION` trong `sw.js` là dọn sạch cache cũ ở lần activate kế tiếp.
+
+## 3. Âm click + phím tắt (`sound.js`, `player.js`, `hoc/index.html`)
+- **Mặc định TẮT.** Người học mở site ở lớp, ở quán, ở văn phòng.
+- WebAudio tổng hợp tại chỗ, không `<audio src>`: một cú click dài 30 ms mà tải file thì vừa thêm
+  request vừa trễ so với phím bấm. Đúng/sai là hai xung khác nhau (cao-gọn / trầm-đục).
+- Hai công tắc trong topbar player: 🔊 âm click, ✋ bàn tay động — đóng luôn nợ "chưa có UI cho
+  `animatedHands`". Cả hai nhớ qua localStorage; mặc định của mỗi cái nằm ở phía ít làm phiền hơn
+  (âm tắt, tay động bật như typing.com).
+- **Phím tắt phải đi kèm Alt**: mọi phím trần đều là ký tự cần gõ, Ctrl/Cmd thuộc về trình duyệt.
+  Alt+S âm · Alt+H tay · Alt+R làm lại bài.
+
+## 4. Dọn `script.js` (−77 dòng)
+Xoá hẳn di sản engine 30 bài cũ: `lessons`, `lessonSecondLines`, `translations`, `siteLanguages`,
+`activeLanguage`, `homeActionText`, `weakKeyUi`, `coachUi`, `coachTrendHint`, `dailyGoalUi`, `rows`,
+`fingerMap`, `localizedLessonName`. Không file nào còn gọi tới (mỗi trang mới có bảng chuỗi riêng).
+Còn đúng `localizedUi`, `currentLocalizedUi`, `formatUi` vì trang chủ thật sự dùng.
+
+## Kiểm định
+- `scripts/e2e.js` **26/26 PASS** (23 cũ + 3 mới: huy hiệu, công tắc, service worker).
+  `PW=<…>/node_modules/playwright-core node scripts/e2e.js http://127.0.0.1:8765`
+- `scripts/offline-check.js` **3/3 PASS** — script MỚI, tự dựng server rồi tự giết để mất mạng thật:
+  bài đã học vẫn gõ được (60 phím, CSS về đủ), trang chủ vẫn mở, trang chưa mở ra đúng trang 503.
+- `scripts/validate-lessons.js` PASS (289 screen, 15.311 ký tự) — không đụng nội dung, chạy cho chắc.
+- Huy hiệu đo ở 390px và 820px: 0 px tràn ngang.
+
+## Cạm bẫy mới
+10. **`context.setOffline(true)` VÀ `context.route(..., route.abort())` của Playwright đều KHÔNG với
+    tới fetch do service worker phát ra** (Chromium + playwright-core 1.49, đo 18/09/2026). Trang
+    vẫn tải sống nhăn qua mạng và bài kiểm "offline" xanh lè một cách vô nghĩa — bản đầu của test 19
+    "PASS" đúng theo kiểu đó. Cách trung thực duy nhất là **tắt hẳn server**, nên phần offline tách
+    ra `scripts/offline-check.js` (nó sở hữu server của chính nó). Đừng gộp lại vào e2e.js.
+11. **Service worker không chạy trong `launchPersistentContext` headless** (`serviceWorker.ready`
+    treo vô hạn, `controller` = null) trong khi `chromium.launch()` + `newContext()` thì chạy bình
+    thường. Muốn kiểm service worker thì dùng context thường.
+12. **Sửa file rồi tải lại có thể vẫn ra bản cũ** vì CSS/JS đi đường cache-trước. Đúng một lần —
+    lần nạp sau đã là bản mới (cập nhật nền). Nếu cần sạch ngay: DevTools → Application →
+    Service Workers → Unregister, hoặc đổi `VERSION` trong `sw.js`.
+13. **`glob.glob()` trên Windows trả về đường dẫn có `\`**, nên `'/' in path` luôn False → script vá
+    HTML đã chèn `src="sw-register.js"` (thiếu `../`) vào 3 trang con và chúng 404. E2E bắt được
+    ngay ở test 10. Chuẩn hoá `p.replace(os.sep, '/')` trước khi kiểm tra đường dẫn.
+
+## Còn lại
+- Huy hiệu chỉ hiện ở `/tien-do/`; chưa có thông báo "vừa mở khoá" ngay trong player.
+- Âm click chỉ có ở player `/hoc/`; `/luyen-tu-do/` và `/kiem-tra-toc-do-go/` chưa gọi `sound.click()`.
+- `sw.js` chưa có thông báo "đã có bản mới, tải lại?" — mới chỉ có `postMessage('skip-waiting')`.
+- Tông da bàn tay vẫn hơi nâu hơn gốc (từ 16/09, chưa động tới).

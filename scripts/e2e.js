@@ -541,6 +541,133 @@ test('11b URL en/ja cũ chuyển hướng về bản tiếng Việt', async page
   }
 });
 
+// Huy hiệu: gieo sẵn tiến độ vào localStorage rồi nạp lại trang — huy hiệu phải khớp đúng số liệu
+// mà chính trang đó đang hiện, và huy hiệu chưa đạt phải nói rõ còn thiếu bao nhiêu.
+const BADGE_SEED = () => {
+  const lessons = {};
+  ['u1-l01', 'u1-l02', 'u1-l03', 'u1-l04', 'u1-l05', 'u1-l06', 'u1-l07', 'u1-l08', 'u1-l09', 'u1-l10']
+    .forEach(id => { lessons[id] = { screens: { 0: { stars: 3, maxStars: 3 }, 1: { stars: 3, maxStars: 3 } }, stars: 6, maxStars: 6, bestWpm: 44, bestAccuracy: 96, seconds: 200, attempts: 1, completedAt: Date.now() }; });
+  localStorage.setItem('typingease-progress-v3', JSON.stringify({ version: 3, current: null, lessons, unlocked: ['u1', 'u2'], legacyCompleted: 0, migratedAt: Date.now() }));
+  localStorage.setItem('typingease-daily-goal-v1', JSON.stringify({ goalMinutes: 10, days: {}, currentStreak: 4, bestStreak: 4, lastCompletedDate: '' }));
+  localStorage.setItem('typingease-profile-v1', JSON.stringify({
+    attempts: [{ at: Date.now(), kind: 'lesson', lesson: 1, wpm: 44, accuracy: 96, seconds: 60 }],
+    keys: { a: { hits: 3000, misses: 60, ms: 0, samples: 0 } }
+  }));
+};
+
+test('17 huy hiệu: rỗng thì 0/10, có tiến độ thì mở đúng 5 cái', async page => {
+  await page.goto(`${BASE}/tien-do/`, { waitUntil: 'networkidle' });
+  const empty = await page.evaluate(() => ({
+    count: document.querySelector('#badges-count').textContent.trim(),
+    cards: document.querySelectorAll('.badge').length,
+    earned: document.querySelectorAll('.badge.is-earned').length,
+    store: localStorage.getItem('typingease-badges-v1')
+  }));
+  assert.strictEqual(empty.cards, 10, 'số huy hiệu');
+  assert.strictEqual(empty.earned, 0, 'chưa gõ gì thì chưa mở cái nào');
+  assert.strictEqual(empty.count, '0 / 10');
+  assert.strictEqual(empty.store, null, 'không đạt thì không ghi mốc nào vào localStorage');
+
+  await page.evaluate(BADGE_SEED);
+  await page.reload({ waitUntil: 'networkidle' });
+  const full = await page.evaluate(() => ({
+    count: document.querySelector('#badges-count').textContent.trim(),
+    earned: [...document.querySelectorAll('.badge.is-earned')].map(el => el.dataset.badge),
+    locked: [...document.querySelectorAll('.badge:not(.is-earned)')].map(el => ({
+      id: el.dataset.badge, meta: el.querySelector('.badge-meta').textContent.trim(),
+      track: Boolean(el.querySelector('.badge-track'))
+    })),
+    store: Object.keys(JSON.parse(localStorage.getItem('typingease-badges-v1') || '{}'))
+  }));
+  assert.deepStrictEqual(full.earned, ['first-step', 'unit-1', 'stars-30', 'streak-3', 'clean-40'], 'huy hiệu mở');
+  assert.strictEqual(full.count, '5 / 10');
+  assert.deepStrictEqual(full.store.sort(), [...full.earned].sort(), 'mốc mở khoá ghi đúng những cái đã đạt');
+  assert.ok(full.locked.every(item => item.track), 'huy hiệu chưa đạt có thanh tiến trình');
+  const stars90 = full.locked.find(item => item.id === 'stars-90');
+  assert.strictEqual(stars90.meta, '60 / 90', 'chưa đạt thì hiện số hiện tại / mốc');
+
+  // Xoá lịch sử là huy hiệu mất theo, không còn cái nào "mồ côi".
+  page.once('dialog', dialog => dialog.accept());
+  await page.click('#clear-results');
+  await sleep(120);
+  const cleared = await page.evaluate(() => ({
+    earned: document.querySelectorAll('.badge.is-earned').length,
+    store: JSON.parse(localStorage.getItem('typingease-badges-v1') || '{}')
+  }));
+  assert.strictEqual(cleared.earned, 0, 'xoá lịch sử → không còn huy hiệu nào');
+  assert.deepStrictEqual(cleared.store, {}, 'mốc mở khoá cũng bị dọn');
+});
+
+test('18 công tắc: âm click tắt sẵn, bàn tay bật sẵn, Alt+S/Alt+H đổi và nhớ', async page => {
+  await openPlayer(page, 'u1-l01/2');
+  const toggles = () => page.evaluate(() => ({
+    sound: document.querySelector('#pt-sound').getAttribute('aria-pressed'),
+    hands: document.querySelector('#pt-hands').getAttribute('aria-pressed'),
+    stored: [localStorage.getItem('typingease-sound-v1'), localStorage.getItem('typingease-hands-v1')],
+    static: document.querySelector('#board').classList.contains('hands-static')
+  }));
+  const start = await toggles();
+  assert.strictEqual(start.sound, 'false', 'âm click PHẢI tắt mặc định');
+  assert.strictEqual(start.hands, 'true', 'bàn tay động bật mặc định');
+  assert.deepStrictEqual(start.stored, [null, null], 'chưa động vào thì không ghi gì');
+
+  await page.click('#pt-sound');
+  await page.click('#pt-hands');
+  const clicked = await toggles();
+  assert.deepStrictEqual([clicked.sound, clicked.hands], ['true', 'false'], 'bấm nút đổi trạng thái');
+  assert.deepStrictEqual(clicked.stored, ['on', 'off'], 'ghi vào localStorage');
+  assert.strictEqual(clicked.static, true, 'tắt tay động → board có .hands-static');
+
+  await page.keyboard.press('Alt+s');
+  await page.keyboard.press('Alt+h');
+  const afterAlt = await toggles();
+  assert.deepStrictEqual([afterAlt.sound, afterAlt.hands], ['false', 'true'], 'Alt+S / Alt+H đảo lại');
+  assert.strictEqual(afterAlt.static, false);
+
+  // Với âm BẬT, vòng gõ phải sống sót: cạm bẫy 8 (hiệu ứng phụ ném lỗi làm player chết sau 1 phím).
+  await page.keyboard.press('Alt+s');
+  await page.click('.player-stage');
+  const target = await page.evaluate(() => window.TypingEasePlayer.getRun().target);
+  await page.keyboard.type(target.slice(0, 6), { delay: 30 });
+  const run = await page.evaluate(() => window.TypingEasePlayer.getRun());
+  assert.strictEqual(run.typed, 6, 'gõ 6 phím với âm bật vẫn đếm đủ 6');
+  assert.strictEqual(run.errors, 0, 'và không sinh lỗi');
+
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForFunction(() => window.TypingEasePlayer && window.TypingEasePlayer.getState().state !== 'loading');
+  const reloaded = await toggles();
+  assert.deepStrictEqual([reloaded.sound, reloaded.hands], ['true', 'true'], 'công tắc nhớ qua lần nạp sau');
+});
+
+// Service worker: ở đây chỉ kiểm được phần ĐO ĐƯỢC — đăng ký, kiểm soát trang, và cache đúng
+// những thứ người dùng vừa đi qua. Phần "mất mạng thì sao" nằm ở scripts/offline-check.js, vì
+// `context.setOffline(true)` và `context.route(... abort)` đều KHÔNG với tới fetch của service
+// worker (đo 18/09/2026): trang vẫn tải sống nhăn và bài kiểm xanh một cách vô nghĩa.
+test('19 service worker: kiểm soát trang và cache đúng lối đi của người dùng', async page => {
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await openPlayer(page, 'u1-l01/2');
+  await sleep(700);   // chờ stale-while-revalidate ghi xong
+  assert.ok(await page.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'service worker phải kiểm soát trang');
+
+  const cached = await page.evaluate(async () => {
+    const names = await caches.keys();
+    const urls = [];
+    for (const name of names) urls.push(...(await (await caches.open(name)).keys()).map(request => new URL(request.url).pathname));
+    return { names, urls };
+  });
+  assert.ok(cached.names.some(name => name.startsWith('typingease-shell-')), `tên cache: ${cached.names.join(', ')}`);
+  for (const must of ['/', '/hoc/', '/data/lessons/vi/u1-l01.json', '/player.js', '/base.css'])
+    assert.ok(cached.urls.includes(must), `thiếu ${must} trong cache: ${cached.urls.join(' ')}`);
+  // Bài KẾ TIẾP cũng được player prefetch — mở bài 2 khi mất mạng vẫn chạy.
+  assert.ok(cached.urls.includes('/data/lessons/vi/u1-l02.json'), 'bài kế tiếp chưa được cache');
+  // Trang chưa ai mở thì không được tự chui vào cache: cache đi theo lối đi thật, không đoán trước.
+  assert.ok(!cached.urls.includes('/luyen-phim-yeu/'), 'trang chưa mở mà đã nằm trong cache');
+
+  const html = await page.evaluate(async () => (await (await caches.match('/hoc/')).text()));
+  assert.ok(/id="player"/.test(html) && /player\.js/.test(html), 'bản cache của /hoc/ phải là trang thật');
+});
+
 // --- runner ------------------------------------------------------------------------------------
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
