@@ -21,33 +21,26 @@
   font-family: "Roboto Mono", ui-monospace, Menlo, Consolas, "Courier New", monospace;
 }
 /* Tắt "Hiện bàn phím" thì giấu phím và tay, NHƯNG giữ lại liên kết Cài đặt — nó là cửa duy nhất
-   để bật bàn phím trở lại, mà nó lại nằm bên trong chính cái board bị ẩn. Bản gốc cho cả board
-   `display:none` nên người học tự khoá mình ra ngoài; stylesheet vendor có sẵn một lớp
-   `.keyboard-link--hidden` (link về position tĩnh, căn giữa, rộng hết hàng) cho đúng tình huống
-   này — ở đây dùng lại chính hình dạng đó. */
-/* `.keyboard--a.keyboard--full` (nền, viền, bóng) khai báo ở tầng 2, tức là SAU khối này và cùng
-   độ đặc hiệu — nên chỗ này phải nêu đủ cả ba class, nếu không vẫn còn một dải nền trống. */
+   để bật bàn phím trở lại, mà nó lại nằm bên trong chính cái board bị ẩn (bản gốc cho cả board
+   `display:none` nên người học tự khoá mình ra ngoài).
+   Liên kết giữ NGUYÊN hình dạng và chỗ đứng của nó lúc bàn phím đang hiện — chữ nhỏ có bánh răng,
+   nằm mé phải, ngay trên đầu bàn phím — chứ không biến thành nút. Cái board rỗng chỉ còn cao đúng
+   bằng dòng chữ đó.
+   (`.keyboard--a.keyboard--full` đặt nền/viền/bóng ở tầng 2, tức là SAU khối này và cùng độ đặc
+   hiệu, nên chỗ này phải nêu đủ cả ba class thì mới xoá được dải nền.) */
 .keyboard.keyboard--a.keyboard--full.hide {
   background: none;
   border: 0;
   box-shadow: none;
   padding: 0;
   margin-bottom: 0;
+  min-height: 22px;
 }
 .keyboard.hide .keyboard-row,
 .keyboard.hide .hands { display: none; }
-.keyboard.hide .keyboard-link {
-  position: static;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-.keyboard.hide .keyboard-link-action {
-  padding: 10px 14px;
-  border: 1px solid var(--border-soft, #cfe1d8);
-  border-radius: var(--r-pill, 999px);
-  background: var(--surface, #fff);
-}
+/* Trang bài học có nút ⌨ riêng trên thanh trên cùng nên không cần giữ liên kết lại: ẩn là ẩn
+   hẳn, đúng như bản gốc. Hai trang còn lại không có nút đó nên vẫn giữ dòng liên kết ở trên. */
+.player-page .keyboard.hide { display: none; }
 .keyboard--full { border-radius: 20px; padding: 15px 15px 10px; }
 .keyboard--c { margin-left: auto; margin-right: auto; }
 /* Chỗ trống dưới bàn phím cho lớp tay: tay được vẽ tràn ra ngoài khung bàn phím. */

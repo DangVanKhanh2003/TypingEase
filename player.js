@@ -119,6 +119,7 @@
 
   const soundEl = root.querySelector('#pt-sound');
   const handsEl = root.querySelector('#pt-hands');
+  const keyboardEl = root.querySelector('#pt-keyboard');
   const sound = global.TypingEaseSound;
 
   // Bàn phím + bàn tay 3D là API của typekute, treo trên `window.NTKeyboard` bởi keyboard/boot.js.
@@ -141,6 +142,17 @@
     root.classList.toggle('no-keyboard', !preferences.showKeyboard);
   }
 
+  // Bản gốc chỉ có một lối vào Cài đặt: liên kết ở góc bàn phím — nên tắt bàn phím là mất luôn lối
+  // vào đó. Ở đây nút ⌨ trên thanh trên cùng luôn có mặt, và bàn phím ẩn thì ẩn hẳn như bản gốc.
+  function openKeyboardSettings() {
+    if (!NT || !board) return;
+    NT.openSettingsFor(board, {
+      root: boardEl,
+      restoreFocus: focusInput,
+      onSave: (next) => { preferences = next; applyBoardPreferences(); syncToggles(); }
+    });
+  }
+
   async function mountKeyboard() {
     NT = await global.NTKeyboardReady;
     if (!NT) return;
@@ -153,11 +165,7 @@
       activeKey: '',
       preferences: boardPreferences(),
       layout,
-      onSettings: () => NT.openSettingsFor(board, {
-        root: boardEl,
-        restoreFocus: focusInput,
-        onSave: (next) => { preferences = next; applyBoardPreferences(); syncToggles(); }
-      })
+      onSettings: () => openKeyboardSettings()
     });
     holder.append(board);
     boardEl.replaceChildren(holder);
@@ -179,6 +187,7 @@
 
   soundEl?.addEventListener('click', () => { sound?.toggle(); syncToggles(); focusInput(); });
   handsEl?.addEventListener('click', () => { setAnimatedHands(!preferences?.animatedHands); focusInput(); });
+  keyboardEl?.addEventListener('click', () => openKeyboardSettings());
 
   // --- viewport -------------------------------------------------------------------------------
   // Hands need room to read; a phone gets three rows of letters and no hands at all (PLAN.md B8).
@@ -1075,11 +1084,12 @@
 
   document.addEventListener('keydown', event => {
     // Phím tắt phải đi kèm Alt: mọi phím trần đều là ký tự cần gõ, và Ctrl/Cmd đã thuộc về
-    // trình duyệt. Alt+S / Alt+H bấm được ngay giữa lúc gõ mà không làm hỏng dòng đang dở.
+    // trình duyệt. Alt+S / Alt+H / Alt+K bấm được ngay giữa lúc gõ mà không làm hỏng dòng đang dở.
     if (event.altKey && !event.ctrlKey && !event.metaKey) {
       const shortcut = String(event.key).toLowerCase();
       if (shortcut === 's') { event.preventDefault(); sound?.toggle(); syncToggles(); return; }
       if (shortcut === 'h') { event.preventDefault(); setAnimatedHands(!preferences?.animatedHands); return; }
+      if (shortcut === 'k') { event.preventDefault(); openKeyboardSettings(); return; }
       if (shortcut === 'r' && lesson) { event.preventDefault(); openLesson(lesson.id, 1); return; }
     }
     if (event.metaKey || event.ctrlKey || event.altKey) return;

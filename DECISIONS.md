@@ -546,20 +546,20 @@ Rủi ro bản quyền vẫn nguyên như mô tả cũ; nó chỉ được **ch�
   player của họ không gọi; player ở đây có gọi nên hàm này nằm ở `boot.js`, ngoài file port.
 - **Bàn tay không với tới Shift.** Bản cũ cho ngón út tay kia chạy tới phím Shift; bảng tư thế của
   typekute chỉ có tư thế cho phím đích, nên giờ chỉ bàn phím chỉ ra Shift nào phải giữ.
-- **Tắt "Hiện bàn phím" không được nuốt luôn nút Cài đặt.** Bản gốc cho cả board `display:none`, mà
-  liên kết Cài đặt lại nằm BÊN TRONG board — người học tự khoá mình ra ngoài, không còn cách nào bật
-  bàn phím trở lại trừ khi xoá localStorage. Ở đây `.keyboard.hide` chỉ giấu hàng phím và lớp tay,
-  còn liên kết về dạng viên thuốc căn giữa (chính hình dạng mà lớp `.keyboard-link--hidden` của
-  stylesheet vendor mô tả). Test 17b canh đúng điều này: ẩn → liên kết vẫn đo được bề rộng → bấm vào
-  đó bật lại được 60 phím.
-- **Ẩn bàn phím thì khung bài về giữa màn hình.** `.player-stage` căn `justify-content:flex-end` để
-  bài nằm ngay trên bàn phím; bỏ bàn phím mà vẫn căn đáy thì cả bài tụt xuống mép dưới, chừa một
-  khoảng trống bằng nửa màn hình phía trên. `player.js` gắn `.no-keyboard` lên `#player` và
-  player.css đưa khung về `center`. Test 17b đo vị trí tâm thẻ bài trong khung (phải nằm trong
-  khoảng 0,3–0,7 chiều cao).
+- **Lối vào Cài đặt lên thanh trên cùng.** Bản gốc chỉ có MỘT lối vào: liên kết ở góc bàn phím —
+  mà tắt "Hiện bàn phím" là cả board `display:none`, nuốt luôn liên kết đó; người học tự khoá mình
+  ra ngoài, không bật lại được trừ khi xoá localStorage. Thêm nút ⚙ cạnh ↻ 🔊 ✋ (và phím tắt Alt+K),
+  đúng chỗ typekute đặt cụm điều khiển của họ. Nhờ có nó, `.hide` ở trang bài học giữ nguyên
+  `display:none` như bản gốc; hai trang còn lại (không có thanh đó) thì board xẹp lại chỉ còn dòng
+  liên kết. Test 17b + 17c canh cả hai lối vào.
+- **Ẩn bàn phím thì bài dồn lên đầu trang.** `.player-stage` căn `justify-content:flex-end` để bài
+  nằm ngay trên bàn phím; bỏ bàn phím mà vẫn căn đáy thì cả bài tụt xuống mép dưới, chừa nửa màn
+  hình trống phía trên. `player.js` gắn `.no-keyboard` lên `#player`, player.css đổi sang
+  `flex-start` — cùng hình dạng mà typekute cho ra khi tắt bàn phím. Test 17b đo tâm thẻ bài phải
+  nằm ở nửa trên khung.
 
 ## Kiểm định
-- `scripts/e2e.js` **29/29 PASS** (`PW=<…>/playwright-core CHROME=<…> node scripts/e2e.js http://127.0.0.1:8765`).
+- `scripts/e2e.js` **30/30 PASS** (`PW=<…>/playwright-core CHROME=<…> node scripts/e2e.js http://127.0.0.1:8765`).
   Năm phép kiểm về tay viết lại: tư thế không còn DOM để đo nên chúng đọc `board.dataset.finger`,
   `board.__ntHands.pose` và gọi thẳng `resolveHandSlots` của bảng tư thế; thêm test 17 cho hộp thoại
   Cài đặt (đổi bố cục sang British (PC) rồi dựng lại board).

@@ -527,10 +527,10 @@ test('17 cài đặt bàn phím: đổi bố cục và dựng lại board', asyn
   assert.ok(board.hands, 'bàn tay dựng lại cùng board');
 });
 
-test('17b ẩn bàn phím: liên kết Cài đặt ở lại để còn bật lên được', async page => {
+test('17b ẩn bàn phím: bài dồn lên đầu trang, nút ⚙ mở lại được', async page => {
   await openPlayer(page, 'u1-l01/2');
-  const setKeyboard = async on => {
-    await page.click('#board .js-keyboard-settings a');
+  const setKeyboard = async (on, from) => {
+    await page.click(from);
     await page.waitForSelector('.kb-settings-card');
     // Ô checkbox cố tình vô hình (chỉ để bàn phím và trình đọc màn hình thấy); nhãn mới là thứ bấm.
     const checked = await page.isChecked('#kb-show-keyboard');
@@ -540,39 +540,49 @@ test('17b ẩn bàn phím: liên kết Cài đặt ở lại để còn bật l�
     await sleep(400);
   };
 
-  await setKeyboard(false);
+  await setKeyboard(false, '#board .js-keyboard-settings a');
   const hidden = await page.evaluate(() => {
     const board = document.querySelector('#board .nt-player-keyboard');
-    const link = board.querySelector('.js-keyboard-settings a').getBoundingClientRect();
     const stage = document.querySelector('#stage');
     const card = document.querySelector('#stage .card').getBoundingClientRect();
     const box = stage.getBoundingClientRect();
+    const button = document.querySelector('#pt-keyboard').getBoundingClientRect();
     return {
       hide: board.classList.contains('hide'),
-      rows: board.querySelector('.keyboard-row').getBoundingClientRect().height,
-      hands: Boolean(board.querySelector('.hands canvas')),
-      link: { w: Math.round(link.width), h: Math.round(link.height) },
+      boardHeight: Math.round(board.getBoundingClientRect().height),
       justify: getComputedStyle(stage).justifyContent,
       // 0 = bài nằm sát mép trên khung, 1 = sát mép dưới.
-      drop: (card.top + card.height / 2 - box.top) / box.height
+      drop: (card.top + card.height / 2 - box.top) / box.height,
+      button: { w: Math.round(button.width), h: Math.round(button.height) }
     };
   });
   assert.ok(hidden.hide, 'board mang class hide');
-  assert.strictEqual(hidden.rows, 0, 'hàng phím biến mất');
-  assert.ok(!hidden.hands, 'bàn tay cũng tắt theo');
-  assert.ok(hidden.link.w > 0 && hidden.link.h > 0, `liên kết Cài đặt PHẢI còn thấy được: ${JSON.stringify(hidden.link)}`);
+  assert.strictEqual(hidden.boardHeight, 0, 'bàn phím ẩn hẳn như bản gốc');
   // Khung bài căn sát đáy để nằm ngay trên bàn phím; bỏ bàn phím mà vẫn căn đáy thì cả bài tụt
   // xuống mép dưới màn hình.
-  assert.strictEqual(hidden.justify, 'center', 'không còn bàn phím thì bài phải về giữa khung');
-  assert.ok(hidden.drop > 0.3 && hidden.drop < 0.7, `bài không được tụt xuống đáy (ở ${hidden.drop.toFixed(2)} chiều cao khung)`);
+  assert.strictEqual(hidden.justify, 'flex-start', 'không còn bàn phím thì bài dồn lên đầu trang');
+  assert.ok(hidden.drop < 0.3, `bài phải ở nửa trên khung, đang ở ${hidden.drop.toFixed(2)}`);
+  // Liên kết Cài đặt nằm TRONG bàn phím nên ẩn theo nó; nút ⚙ trên thanh trên cùng là lối vào
+  // luôn có mặt, nếu không người học tự khoá mình ra ngoài không bật lại được bàn phím.
+  assert.ok(hidden.button.w > 0 && hidden.button.h > 0, 'nút Cài đặt bàn phím trên thanh trên cùng');
 
-  // Và nó phải thật sự mở lại được bàn phím — đây là cửa duy nhất.
-  await setKeyboard(true);
+  await setKeyboard(true, '#pt-keyboard');
   const board = await boardState(page);
   assert.strictEqual(board.keys, 60, 'phím trở lại');
   assert.strictEqual(board.activeKey, 'j', 'phím đích được áp lại');
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('typingease-keyboard-v1')).showKeyboard);
   assert.strictEqual(stored, true, 'tuỳ chọn được ghi lại');
+});
+
+test('17c Alt+K mở Cài đặt bàn phím ngay giữa lúc gõ', async page => {
+  await openPlayer(page, 'u1-l01/2');
+  await page.keyboard.press('Alt+k');
+  await page.waitForSelector('.kb-settings-card', { timeout: 3000 });
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(() => !document.querySelector('.kb-settings'));
+  const state = await playerState(page);
+  assert.strictEqual(state.state, 'typing', 'vẫn đang ở màn gõ');
+  assert.strictEqual(state.value, '', 'phím tắt không lọt vào ô nhập');
 });
 
 for (const route of ['/tien-do/', '/luyen-tu-do/', '/bai-hoc/', '/kiem-tra-toc-do-go/', '/luyen-phim-yeu/']) {
