@@ -489,3 +489,40 @@ Dưới 900px nav ẩn, topbar quay lại flex để nút CTA về sát mép ph�
 - Âm click chỉ có ở player `/hoc/`; `/luyen-tu-do/` và `/kiem-tra-toc-do-go/` chưa gọi `sound.click()`.
 - `sw.js` chưa có thông báo "đã có bản mới, tải lại?" — mới chỉ có `postMessage('skip-waiting')`.
 - Tông da bàn tay vẫn hơi nâu hơn gốc (từ 16/09, chưa động tới).
+
+---
+
+# 2026-09-18 (tối) — VẼ LẠI BÀN TAY
+
+Chủ site: "nhìn rất xấu". Đúng — bản cũ là bốn cái ống thẳng song song cắm lên một khối bo tròn,
+và mắt người nhận ra ngay đó không phải bàn tay.
+
+## Chẩn đoán từng thứ một
+1. **Đầu ngón đội vương miện**: `crease()` vẽ nếp gấp dưới móng bằng một chữ V, cộng với ellipse
+   móng thành hình răng cưa. Nay nếp gấp là cung nông, và đầu ngón là mái vòm dựng bằng hai cubic
+   chứ không phải nửa hình tròn ghép vào (`A r r` nhìn ra ngay là hình vẽ bằng ống).
+2. **Ngón không thuôn**: bề ngang gần như không đổi từ gốc tới đầu. Nay `[1, .96, .98, .86, .72]` —
+   phình nhẹ ở khớp giữa rồi thon lại, vì ngón người không thuôn đều một mạch.
+3. **Bốn ngón song song**: `SPLAY` cho ngón xoè dần về phía ngón út, `CONVERGE` 0,86 để gốc chụm
+   hơn đầu. Ngón cũng hẹp lại (0,62–0,74 bề ngang phím thay vì 0,82–1,02) nên có KHE giữa các ngón;
+   không có khe thì bốn ngón dính thành một mảng.
+4. **Mu bàn tay là khối bo tròn**: mép trên nay lượn theo từng đốt ngón và tụt xuống ở kẽ ngón
+   (`WEB_DROP`), nên ngón mọc ra khỏi bàn tay chứ không phải dán lên. Thêm gò cái (chỗ phình giữa
+   gốc ngón trỏ và cổ tay) và bốn vệt gân rất nhạt — thiếu gân thì mu bàn tay là mảng phẳng, mà
+   mảng phẳng chính là thứ làm hình trông như đồ hoạ.
+5. **Tay quá to**: cổ tay từ 3,0 xuống 2,0 bề ngang phím, lòng bàn tay và cẳng tay ngắn lại, độ tan
+   kéo lên sớm hơn (0,7→2,3 thay vì 1,1→3,6 chiều cao phím). Cao 362px → 279px.
+6. **Ngón cái**: trước nằm DƯỚI mu bàn tay nên tay phải gần như mất ngón cái. Nay vẽ ĐÈ lên, và
+   gốc tan dần vào gò cái bằng mask, nếu không thì lộ một mép cắt phẳng giữa lòng bàn tay.
+7. **Tương phản**: `opacity` .5 → .6 và gradient ống nhiều chặng hơn. Ở .5 mọi khối đều bị nền
+   trắng nuốt, nên hình đã đúng vẫn trông bẹt.
+
+## Kiểm định
+`scripts/e2e.js` **27/27 PASS** — quan trọng nhất là 11-16 (tư thế ngón, sai số đầu ngón ≤ 3,7px so
+với tâm phím, Shift, Space, tốc độ thích ứng, resize): hình đổi hẳn nhưng hợp đồng hình học thì
+không, vì đầu ngón vẫn ghim vào đúng phím cơ sở như cũ.
+
+## Còn lại
+- Ngón vẫn hơi "xúc xích" ở đoạn giữa; muốn hơn nữa thì phải có phối cảnh thật (ngón ngắn lại theo
+  chiều nhìn), tức là đổi cả mô hình chứ không chỉ đường nét.
+- Tông da ấm hơn bản cũ nhưng vẫn là một tông duy nhất cho mọi người dùng.
