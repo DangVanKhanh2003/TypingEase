@@ -67,6 +67,8 @@
     notReadyTitle: 'Bài này chưa có nội dung',
     notReadyBody: '<b>{title}</b> đã có trong lộ trình nhưng nội dung sẽ được viết ở giai đoạn sau. Hãy chọn một bài đã mở.',
     weakPage: 'Luyện phím yếu',
+    badgeNew: 'Huy hiệu mới',
+    badgeAll: 'Xem tất cả huy hiệu →',
     imeNote: 'Hình như bộ gõ tiếng Việt chưa bật: bạn đang gõ ra chuỗi Telex thô. Bật Unikey hoặc EVKey ở kiểu gõ Telex, hoặc chuyển bài này sang gõ không dấu.',
     imeNoteButton: 'Gõ không dấu',
     asciiNote: 'Bài này đang ở chế độ gõ KHÔNG DẤU. Bật bộ gõ tiếng Việt rồi bấm nút bên cạnh để quay lại bản có dấu.',
@@ -109,32 +111,58 @@
   const input = root.querySelector('#player-input');
   const tapEl = root.querySelector('#tap-to-type');
 
+  // Huy hiệu vừa mở khoá được báo NGAY trong bảng kết quả — đợi người học tự vào /tien-do/ thì
+  // nhiều người không bao giờ biết mình có. `knownBadges` là ảnh chụp lúc mở trang; mỗi lượt
+  // đánh giá chỉ báo những cái mới so với ảnh đó rồi cập nhật ảnh, nên mỗi huy hiệu báo đúng một lần.
+  const badges = global.TypingEaseBadges;
+  const knownBadges = new Set(badges?.earnedIds?.() || []);
+
+  function freshBadges() {
+    if (!badges || !curriculum) return [];
+    let list = [];
+    try { list = badges.evaluate({ store, profile, curriculum }); } catch { return []; }
+    const fresh = list.filter(badge => badge.earned && !knownBadges.has(badge.id));
+    fresh.forEach(badge => knownBadges.add(badge.id));
+    return fresh;
+  }
+
+  function badgeNoticeHtml(list) {
+    if (!list.length) return '';
+    return `<div class="badge-notice" role="status">`
+      + list.map(badge => `<span class="badge-notice-item" data-badge="${escapeHtml(badge.id)}">`
+        + `<span class="badge-notice-icon" aria-hidden="true">${badge.icon}</span>`
+        + `<span><small>${T.badgeNew}</small><b>${escapeHtml(badge.title)}</b></span></span>`).join('')
+      + `<a class="badge-notice-link" href="../tien-do/#badges">${T.badgeAll}</a></div>`;
+  }
+
   const soundEl = root.querySelector('#pt-sound');
   const handsEl = root.querySelector('#pt-hands');
   const sound = global.TypingEaseSound;
 
-  // Hai công tắc của người học, nhớ giữa các phiên. Bàn tay động mặc định BẬT (giống typing.com),
-  // âm click mặc định TẮT — mặc định của mỗi cái nằm ở phía ít làm phiền hơn.
+  // Hai công tắc của người học, nhớ giữa các phiên. Bàn tay mặc định HIỆN, âm click mặc định
+  // TẮT — mặc định của mỗi cái nằm ở phía ít làm phiền hơn. (Tới 18/09 công tắc này bật/tắt
+  // chuyển động ngón của bàn tay vẽ; từ 19/09 tay là ảnh đứng yên nên nó thành hiện/ẩn bàn tay.
+  // Giữ nguyên khoá localStorage: "off" cũ = người dùng không muốn thấy tay nhúc nhích, nay = ẩn.)
   const HANDS_KEY = 'typingease-hands-v1';
   const readHands = () => { try { return global.localStorage.getItem(HANDS_KEY) !== 'off'; } catch { return true; } };
-  let animatedHands = readHands();
+  let showHands = readHands();
 
-  const keyboard = global.TypingEaseKeyboard?.create({ host: boardEl, hands: true, animatedHands });
+  const keyboard = global.TypingEaseKeyboard?.create({ host: boardEl, hands: showHands });
 
   function syncToggles() {
     soundEl?.setAttribute('aria-pressed', String(Boolean(sound?.isOn())));
-    handsEl?.setAttribute('aria-pressed', String(animatedHands));
+    handsEl?.setAttribute('aria-pressed', String(showHands));
   }
 
-  function setAnimatedHands(value) {
-    animatedHands = Boolean(value);
-    try { global.localStorage.setItem(HANDS_KEY, animatedHands ? 'on' : 'off'); } catch { /* storage blocked */ }
-    keyboard?.layout({ animatedHands });
+  function setShowHands(value) {
+    showHands = Boolean(value);
+    try { global.localStorage.setItem(HANDS_KEY, showHands ? 'on' : 'off'); } catch { /* storage blocked */ }
+    applyViewport();
     syncToggles();
   }
 
   soundEl?.addEventListener('click', () => { sound?.toggle(); syncToggles(); focusInput(); });
-  handsEl?.addEventListener('click', () => { setAnimatedHands(!animatedHands); focusInput(); });
+  handsEl?.addEventListener('click', () => { setShowHands(!showHands); focusInput(); });
 
   // --- viewport -------------------------------------------------------------------------------
   // Hands need room to read; a phone gets three rows of letters and no hands at all (PLAN.md B8).
@@ -146,7 +174,8 @@
   const isPhone = () => phoneQuery.matches;
 
   function applyViewport() {
-    keyboard?.layout({ compact: isPhone(), hands: wideQuery.matches });
+    // Tay chỉ hiện khi đủ rộng VÀ người dùng muốn thấy.
+    keyboard?.layout({ compact: isPhone(), hands: wideQuery.matches && showHands });
     root.classList.toggle('is-phone', isPhone());
     root.classList.toggle('is-touch', touchQuery.matches);
     if (tapEl) tapEl.textContent = T.tapToType;
@@ -776,9 +805,13 @@
       ? fill(T.slowKey, { key: escapeHtml(keyLabel(result.slow.key)), ms: (result.slow.mean / 1000).toFixed(1).replace('.', ',') })
       : failed ? T.keepAccuracy : '';
     stageEl.className = 'player-stage is-result';
+    // Screen cuối thì để bảng tổng kết bài báo: "Bước đầu tiên" hay "Xong Unit 1" thuộc về
+    // khoảnh khắc xong BÀI, không phải xong một screen — và ở đó có chỗ hơn.
+    const fresh = screenIndex + 1 >= screens.length ? [] : freshBadges();
     stageEl.innerHTML = '<section class="card result-card">'
       + starRow(result.stars)
       + `<h2 class="result-headline">${headline}</h2>`
+      + badgeNoticeHtml(fresh)
       + `<p class="result-stats">${stats.join(' · ')}</p>`
       + (hint ? `<p class="result-hint">${hint}</p>` : '')
       + '<div class="result-actions">'
@@ -834,10 +867,12 @@
     const unitDone = unitIds.filter(id => store.getLesson(id)?.completedAt).length;
 
     const tile = (label, value) => `<div class="stat-tile"><span>${label}</span><strong>${value}</strong></div>`;
+    const fresh = freshBadges();
     stageEl.className = 'player-stage is-lesson-result';
     stageEl.innerHTML = '<section class="card lesson-result-card">'
       + `<p class="lesson-done-kicker">${escapeHtml(lesson.title)} — ${T.lessonDone}</p>`
       + starRow(Math.min(STARS, Math.round(stars / Math.max(1, maxStars) * STARS)))
+      + badgeNoticeHtml(fresh)
       + (keys.length ? `<p class="learned-keys">${fill(T.learned, { count: keys.length })} <b>${keys.map(escapeHtml).join(' ')}</b></p>` : '')
       + '<div class="stat-tiles">'
         + tile(T.statWpm, `${wpm} WPM`)
@@ -1033,7 +1068,7 @@
     if (event.altKey && !event.ctrlKey && !event.metaKey) {
       const shortcut = String(event.key).toLowerCase();
       if (shortcut === 's') { event.preventDefault(); sound?.toggle(); syncToggles(); return; }
-      if (shortcut === 'h') { event.preventDefault(); setAnimatedHands(!animatedHands); return; }
+      if (shortcut === 'h') { event.preventDefault(); setShowHands(!showHands); return; }
       if (shortcut === 'r' && lesson) { event.preventDefault(); openLesson(lesson.id, 1); return; }
     }
     if (event.metaKey || event.ctrlKey || event.altKey) return;

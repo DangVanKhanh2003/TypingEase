@@ -64,6 +64,25 @@ let testHistory = loadHistory();
 let progressRange = 7;
 let progressMetric = 'wpm';
 
+// Âm click — cùng công tắc với player và trang luyện tự do (`typingease-sound-v1`).
+// Chỉ kêu khi ô nhập dài ra; xoá lùi thì im.
+const sound = window.TypingEaseSound;
+const soundToggle = document.querySelector('#sound-toggle');
+let heardLength = 0;
+const syncSound = () => soundToggle?.setAttribute('aria-pressed', String(Boolean(sound?.isOn())));
+soundToggle?.addEventListener('click', () => { sound?.toggle(); syncSound(); input.focus(); });
+document.addEventListener('keydown', event => {
+  if (event.altKey && !event.ctrlKey && !event.metaKey && String(event.key).toLowerCase() === 's') {
+    event.preventDefault(); sound?.toggle(); syncSound();
+  }
+});
+syncSound();
+function clickFor(value) {
+  const index = value.length - 1;
+  if (index >= 0 && value.length > heardLength) sound?.click(value[index] === passage[index] ? 'ok' : 'bad');
+  heardLength = value.length;
+}
+
 function loadHistory() {
   try {
     const saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
@@ -309,6 +328,7 @@ durationButtons.forEach(button => button.addEventListener('click', () => {
   resetTest(false);
 }));
 input.addEventListener('input', () => {
+  if (!finished) clickFor(input.value);
   beginTest();
   renderPrompt();
   updateMetrics();

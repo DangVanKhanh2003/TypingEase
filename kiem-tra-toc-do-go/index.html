@@ -54,7 +54,7 @@
             <div><span>Độ ổn định</span><strong id="consistency">--<small>%</small></strong></div>
           </div>
           <p class="test-prompt" id="test-prompt" aria-label="Đoạn văn cần gõ"></p>
-          <label for="typing-input">Bắt đầu gõ tại đây</label>
+          <div class="input-head"><label for="typing-input">Bắt đầu gõ tại đây</label><button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" title="Âm click khi gõ (Alt+S)">🔊 Âm click</button></div>
           <textarea id="typing-input" rows="4" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Nhấn vào đây và bắt đầu gõ..."></textarea>
           <div class="test-actions"><button class="primary-button" id="restart" type="button">Thử lại <span>↻</span></button><p>WPM được tính theo số ký tự đã nhập trong thời gian gõ.</p></div>
           <section class="test-result" id="test-result" aria-live="polite" hidden>
@@ -138,6 +138,7 @@
     </main>
 
     <footer class="test-footer"><a class="brand" href="../">Typing<span>Ease</span></a><p>Gõ chậm một chút, rồi bạn sẽ đi rất xa.</p></footer>
+    <script src="../sound.js"></script>
     <script src="typing-test.js"></script>
     <script src="../sw-register.js"></script>
   </body>

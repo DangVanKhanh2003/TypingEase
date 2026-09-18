@@ -64,6 +64,21 @@ em{font-style:normal;color:var(--green)}
 textarea{resize:none;width:100%;border:1px solid var(--border-soft);border-radius:var(--r-sm);padding:11px 12px;line-height:1.5;color:var(--ink);margin-top:7px;outline:0;font:14px "DM Mono",monospace}
 textarea:focus{border-color:var(--green);box-shadow:var(--shadow-focus)}
 .typing-label{display:block;font-size:10px;color:var(--muted);font-weight:700;margin-top:13px}
+/* Nhãn ô gõ + công tắc âm click trên một hàng (luyện tự do, kiểm tra tốc độ). Nút nằm NGOÀI
+   <label> vì bấm vào trong label là trình duyệt chuyển focus sang textarea thay vì bấm nút. */
+.input-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.input-head label{margin-bottom:0}
+.sound-toggle{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid var(--border-soft);border-radius:var(--r-sm);background:var(--surface);color:var(--ink);font-size:var(--fs-xs);font-weight:700;line-height:1;white-space:nowrap}
+.sound-toggle:hover{background:var(--surface-tint)}
+.sound-toggle[aria-pressed=true]{border-color:var(--border-hover);background:var(--surface-tint);color:var(--green)}
+.sound-toggle[aria-pressed=false]{color:var(--muted)}
+
+/* Thanh "có bản mới" của sw-register.js: nằm dưới cùng, không chiếm focus, người dùng tự quyết
+   lúc nào tải lại — đang giữa một screen mà bị tải lại giùm là mất công gõ. */
+.update-bar{position:fixed;left:50%;bottom:18px;z-index:60;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:10px 12px 10px 16px;border:1px solid var(--border-soft);border-radius:var(--r);background:var(--surface);color:var(--ink);font-size:var(--fs-sm);box-shadow:var(--shadow-lift);transform:translateX(-50%)}
+.update-bar button{border:1px solid var(--border-soft);border-radius:var(--r-sm);padding:7px 11px;background:var(--surface);color:var(--muted);font-size:var(--fs-xs);font-weight:700;white-space:nowrap}
+.update-bar button.is-primary{border-color:var(--green);background:var(--green);color:var(--surface)}
+.update-bar button:hover{filter:brightness(.96)}
 .feedback{margin:10px 0 0;color:var(--muted);font-size:10px}
 
 /* ===== Hero & tiêu đề section ================================================================= */

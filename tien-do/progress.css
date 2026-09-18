@@ -39,9 +39,8 @@
 .daily-goal-progress p{margin-top:6px}
 .daily-goal-options{display:flex;gap:5px}
 .daily-goal-options button{border:1px solid var(--border-soft);border-radius:var(--r-sm);padding:7px 8px;background:var(--surface);color:var(--muted);font-size:10px;font-weight:800}
-/* #e5f5df = nền "đang chọn", dùng ở 4 nhóm nút khắp site. Ngả vàng hơn --surface-tint rõ rệt
-   nên không snap; đề nghị thêm --surface-active. */
-.daily-goal-options button.selected{border-color:var(--green);background:#e5f5df;color:var(--green)}
+/* --surface-active = nền "đang chọn", dùng ở 4 nhóm nút khắp site (ngả vàng hơn --surface-tint). */
+.daily-goal-options button.selected{border-color:var(--green);background:var(--surface-active);color:var(--green)}
 
 /* ---------- huy hiệu ---------- */
 .badges{margin:0 0 22px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
@@ -70,7 +69,7 @@
 .coach-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .coach-kicker{color:var(--green);font-size:10px;font-weight:800}
 .coach-head h3{margin:4px 0 0;color:var(--ink);font-size:20px;letter-spacing:-.7px}
-.coach-level{padding:5px 11px;border:1px solid var(--green);border-radius:var(--r-pill);background:#e5f5df;color:var(--green);font-size:10px;font-weight:800;white-space:nowrap}
+.coach-level{padding:5px 11px;border:1px solid var(--green);border-radius:var(--r-pill);background:var(--surface-active);color:var(--green);font-size:10px;font-weight:800;white-space:nowrap}
 .coach-body{display:grid;grid-template-columns:1fr 190px;gap:16px;align-items:center}
 .coach:not(.has-trend) .coach-body{grid-template-columns:1fr}
 /* Cạm bẫy: `hidden` là IDL của HTMLElement, SVGElement không có — và UA stylesheet cũng không áp
@@ -95,8 +94,7 @@
 .coach-key b{font-family:"DM Mono",monospace;font-size:12px}
 .coach-advice{color:var(--ink);font-size:12px;line-height:1.5}
 .coach-action{display:inline-flex;align-items:center;justify-self:start;padding:11px 17px;border:0;border-radius:var(--r-sm);background:var(--green);color:var(--surface);font-size:12px;font-weight:800;text-decoration:none;cursor:pointer}
-/* #0f6244 là --green tối đi một bậc cho trạng thái hover; đề nghị token --green-dark. */
-.coach-action:hover{background:#0f6244}
+.coach-action:hover{background:var(--green-dark)}
 
 /* ---------- heatmap ---------- */
 /* Ba mức nhiệt (mạnh/khá/yếu) là màu ngữ nghĩa xanh-vàng-đỏ, không quy về token thương hiệu. */

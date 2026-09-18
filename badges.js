@@ -100,5 +100,10 @@
     return badges;
   }
 
-  global.TypingEaseBadges = { KEY, LIST, collect, evaluate, reset: () => write({}) };
+  // Danh sách id đã có mốc mở khoá. Player dùng nó làm ảnh chụp "trước": huy hiệu nào `earned`
+  // sau lượt gõ mà chưa nằm trong ảnh này là vừa mở — kể cả khi nó đạt từ phiên trước nhưng
+  // người dùng chưa từng ghé /tien-do/ để thấy, vì lúc đó mốc cũng chưa được ghi.
+  const earnedIds = () => Object.keys(read());
+
+  global.TypingEaseBadges = { KEY, LIST, collect, evaluate, earnedIds, reset: () => write({}) };
 })(window);

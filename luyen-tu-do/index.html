@@ -59,7 +59,7 @@
           <span>Thời gian <b id="free-timer">00:00</b></span>
         </div>
         <p class="free-sample" id="free-sample">Hãy chọn một đoạn văn để bắt đầu luyện gõ.</p>
-        <label class="typing-label" for="free-input">Gõ lại đoạn văn phía trên</label>
+        <div class="input-head"><label class="typing-label" for="free-input">Gõ lại đoạn văn phía trên</label><button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" title="Âm click khi gõ (Alt+S)">🔊 Âm click</button></div>
         <textarea id="free-input" rows="3" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Bắt đầu gõ tại đây..."></textarea>
         <p class="feedback" id="free-feedback" aria-live="polite">Bạn có thể dán nội dung riêng hoặc tạo đoạn ngẫu nhiên.</p>
       </section>
@@ -112,6 +112,7 @@
     <script src="../profile.js"></script>
     <script src="../progress-store.js"></script>
     <script src="../keyboard-widget.js"></script>
+    <script src="../sound.js"></script>
     <script src="free-page.js"></script>
     <script src="../sw-register.js"></script>
   </body>

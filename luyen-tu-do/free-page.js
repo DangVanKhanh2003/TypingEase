@@ -5,6 +5,7 @@
   // (`data-pkey`) nên không đụng vào bất cứ bàn phím nào khác trên site.
   const profile = global.TypingEaseProfile;
   const store = global.TypingEaseProgress;
+  const sound = global.TypingEaseSound;
 
   const sampleEl = document.querySelector('#free-sample');
   const input = document.querySelector('#free-input');
@@ -22,6 +23,23 @@
 
   let target = '', startedAt = null, timer = null, recorded = false;
   let keyStart = null, observed = 0;
+
+  // Âm click dùng chung công tắc với player (`typingease-sound-v1`): bật ở một nơi là bật khắp
+  // site. Chỉ kêu khi ô nhập DÀI RA — xoá lùi thì im, vì tiếng "sai" lúc sửa lỗi chỉ thêm bực.
+  const soundEl = document.querySelector('#sound-toggle');
+  const syncSound = () => soundEl?.setAttribute('aria-pressed', String(Boolean(sound?.isOn())));
+  soundEl?.addEventListener('click', () => { sound?.toggle(); syncSound(); input.focus(); });
+  document.addEventListener('keydown', event => {
+    if (event.altKey && !event.ctrlKey && !event.metaKey && String(event.key).toLowerCase() === 's') {
+      event.preventDefault(); sound?.toggle(); syncSound();
+    }
+  });
+  syncSound();
+  function clickFor(value) {
+    const index = value.length - 1;
+    if (index < 0 || value.length <= observed) return;
+    sound?.click(value[index] === target[index] ? 'ok' : 'bad');
+  }
 
   const board = document.querySelector('#free-board');
   const keyboard = board && global.TypingEaseKeyboard
@@ -121,6 +139,7 @@
     if (input.value.length > target.length) input.value = input.value.slice(0, target.length);
     if (!startedAt && input.value) { startedAt = Date.now(); timer = setInterval(tick, 1000); }
     if (startedAt || input.value) store?.recordPracticeActivity();
+    clickFor(input.value);   // trước trackKeystrokes: nó cập nhật `observed`
     trackKeystrokes(input.value);
     keyboard?.press();
     draw();
