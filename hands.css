@@ -7,8 +7,9 @@
 .hand-layer{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:2;
   -webkit-mask-image:linear-gradient(to bottom,#000 var(--hand-fade-from,75%),transparent 100%);
   mask-image:linear-gradient(to bottom,#000 var(--hand-fade-from,75%),transparent 100%)}
-.hand-photo{position:absolute;left:0;top:0;transform-origin:0 0;opacity:.62;user-select:none;
-  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+/* Bàn tay là HÌNH VẼ NÉT (SVG, assets/hands/*.svg): chỉ có đường viền, ruột rỗng, nên chữ trên
+   phím vẫn đọc được xuyên qua tay. Không bóng đổ — bóng chỉ có nghĩa với một vật đặc. */
+.hand-photo{position:absolute;left:0;top:0;transform-origin:0 0;opacity:.8;user-select:none}
 .hand-pointers{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
 /* Vệt sáng ở đầu ngón phụ trách; ngón út giữ Shift (glow-full) đậm hơn để phân biệt với ngón gõ. */
 .finger-glow{fill:#37b3d6;opacity:0;transition:opacity .12s ease;transform-box:fill-box;transform-origin:center}

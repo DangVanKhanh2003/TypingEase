@@ -16,10 +16,10 @@
 
   // >>> HAND_PHOTOS — scripts/hand-photo.py ghi lại khối này, đừng sửa tay
   const PHOTOS = {
-    left: { src: '/assets/hands/left.webp', width: 492, height: 545,
-      tips: { LP: [61, 29.6], LR: [174, 29.6], LM: [287, 29.6], LI: [400, 29.6], LT: [461.2, 274.3] } },
-    right: { src: '/assets/hands/right.webp', width: 468, height: 545,
-      tips: { RI: [68, 29.6], RM: [181, 29.6], RR: [294, 29.6], RP: [407, 29.6], RT: [142.4, 274.3] } }
+    left: { src: '/assets/hands/left.svg', width: 486, height: 424,
+      tips: { LP: [50, 40], LR: [150, 40], LM: [250, 40], LI: [350, 40], LT: [438, 282] } },
+    right: { src: '/assets/hands/right.svg', width: 486, height: 424,
+      tips: { RI: [136, 40], RM: [236, 40], RR: [336, 40], RP: [436, 40], RT: [48, 282] } }
   };
   // <<< HAND_PHOTOS
 

@@ -655,3 +655,42 @@ hơn (không tới mức ảnh). **Chốt cách 1.** Bàn tay SVV động (16/09
 - Ảnh tay vẫn là hình VẼ. Muốn đẹp hơn thì chụp tay thật theo hướng dẫn ở `hand-photo.py`; sau khi
   thay nhớ chạy lại e2e (test 11 kiểm đầu ngón, 16 kiểm resize).
 - Ngón cái trong hình vẽ nhìn vẫn như một cục tròn — điểm yếu cố hữu của bản vẽ, ảnh thật sẽ xong.
+
+---
+
+# 2026-09-19 (chiều) — BÀN TAY VẼ NÉT, KHÔNG TÔ MÀU
+
+Chủ site gửi thêm một ảnh mẫu thứ hai: bàn tay kiểu **hình vẽ nét** đặt lên sơ đồ bàn phím — chỉ
+đường viền đen mảnh, ruột rỗng, chữ trên phím đọc xuyên qua tay. Khác hẳn ảnh mẫu buổi sáng (tay
+chụp thật). Chốt làm theo mẫu này.
+
+## Vì sao nó thắng hẳn bàn tay tô màu
+- **Không che phím.** Tay đặc, dù vẽ khéo đến đâu, cũng phủ lên đúng những phím người học đang cần
+  nhìn. Trước phải hạ độ mờ xuống .62 cho đỡ che, đổi lại tay mờ nhợt. Nay .8 mà vẫn đọc được phím.
+- **Vẽ nét chỉ cần đường đi đúng**, không cần tả khối. Hai lần vẽ tô màu trước đều chết ở chỗ dựng
+  mu bàn tay và phối cảnh ngón; kiểu nét không có hai thứ đó.
+- **SVG thay cho ảnh raster**: 2,5 KB mỗi bàn (WebP trước là 40 KB), nét tuyệt đối ở mọi cỡ, và
+  `scripts/draw-hands.js` là Node THUẦN — không cần Chrome, không cần Pillow, không cần playwright.
+  `draw-hands.html` + `render-hands.js` (vòng trước) bị xoá theo.
+
+## Hình học (`scripts/draw-hands.js`)
+- Mỗi ngón là một dải từ đầu ngón (trên phím cơ sở) xuôi về cổ tay, thu hẹp dần, đầu bo tròn bằng
+  nửa đường tròn. Các dải **cắt nhau** trong lòng bàn tay và mọi đường để nguyên — mẫu vẽ cũng vậy,
+  và nhờ thế không phải dựng mu bàn tay.
+- Hai đường mép (bên ngón út, bên gò cái) khép bàn tay lại và chạy tiếp thành cổ tay. Đáy để mở,
+  phần tan dần ở cổ tay là việc của mask trong `hands.css`.
+- Tay phải là ảnh gương của tay trái, nên chỉ phải chỉnh một bàn tay.
+- Bốn vòng chỉnh mới ra hình: (1) ngón dài tới hết khung → mạng nhện phủ nửa dưới bàn phím;
+  (2) rút ngắn nhưng hội tụ lỏng → bốn dải rời, không ra bàn tay; (3) ngón cái mọc từ GIỮA đám bốn
+  ngón nên thân bị che, chỉ còn cái đầu tròn nổi lên như móc câu — phải cho nó mọc từ gò cái ở mép
+  ngoài; (4) rút ngắn cổ tay để nửa dưới bớt rối.
+
+## Kiểm định
+`scripts/e2e.js` **31/31 PASS** (không phải sửa test nào: hợp đồng vẫn là bốn đầu ngón khớp bốn phím
+cơ sở), `offline-check.js` 3/3. Ảnh chụp ở 1024 và 1440: hình giữ nguyên tỉ lệ, đường chỉ phím trúng
+tâm phím.
+
+## Còn lại
+- Đầu ngón cái nhìn vẫn hơi tròn ủng ở chỗ nối với gò cái.
+- `scripts/hand-photo.py` vẫn dùng được nguyên vẹn nếu sau này chủ site muốn quay lại ảnh chụp thật
+  (nó ghi cùng khối HAND_PHOTOS, chỉ khác đuôi file là .webp).
