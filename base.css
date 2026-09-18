@@ -20,13 +20,23 @@ button{font:inherit;cursor:pointer}
 /* Topbar dùng ĐÚNG --w-page như thân trang. Trước đây topbar 1180px còn nội dung 1068px, nên trên
    gần như mọi trang header thò ra hai bên rộng hơn nội dung 112px — một trong những thứ làm site
    trông lệch lạc. Logo và nav phải thẳng hàng với mép nội dung. */
-.topbar{height:84px;display:flex;align-items:center;justify-content:space-between;max-width:var(--w-page);margin:auto;padding:0 var(--pad-x)}
+/* Lưới ba cột `1fr auto 1fr` chứ không phải space-between: nav nằm CHÍNH GIỮA topbar kể cả khi
+   cột phải trống. Trang chủ không có .header-actions, nên với space-between nav bị đẩy lệch hẳn
+   sang phải và không khớp với các trang có nút CTA. */
+.topbar{height:84px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;max-width:var(--w-page);margin:auto;padding:0 var(--pad-x)}
 .brand{font-size:26px;font-weight:800;letter-spacing:-1.8px;color:var(--ink);text-decoration:none}
 .brand span{color:var(--green)}
-nav{display:flex;gap:34px;margin-left:100px}
+nav{display:flex;gap:34px}
+/* Đặt cột TƯỜNG MINH cho từng vai trò, vì topbar có ba hình dạng khác nhau: logo + nav (+ nút CTA),
+   logo + `← Trang chủ` trần, và logo + `← Trang chủ` bọc trong .header-actions. Nếu chỉ dựa vào
+   thứ tự trong lưới thì phần tử thứ hai rơi vào cột giữa — đúng cho nav, sai cho link về trang chủ
+   (nó từng nằm sát mép phải và phải ở nguyên đó). Mặc định là cột phải; chỉ logo và nav được gọi tên. */
+.topbar>*{grid-column:3;justify-self:end}
+.topbar .brand{grid-column:1;justify-self:start}
+.topbar nav{grid-column:2;justify-self:center}
 nav a{font-size:14px;font-weight:600;color:var(--muted-soft);text-decoration:none;padding:9px 0}
 nav a.active{color:var(--green);border-bottom:2px solid var(--green)}
-.header-actions{display:flex;align-items:center;gap:8px}
+.header-actions{display:flex;align-items:center;gap:8px;justify-self:end}
 
 /* ===== Chữ ==================================================================================== */
 h1,h2,h3,p{margin-top:0}
@@ -138,7 +148,7 @@ footer p,footer span{font-size:var(--fs-2xs);color:var(--muted-soft);margin:0}
    Bản cũ dùng 12 ngưỡng (750/900/620/600/599/520/500/420/380...), nhiều cặp lệch 1px vô nghĩa.
    Nay chỉ hai: 900px cho máy tính bảng / cửa sổ hẹp, 620px cho điện thoại. */
 @media (max-width:900px){
-  .topbar{height:68px}
+  .topbar{height:68px;display:flex;justify-content:space-between}
   .topbar nav{display:none}
   .hero{grid-template-columns:1fr;padding:60px var(--pad-x) 25px}
   .hero-copy{padding:0}

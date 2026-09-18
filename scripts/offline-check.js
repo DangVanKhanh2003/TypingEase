@@ -32,8 +32,17 @@ const TYPES = {
   '.ico': 'image/x-icon', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml'
 };
 
+// Bộ đếm cho phép kiểm "còn mạng thì luôn là bản mới": mỗi lần gọi trả một con số khác.
+let counter = 0;
+
 function serve() {
   const server = http.createServer((request, response) => {
+    if (request.url.startsWith('/__fresh.txt')) {
+      counter += 1;
+      response.writeHead(200, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
+      response.end(String(counter));
+      return;
+    }
     let filePath = path.join(ROOT, decodeURIComponent(request.url.split('?')[0]));
     if (filePath.endsWith(path.sep) || !path.extname(filePath)) filePath = path.join(filePath, 'index.html');
     fs.readFile(filePath, (error, body) => {
@@ -97,6 +106,14 @@ check('trang chưa từng mở ra trang offline của site', async page => {
   await sleep(1500);   // stale-while-revalidate ghi cache sau khi trả lời, đừng cắt ngang
   assert.ok(await page.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'service worker chưa kiểm soát trang');
 
+  // 1b. CÒN MẠNG thì phải là bản mới. Bản v1 của sw.js cho tài nguyên tĩnh đi
+  // stale-while-revalidate, nên sửa CSS xong tải lại vẫn ra bản cũ đúng một lần — đủ để người sửa
+  // tưởng mình sai. Hai lần gọi cùng một URL phải ra hai giá trị khác nhau.
+  const first = await page.evaluate(() => fetch('/__fresh.txt').then(response => response.text()));
+  const second = await page.evaluate(() => fetch('/__fresh.txt').then(response => response.text()));
+  assert.notStrictEqual(second, first, `service worker trả bản cache khi vẫn còn mạng (${first} rồi ${second})`);
+  console.log(`PASS còn mạng thì luôn lấy bản mới (${first} → ${second})`);
+
   // 2. Mất mạng thật: server biến mất khỏi đời.
   await new Promise(resolve => server.close(resolve));
   await sleep(800);
@@ -109,6 +126,7 @@ check('trang chưa từng mở ra trang offline của site', async page => {
   }
   if (errors.length) { failed += 1; console.log(`FAIL lỗi JS của trang:\n    ${errors.join('\n    ')}`); }
   await browser.close();
-  console.log(`\n${checks.length - failed}/${checks.length} PASS (mất mạng thật, server đã tắt)`);
+  console.log(`
+${checks.length - failed}/${checks.length} PASS khi mất mạng thật (server đã tắt) + 1 khi còn mạng`);
   process.exit(failed ? 1 : 0);
 })().catch(error => { console.error(error); process.exit(1); });

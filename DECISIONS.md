@@ -418,8 +418,15 @@ Phase 5 theo PLAN.md, đã trừ phần en/ja (bỏ từ 16/09). Bốn việc, k
 ## 2. Service worker (`sw.js` + `sw-register.js`, nạp ở cả 11 trang)
 - **Không precache cả site.** Site tĩnh, người dùng chỉ đi vài trang; tải sẵn 35 file bài cho người
   mới vào là tiêu băng thông của họ. PRECACHE đúng 9 file đủ mở trang chủ + vào học.
-- **HTML: mạng trước.** Bài viết và lộ trình đổi theo mỗi lần deploy; cache trước là người dùng thấy
-  site cũ cả tuần. **CSS/JS/JSON: cache trước, cập nhật nền.**
+- **Mọi thứ đi mạng trước, cache chỉ là lưới đỡ khi mạng đứt** (sửa chiều cùng ngày, `sw.js` v2).
+  Bản v1 cho CSS/JS đi cache-trước-cập-nhật-nền để vào bài nhanh hơn; cái giá là MỘT lần nạp thấy
+  bản cũ sau mỗi lần deploy. Ngay chiều hôm đó nó đánh lừa đúng chủ site: sửa `base.css` xong, tải
+  lại, vẫn thấy giao diện cũ và tưởng code sai. Người dùng thật cũng gặp đúng cảnh ấy, chỉ khác là
+  họ không có cách nào để nghi ngờ. Tệ hơn: HTML mạng-trước ghép với CSS cache-trước nghĩa là trang
+  MỚI có thể dính CSS CŨ. Tốc độ gần như không mất: `fetch()` trong service worker vẫn đi qua HTTP
+  cache của trình duyệt nên lần thứ hai thường chỉ là một cú 304.
+  Ngoại lệ duy nhất là font Google — URL bất biến nên cache trước, và lưu cả response opaque để
+  trang offline còn đúng font.
 - **Trang chưa từng mở mà mất mạng → trang offline tự chứa (503)**, KHÔNG phục vụ bản cache của
   trang chủ dưới URL đó: trang chủ dùng đường dẫn tương đối nên đặt nó ở `/luyen-phim-yeu/` là mọi
   liên kết lệch một cấp, vừa vỡ giao diện vừa nói dối người dùng về chỗ họ đang đứng.
@@ -441,10 +448,19 @@ Xoá hẳn di sản engine 30 bài cũ: `lessons`, `lessonSecondLines`, `transla
 `fingerMap`, `localizedLessonName`. Không file nào còn gọi tới (mỗi trang mới có bảng chuỗi riêng).
 Còn đúng `localizedUi`, `currentLocalizedUi`, `formatUi` vì trang chủ thật sự dùng.
 
+## 5. Nav của topbar về chính giữa (chiều 18/09)
+`.topbar` từ `flex + space-between` sang lưới `1fr auto 1fr`. Với space-between, vị trí nav phụ
+thuộc việc trang đó có nút CTA bên phải hay không — trang chủ không có nên nav dạt hẳn sang phải,
+lệch hẳn so với các trang khác.
+**Cột phải đặt TƯỜNG MINH, không dựa vào thứ tự.** Topbar có ba hình dạng (logo+nav, logo+nav+CTA,
+logo+`← Trang chủ`); lưới xếp theo thứ tự nên phần tử thứ hai rơi vào cột giữa — đúng cho nav, sai
+cho link `← Trang chủ` của 6 trang, và nó đã bị kéo vào giữa đúng một lần trước khi có test 20.
+Dưới 900px nav ẩn, topbar quay lại flex để nút CTA về sát mép phải.
+
 ## Kiểm định
-- `scripts/e2e.js` **26/26 PASS** (23 cũ + 3 mới: huy hiệu, công tắc, service worker).
+- `scripts/e2e.js` **27/27 PASS** (23 cũ + 4 mới: huy hiệu, công tắc, service worker, topbar).
   `PW=<…>/node_modules/playwright-core node scripts/e2e.js http://127.0.0.1:8765`
-- `scripts/offline-check.js` **3/3 PASS** — script MỚI, tự dựng server rồi tự giết để mất mạng thật:
+- `scripts/offline-check.js` **3/3 + 1 PASS** — script MỚI, tự dựng server rồi tự giết để mất mạng thật:
   bài đã học vẫn gõ được (60 phím, CSS về đủ), trang chủ vẫn mở, trang chưa mở ra đúng trang 503.
 - `scripts/validate-lessons.js` PASS (289 screen, 15.311 ký tự) — không đụng nội dung, chạy cho chắc.
 - Huy hiệu đo ở 390px và 820px: 0 px tràn ngang.
@@ -458,9 +474,12 @@ Còn đúng `localizedUi`, `currentLocalizedUi`, `formatUi` vì trang chủ th�
 11. **Service worker không chạy trong `launchPersistentContext` headless** (`serviceWorker.ready`
     treo vô hạn, `controller` = null) trong khi `chromium.launch()` + `newContext()` thì chạy bình
     thường. Muốn kiểm service worker thì dùng context thường.
-12. **Sửa file rồi tải lại có thể vẫn ra bản cũ** vì CSS/JS đi đường cache-trước. Đúng một lần —
-    lần nạp sau đã là bản mới (cập nhật nền). Nếu cần sạch ngay: DevTools → Application →
-    Service Workers → Unregister, hoặc đổi `VERSION` trong `sw.js`.
+12. **Cache-trước cho CSS/JS là cái bẫy tự đặt cho chính mình** — xem mục service worker ở trên.
+    Đã bỏ (v2 đi mạng trước). Bài học rộng hơn: một chiến lược cache mà người sửa code không nhận
+    ra là nó đang bật thì sẽ có ngày làm mất cả buổi để đi tìm một lỗi không tồn tại.
+    `scripts/offline-check.js` nay có một phép đo giữ điều đó: hai lần gọi cùng một URL khi còn
+    mạng phải ra hai giá trị khác nhau.
+    Máy nào đã dính bản v1: tải lại một lần nữa là xong, hoặc Ctrl+Shift+R.
 13. **`glob.glob()` trên Windows trả về đường dẫn có `\`**, nên `'/' in path` luôn False → script vá
     HTML đã chèn `src="sw-register.js"` (thiếu `../`) vào 3 trang con và chúng 404. E2E bắt được
     ngay ở test 10. Chuẩn hoá `p.replace(os.sep, '/')` trước khi kiểm tra đường dẫn.

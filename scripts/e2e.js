@@ -668,6 +668,38 @@ test('19 service worker: kiểm soát trang và cache đúng lối đi của ng�
   assert.ok(/id="player"/.test(html) && /player\.js/.test(html), 'bản cache của /hoc/ phải là trang thật');
 });
 
+// Topbar có BA hình dạng (logo+nav, logo+nav+CTA, logo+`← Trang chủ`) và một lưới chung. Ngày
+// 18/09 nav được đưa vào giữa bằng grid `1fr auto 1fr`, và vì lưới xếp theo thứ tự, link
+// `← Trang chủ` của 6 trang bị kéo vào cột giữa — chỉ nhìn trang chủ thì không thấy. Phép đo này
+// đi qua đủ ba hình dạng: logo sát mép trái, nav đúng tâm, phần tử cuối sát mép phải.
+const TOPBAR_PAGES = ['/', '/tien-do/', '/kiem-tra-toc-do-go/', '/cach-go-10-ngon/'];
+test('20 topbar: logo trái, nav giữa, phần tử cuối sát mép phải trên cả ba hình dạng', async page => {
+  for (const path of TOPBAR_PAGES) {
+    await page.goto(`${BASE}${path}`, { waitUntil: 'networkidle' });
+    const bar = await page.evaluate(() => {
+      const topbar = document.querySelector('.topbar');
+      const box = topbar.getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(topbar).paddingLeft);
+      const visible = [...topbar.children].filter(child => getComputedStyle(child).display !== 'none');
+      const nav = topbar.querySelector('nav');
+      const last = visible[visible.length - 1];
+      return {
+        logoLệch: Math.round(topbar.querySelector('.brand').getBoundingClientRect().left - (box.left + pad)),
+        navLệchTâm: nav && getComputedStyle(nav).display !== 'none'
+          ? Math.round(nav.getBoundingClientRect().left + nav.getBoundingClientRect().width / 2 - (box.left + box.width / 2)) : null,
+        cuốiLàNav: last.tagName === 'NAV',
+        cuốiLệchPhải: Math.round((box.right - pad) - last.getBoundingClientRect().right)
+      };
+    });
+    assert.ok(Math.abs(bar.logoLệch) <= 1, `${path}: logo lệch mép trái ${bar.logoLệch}px`);
+    if (bar.navLệchTâm !== null)
+      assert.ok(Math.abs(bar.navLệchTâm) <= 1, `${path}: nav lệch tâm ${bar.navLệchTâm}px`);
+    // Trang chủ không có gì ở cột phải nên phần tử cuối chính là nav — chỉ đo mép phải khi có.
+    if (!bar.cuốiLàNav)
+      assert.ok(Math.abs(bar.cuốiLệchPhải) <= 1, `${path}: phần tử phải cùng cách mép phải ${bar.cuốiLệchPhải}px`);
+  }
+});
+
 // --- runner ------------------------------------------------------------------------------------
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });

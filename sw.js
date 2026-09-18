@@ -4,15 +4,22 @@
  * tải sẵn 35 file bài học cho một người mới vào là phí băng thông của họ. Thay vào đó cache
  * theo lối đi thật — trang nào đã mở, bài nào đã gõ thì lần sau không cần mạng nữa.
  *
- * Hai chiến lược:
- *   - Trang HTML (navigate): MẠNG TRƯỚC. Nội dung bài viết và lộ trình đổi theo mỗi lần deploy;
- *     phục vụ bản cache trước sẽ khiến người dùng thấy site cũ cả tuần. Mất mạng mới rơi về cache.
- *   - CSS/JS/JSON/ảnh: CACHE TRƯỚC, cập nhật nền (stale-while-revalidate). Đổi tên file không
- *     phải chuyện xảy ra giữa chừng một phiên, còn tốc độ vào bài thì thấy ngay.
+ * MỌI THỨ CÙNG MỘT NHÀ: mạng trước, cache chỉ là lưới đỡ khi mạng đứt.
+ *
+ * Bản đầu (v1, sáng 18/09) cho CSS/JS đi cache-trước-cập-nhật-nền để vào bài nhanh hơn. Đổi lấy
+ * tốc độ đó là MỘT lần nạp thấy bản cũ sau mỗi lần deploy — và ngay chiều hôm đó nó đánh lừa
+ * đúng chủ site: sửa `base.css` xong, tải lại, vẫn thấy giao diện cũ và tưởng code sai. Người
+ * dùng thật cũng gặp đúng cảnh đó sau mỗi lần deploy, chỉ là họ không biết để mà nghi ngờ. Tệ hơn,
+ * HTML đi mạng-trước còn CSS đi cache-trước nghĩa là trang MỚI có thể ghép với CSS CŨ.
+ * Còn tốc độ thì gần như không mất gì: `fetch()` trong service worker vẫn đi qua HTTP cache của
+ * trình duyệt, nên "mạng trước" ở lần thứ hai thường chỉ là một cú 304.
+ *
+ * Ngoại lệ duy nhất: font Google. URL của chúng bất biến (băm nội dung trong tên file) nên
+ * cache-trước là đúng, và nhờ lưu cả response opaque mà trang offline vẫn còn đúng font.
  *
  * Đổi VERSION là dọn sạch cache cũ ở lần activate kế tiếp.
  */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL = `typingease-shell-${VERSION}`;
 const RUNTIME = `typingease-runtime-${VERSION}`;
 
@@ -39,8 +46,11 @@ self.addEventListener('activate', event => {
     .then(() => self.clients.claim()));
 });
 
-const putCopy = (cacheName, request, response) => {
-  if (!response || !response.ok || response.type === 'opaque') return response;
+// `allowOpaque` chỉ bật cho font: response cross-origin no-cors không đọc được status (luôn là 0),
+// lưu bừa là có ngày cache lại đúng một trang lỗi. Với font thì đánh đổi đó đáng, vì URL bất biến.
+const putCopy = (cacheName, request, response, { allowOpaque = false } = {}) => {
+  if (!response) return response;
+  if (!(response.ok || (allowOpaque && response.type === 'opaque'))) return response;
   const copy = response.clone();
   caches.open(cacheName).then(cache => cache.put(request, copy)).catch(() => {});
   return response;
@@ -65,20 +75,23 @@ const offlinePage = () => new Response(OFFLINE_HTML, {
   status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' }
 });
 
-async function networkFirst(request) {
+async function networkFirst(request, { navigate = false } = {}) {
   try {
     return putCopy(RUNTIME, request, await fetch(request));
   } catch {
-    return (await caches.match(request)) || offlinePage();
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    return navigate ? offlinePage() : Response.error();
   }
 }
 
-async function staleWhileRevalidate(request) {
+// Chỉ dành cho font: lấy bản đã lưu nếu có, không thì tải và lưu lại (kể cả response opaque).
+async function cacheFirst(request) {
   const cached = await caches.match(request);
-  const network = fetch(request)
-    .then(response => putCopy(RUNTIME, request, response))
-    .catch(() => null);
-  return cached || (await network) || Response.error();
+  if (cached) return cached;
+  try {
+    return putCopy(RUNTIME, request, await fetch(request), { allowOpaque: true });
+  } catch { return Response.error(); }
 }
 
 self.addEventListener('fetch', event => {
@@ -87,14 +100,10 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (!url.protocol.startsWith('http')) return;
 
-  // Font Google: stale-while-revalidate như tài nguyên tĩnh. Response là opaque nên không
-  // lưu lại được (putCopy bỏ qua) — nhưng trình duyệt vẫn giữ trong HTTP cache, và nếu thiếu
-  // thì trang rơi về font hệ thống chứ không vỡ.
-  if (FONT_HOSTS.includes(url.hostname)) { event.respondWith(staleWhileRevalidate(request)); return; }
+  if (FONT_HOSTS.includes(url.hostname)) { event.respondWith(cacheFirst(request)); return; }
   if (url.origin !== self.location.origin) return;
 
-  if (request.mode === 'navigate') { event.respondWith(networkFirst(request)); return; }
-  event.respondWith(staleWhileRevalidate(request));
+  event.respondWith(networkFirst(request, { navigate: request.mode === 'navigate' }));
 });
 
 // Trang gọi được để nhận bản mới ngay mà không phải đóng hết tab.
