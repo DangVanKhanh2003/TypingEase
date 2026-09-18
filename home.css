@@ -1,7 +1,7 @@
 /* home.css — trang chu: hero ngan (nut "Bat dau Bai 1" cho nguoi moi / continue card cho
    nguoi quay lai) + lo trinh, loi tat va khoi kham pha.
    Nap SAU tokens.css + base.css nen co the ghi de cac rule 0,1,0 cua base.css.
-   Trang chu KHONG con o go thu, ban phim hay ban tay — keyboard.css/hands.css khong duoc nap o day. */
+   Trang chu KHONG con o go thu, ban phim hay ban tay — keyboard/keyboard.css khong duoc nap o day. */
 
 /* ---------- Hero mot cot, co tinh thap de tieu de Unit 1 cua .home-roadmap lot man hinh dau ---------- */
 .hero{grid-template-columns:1fr;min-height:auto;padding:48px var(--pad-x) 28px}

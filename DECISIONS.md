@@ -489,3 +489,84 @@ Dưới 900px nav ẩn, topbar quay lại flex để nút CTA về sát mép ph�
 - Âm click chỉ có ở player `/hoc/`; `/luyen-tu-do/` và `/kiem-tra-toc-do-go/` chưa gọi `sound.click()`.
 - `sw.js` chưa có thông báo "đã có bản mới, tải lại?" — mới chỉ có `postMessage('skip-waiting')`.
 - Tông da bàn tay vẫn hơi nâu hơn gốc (từ 16/09, chưa động tới).
+
+---
+
+# 2026-09-18 (chiều) — Thay bàn phím + bàn tay bằng bản port từ typekute
+
+Yêu cầu: **xoá toàn bộ bàn phím và bàn tay của dự án, thay bằng `cell js-keyboard-holder well` của
+typekute** (bản clone typing.com nằm ở `../typekute`). Ba lựa chọn được chốt trước khi viết code:
+copy đầy đủ stack 3D, lấy cả catalog 119 bố cục kèm nút Cài đặt, và **đổi hẳn sang API của
+typekute** thay vì giữ vỏ `TypingEaseKeyboard` cũ.
+
+## Đảo một quyết định cũ — và vì sao
+`PLAN-ban-tay.md` (15/09) ghi: **không copy** `hand-default.compressed.gltf`, `base-1.jpg`,
+`highlight-*.png` vì là tài sản của Teaching.com, và tự vẽ lại bàn tay bằng SVG. Quyết định đó nay
+bị đảo theo yêu cầu của chủ dự án: các file trên đã được copy vào `assets/hands-3d/`, kèm
+`three.module.min.js` + GLTFLoader + SkeletonUtils + BufferGeometryUtils vào `vendor/three/`.
+Rủi ro bản quyền vẫn nguyên như mô tả cũ; nó chỉ được **chấp nhận**, không biến mất. Bản SVG tự vẽ
+(`hands.js`, `hands.css`) đã bị xoá, muốn quay lại thì lấy từ git.
+
+## Đã xoá
+`keyboard-widget.js`, `hands.js`, `keyboard.css`, `hands.css` — cùng với chúng là mô hình DOM cũ
+(`.key[data-pkey]`, `.hand-layer .finger[data-finger]`, `.ghost-hand`, `active-key`,
+`active-finger`, `glow-full`, `--hand-speed`) và bản bàn phím compact cho điện thoại.
+
+## Đã thêm
+- `keyboard/keyboard.js` — port gần như nguyên văn `11ty/client/player/keyboard.js` của typekute:
+  dựng DOM từ layout, `data-entry` làm định danh phím, `resolveKeyTarget` (shift/AltGr/phím chết),
+  index + cache cho mỗi board, `highlightErrorKey` 250 ms. Chỉ đổi: liên kết Cài đặt dùng SVG nội
+  tuyến thay cho sprite của họ, và nhãn tiếng Việt.
+- `keyboard/hands-3d.js`, `hands-pose-map.js`, `gltf-unpack.js` — port, chỉ sửa đường dẫn import và
+  đường dẫn asset. Thêm một đoạn: `prefers-reduced-motion` thì tay nhảy thẳng tư thế, không tween.
+- `keyboard/preferences.js` — kho tuỳ chọn + hộp thoại Cài đặt, dựng lại bằng `.card` của player.css
+  thay cho bộ modal/switch trong stylesheet vendor (giữ nguyên bộ luật phụ thuộc giữa các công tắc).
+  Bản ghi cũ `typingease-hands-v1` được nuốt vào `typingease-keyboard-v1` ở lần đọc đầu tiên.
+- `keyboard/keyboard.css` — lọc từ 745 KB CSS vendor xuống còn phần bàn phím + lớp tay, cộng khối
+  `finger-theme` (5 màu ngón, `--fk` theo `key-<mã ký tự>`, nhá màu 2 giây qua `@property --fng-peek`).
+- `keyboard/ready.js` + `keyboard/boot.js` — cầu nối: module chạy sau mọi `<script src>` thường nên
+  player.js không thể đọc `window.NTKeyboard` ngay; `ready.js` dựng sẵn một lời hứa để chờ.
+- `data/keyboards/` — catalog cắt nhỏ: `index.json` (16 KB, để đổ danh sách) + `layouts/<id>.json`
+  (~4 KB mỗi bố cục). Nguồn 485 KB nạp một lần cho MỘT bàn phím là phí; `scripts/build-keyboards.mjs`
+  cắt lại khi cần cập nhật.
+
+## Ba trang dùng nó, ba kiểu khác nhau
+| Trang | Bàn tay | Nhá màu ngón | Ghi chú |
+|---|---|---|---|
+| `/hoc/` | có (tắt ở ≤620px) | có | công tắc ✋ = `animatedHands` |
+| `/luyen-tu-do/` | có (≥900px) | có | |
+| `/tien-do/` | không | không | heatmap tự tô màu theo độ chính xác; hai lớp màu chồng nhau thì không đọc được lớp nào |
+
+## Lệch có chủ ý so với bản gốc
+- **Bỏ vòng viền quanh phím đích.** Bản gốc kẻ `0 0 0 2px var(--fk-line)` cho dễ thấy giữa lúc nhá
+  màu; chủ dự án thấy rối mắt đúng ở chỗ phải nhìn nhất. Giữ lại bóng đổ + màu đậm hơn hàng xóm.
+- **Chip "phím mới"** (`is-new`) không có trong bản gốc — họ dạy phím mới bằng màn hình riêng. Ở đây
+  là một mảng màu ngón nhạt, không viền.
+- **`pressKey`** (nhún phím khi gõ đúng): keyframe `keyPressDefault` có sẵn trong CSS vendor nhưng
+  player của họ không gọi; player ở đây có gọi nên hàm này nằm ở `boot.js`, ngoài file port.
+- **Bàn tay không với tới Shift.** Bản cũ cho ngón út tay kia chạy tới phím Shift; bảng tư thế của
+  typekute chỉ có tư thế cho phím đích, nên giờ chỉ bàn phím chỉ ra Shift nào phải giữ.
+- **Tắt "Hiện bàn phím" không được nuốt luôn nút Cài đặt.** Bản gốc cho cả board `display:none`, mà
+  liên kết Cài đặt lại nằm BÊN TRONG board — người học tự khoá mình ra ngoài, không còn cách nào bật
+  bàn phím trở lại trừ khi xoá localStorage. Ở đây `.keyboard.hide` chỉ giấu hàng phím và lớp tay,
+  còn liên kết về dạng viên thuốc căn giữa (chính hình dạng mà lớp `.keyboard-link--hidden` của
+  stylesheet vendor mô tả). Test 17b canh đúng điều này: ẩn → liên kết vẫn đo được bề rộng → bấm vào
+  đó bật lại được 60 phím.
+
+## Kiểm định
+- `scripts/e2e.js` **29/29 PASS** (`PW=<…>/playwright-core CHROME=<…> node scripts/e2e.js http://127.0.0.1:8765`).
+  Năm phép kiểm về tay viết lại: tư thế không còn DOM để đo nên chúng đọc `board.dataset.finger`,
+  `board.__ntHands.pose` và gọi thẳng `resolveHandSlots` của bảng tư thế; thêm test 17 cho hộp thoại
+  Cài đặt (đổi bố cục sang British (PC) rồi dựng lại board).
+- `scripts/offline-check.js` **3/3 + 1 PASS** — bài đã học vẫn gõ được khi tắt server.
+- Chụp ở 1440px và 390px, cả ba trang: không tràn ngang, `cell js-keyboard-holder well` đúng như tên.
+
+## Cạm bẫy mới
+14. **WebGL trong headless cần cờ riêng.** Không có `--use-gl=angle --use-angle=swiftshader
+    --enable-unsafe-swiftshader` thì `mountTypingHands` ném lỗi, lớp tay im lặng rơi về ảnh 2D rỗng,
+    và mọi phép kiểm về tay xanh một cách vô nghĩa. Cờ đã đặt trong `scripts/e2e.js`.
+15. **Module script chạy sau mọi script thường**, kể cả script khai báo `const NT = window.NTKeyboard`
+    ở thân IIFE. Đó là lý do có `keyboard/ready.js`; đừng gộp nó vào `boot.js`.
+16. **Mỗi bàn phím giữ một WebGL context** và Chrome chỉ cho 16 context mỗi tab rồi âm thầm giết cái
+    cũ nhất (tay biến mất giữa bài). `hands-3d.js` gọi `forceContextLoss()` khi huỷ; player gọi
+    `board.__ntHands.destroy()` ở `pagehide`. Đừng dựng bàn phím mới cho mỗi screen.

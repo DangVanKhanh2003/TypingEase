@@ -17,9 +17,14 @@
  * Ngoại lệ duy nhất: font Google. URL của chúng bất biến (băm nội dung trong tên file) nên
  * cache-trước là đúng, và nhờ lưu cả response opaque mà trang offline vẫn còn đúng font.
  *
- * Đổi VERSION là dọn sạch cache cũ ở lần activate kế tiếp.
+ * Đổi VERSION là dọn sạch cache cũ ở lần activate kế tiếp. v3: bàn phím/bàn tay thay bằng bản
+ * port từ typekute — keyboard-widget.js, hands.js, keyboard.css, hands.css không còn tồn tại, nên
+ * quét sạch cache v2 để không ai còn giữ chúng.
+ *
+ * Bàn tay 3D (three.js ~690 KB, model 967 KB, texture) KHÔNG nằm trong PRECACHE: chúng chỉ tải
+ * khi người học thật sự bật bàn tay, và cache lối-đi-thật ở dưới sẽ giữ lại sau lần đầu.
  */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL = `typingease-shell-${VERSION}`;
 const RUNTIME = `typingease-runtime-${VERSION}`;
 

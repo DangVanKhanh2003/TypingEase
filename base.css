@@ -99,7 +99,7 @@ textarea:focus{border-color:var(--green);box-shadow:var(--shadow-focus)}
 .results-table .empty{color:var(--muted-soft)}
 
 /* ===== Khung quanh bàn phím minh hoạ (tien-do, luyen-tu-do) ====================================
-   Đây là phần "hộp + chú thích ngón", KHÔNG phải bản thân bàn phím — phím nằm ở keyboard.css.
+   Đây là phần "hộp + chú thích ngón", KHÔNG phải bản thân bàn phím — phím nằm ở keyboard/keyboard.css.
    Bản cũ khai báo .keyboard-lab bốn lần rải rác; gộp lại, giữ đúng giá trị cuối cùng có hiệu lực. */
 .keyboard-lab{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:29px 31px}
 .keyboard-copy{order:2}
@@ -108,12 +108,14 @@ textarea:focus{border-color:var(--green);box-shadow:var(--shadow-focus)}
 .keyboard-demo{order:1;min-width:0}
 .finger-legend{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px}
 .finger-legend span{font-size:9px;padding:4px 7px;border-radius:4px;color:#234438}
-/* Năm màu ngón tay là màu ngữ nghĩa (mỗi ngón một sắc), không quy về token thương hiệu được. */
-.pinky{background:#f5d8d8}
-.ring{background:#ffe9bd}
-.middle{background:#dcedbe}
-.index{background:#cbece4}
-.thumb{background:#dcd8f4}
+/* Năm màu ngón tay là màu ngữ nghĩa (mỗi ngón một sắc), không quy về token thương hiệu được.
+   Đúng năm màu mà bàn phím và bàn tay 3D đang dùng (--fng-* trong keyboard/keyboard.css) — chú
+   thích mà lệch màu với phím thì thà bỏ đi còn hơn. */
+.finger-legend .pinky{background:#b8b8f0;color:#2c2c93}
+.finger-legend .ring{background:#a8e0b8;color:#2c9349}
+.finger-legend .middle{background:#f6df72;color:#806500}
+.finger-legend .index{background:#98d8d8;color:#2c9393}
+.finger-legend .thumb{background:#8cc8ff;color:#205c9a}
 
 /* ===== Luyện tự do (luyen-tu-do) ==============================================================
    free.css bật lại .free-practice bằng .free-page, nên ở đây không cần rule display nào nữa. */

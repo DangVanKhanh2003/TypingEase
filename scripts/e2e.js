@@ -29,15 +29,20 @@ const DESKTOP = { width: 1440, height: 1000 };
 // --- helpers -----------------------------------------------------------------------------------
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-// Bảng phím -> ngón của keyboard-widget.js, chép lại để test không phụ thuộc vào chính module đang test.
+// Bảng phím -> ngón, chép lại để test không phụ thuộc vào chính module đang kiểm. Tên ngón là tên
+// mà keyboard/keyboard.js ghi vào `board.dataset.finger` (bảng FINGER_NAMES của bản gốc).
 const FINGERS = {
-  q: 'LP', a: 'LP', z: 'LP', w: 'LR', s: 'LR', x: 'LR', e: 'LM', d: 'LM', c: 'LM',
-  r: 'LI', f: 'LI', v: 'LI', t: 'LI', g: 'LI', b: 'LI', y: 'RI', h: 'RI', n: 'RI', u: 'RI', j: 'RI', m: 'RI',
-  i: 'RM', k: 'RM', ',': 'RM', o: 'RR', l: 'RR', '.': 'RR', p: 'RP', ';': 'RP', '/': 'RP', ' ': 'LT'
+  q: 'left-pinky', a: 'left-pinky', z: 'left-pinky', w: 'left-ring', s: 'left-ring', x: 'left-ring',
+  e: 'left-middle', d: 'left-middle', c: 'left-middle',
+  r: 'left-index', f: 'left-index', v: 'left-index', t: 'left-index', g: 'left-index', b: 'left-index',
+  y: 'right-index', h: 'right-index', n: 'right-index', u: 'right-index', j: 'right-index', m: 'right-index',
+  i: 'right-middle', k: 'right-middle', ',': 'right-middle',
+  o: 'right-ring', l: 'right-ring', '.': 'right-ring',
+  p: 'right-pinky', ';': 'right-pinky', '/': 'right-pinky', ' ': 'thumb'
 };
 
-// Ghi lại mọi class được THÊM vào phím / ngón trong `root`, kèm mốc thời gian, để bắt được các
-// class chỉ sống 250 ms (is-animating, is-wrong, pressing) mà một lần đọc DOM có thể bỏ lỡ.
+// Ghi lại mọi class được THÊM vào phím trong `root`, kèm mốc thời gian, để bắt được các class chỉ
+// sống 250 ms (is-animating, is-wrong) mà một lần đọc DOM có thể bỏ lỡ.
 async function watchClasses(page, rootSelector) {
   await page.evaluate(selector => {
     const root = document.querySelector(selector);
@@ -57,8 +62,9 @@ async function watchClasses(page, rootSelector) {
           if (!before.has(name)) {
             window.__e2e.added.push({
               className: name, at,
-              key: element.dataset.pkey ?? element.dataset.tkey ?? null,
-              finger: element.dataset.finger ?? null
+              // `data-values` = ký tự chính \u0001 ký tự shift \u0001 ký tự alt.
+              key: (element.dataset.values ?? '').split('\u0001')[0] || null,
+              finger: element.closest('.nt-player-keyboard')?.dataset.finger ?? null
             });
           }
         }
@@ -70,19 +76,29 @@ async function watchClasses(page, rootSelector) {
 }
 const addedClasses = page => page.evaluate(() => window.__e2e);
 
-const boardState = (page, board = '#board') => page.evaluate(selector => {
+// Bàn phím tự giữ danh sách phím đang sáng (`__ntActiveKeys`): phần tử đầu là phím đích, phần còn
+// lại là phím bổ trợ phải giữ (Shift của tay kia, AltGr). Đọc đúng thứ đó thay vì đoán từ DOM.
+const boardState = (page, host = '#board') => page.evaluate(selector => {
   const root = document.querySelector(selector);
-  const attr = element => element?.dataset.pkey ?? element?.dataset.tkey ?? null;
+  const board = root?.querySelector('.nt-player-keyboard');
+  if (!board) return { board: false, keys: 0 };
+  const id = element => (element?.dataset.values ?? '').split('\u0001')[0] || null;
+  const side = element => (element.classList.contains('key--special-l') ? 'l' : element.classList.contains('key--special-r') ? 'r' : '?');
+  const active = board.__ntActiveKeys ?? [];
   return {
-    keys: root.querySelectorAll('.key').length,
-    fingers: root.querySelectorAll('.hand-layer .finger').length,
-    handLayer: Boolean(root.querySelector('.hand-layer')),
-    activeKey: attr(root.querySelector('.key.active-key')),
-    activeMod: [...root.querySelectorAll('.key.active-mod')].map(element => `${attr(element)}:${element.className.includes('key--special-l') ? 'l' : element.className.includes('key--special-r') ? 'r' : '?'}`),
-    activeFinger: root.querySelector('.finger.active-finger')?.dataset.finger ?? null,
-    hasNumberRow: Boolean(root.querySelector('.key[data-pkey="1"], .key[data-tkey="1"]'))
+    board: true,
+    holder: root.querySelector('.js-keyboard-holder')?.className ?? null,
+    keys: board.querySelectorAll('.keyboard-key').length,
+    rows: board.querySelectorAll('.keyboard-row').length,
+    hands: Boolean(board.querySelector('.hands canvas')),
+    handsHidden: board.classList.contains('nt-player-hands-hidden'),
+    activeKey: id(active[0]),
+    activeMod: active.slice(1).map(element => `${id(element)}:${side(element)}`),
+    activeFinger: board.dataset.finger ?? null,
+    pose: board.__ntHands?.pose ?? null,
+    hasNumberRow: Boolean(board.querySelector('.key-49'))
   };
-}, board);
+}, host);
 
 const playerState = page => page.evaluate(() => ({
   ...window.TypingEasePlayer.getState(),
@@ -106,14 +122,16 @@ const targetOf = screen => String(screen.content).split('\n').map(line => line.t
 async function openPlayer(page, hash) {
   await page.goto(`${BASE}/hoc/#${hash}`, { waitUntil: 'networkidle' });
   await page.waitForFunction(() => window.TypingEasePlayer && !['loading'].includes(window.TypingEasePlayer.getState().state));
-  await sleep(150);   // drawHands chạy sau layout; chờ một nhịp cho .hand-layer
+  // Bàn phím là module + hai lần fetch (catalog, layout) nên nó tới sau trạng thái player.
+  await page.waitForFunction(() => document.querySelector('#board .nt-player-keyboard'), null, { timeout: 15000 });
+  await sleep(150);
 }
 
 // --- tests -------------------------------------------------------------------------------------
 const tests = [];
 const test = (name, options, fn) => tests.push(typeof options === 'function' ? { name, fn: options, options: {} } : { name, fn, options });
 
-test('1 player load: 60 phím, 10 ngón, phím + ngón đầu screen', async page => {
+test('1 player load: 60 phím, bàn tay 3D, phím + ngón đầu screen', async page => {
   await openPlayer(page, 'u1-l01/2');
   const lesson = await lessonJson(page, 'u1-l01');
   const first = targetOf(lesson.screens[1])[0];
@@ -121,10 +139,13 @@ test('1 player load: 60 phím, 10 ngón, phím + ngón đầu screen', async pag
   const state = await playerState(page);
   assert.strictEqual(state.state, 'typing');
   assert.strictEqual(state.screenLabel, 'Screen 2 / 10');
+  assert.strictEqual(board.holder, 'cell js-keyboard-holder well', 'ô chứa bàn phím');
   assert.strictEqual(board.keys, 60, 'số phím');
-  assert.strictEqual(board.fingers, 10, 'số ngón');
+  assert.strictEqual(board.rows, 5, 'số hàng');
+  assert.ok(board.hands, 'canvas bàn tay 3D đã dựng');
   assert.strictEqual(board.activeKey, first, 'phím active = ký tự đầu');
   assert.strictEqual(board.activeFinger, FINGERS[first], 'ngón active theo bảng FINGERS');
+  assert.strictEqual(board.pose?.key, first, 'tay nhận đúng phím');
   assert.strictEqual(state.focused, 'player-input', 'ô nhập tự focus');
 });
 
@@ -139,16 +160,19 @@ test('2 gõ đúng: phím nhún (is-animating ≤150ms), highlight + ngón chuy�
   assert.ok(presses.every(entry => entry.key === 'j'), 'phím nhún là phím vừa gõ (j)');
   const last = presses[presses.length - 1];
   assert.ok(added.inputAt !== null && last.at - added.inputAt <= 150, `nhún sau input ${Math.round(last.at - added.inputAt)}ms`);
-  assert.ok(added.added.some(entry => entry.className === 'pressing' && entry.finger === 'RI'), 'ngón trỏ phải nhún (pressing)');
+  // `dataset.finger` lúc phím nhún đã là ngón của ký tự KẾ (paint chạy trước reactToKeystroke),
+  // nên phím cuối trong "jjj" ghi 'thumb' của dấu cách; chỉ cần có lần ghi đúng ngón trỏ phải.
+  assert.ok(presses.some(entry => entry.finger === 'right-index'), 'có lần ghi ngón trỏ phải khi gõ j');
   let board = await boardState(page);
   assert.strictEqual(board.activeKey, ' ', 'sau jjj highlight sang dấu cách');
-  // Dấu cách là ngón cái; tay nào tuỳ bản widget (typing.com dùng ngón cái phải, PLAN-ban-tay C4).
-  assert.ok(/^[LR]T$/.test(board.activeFinger), `ngón cái, thấy ${board.activeFinger}`);
+  // Dấu cách là ngón cái; bản gốc không chia trái/phải cho nó (layout ghi finger 6 = "thumb").
+  assert.strictEqual(board.activeFinger, 'thumb', `ngón cái, thấy ${board.activeFinger}`);
   await page.keyboard.type(' ');
   await sleep(40);
   board = await boardState(page);
   assert.strictEqual(board.activeKey, 'f');
-  assert.strictEqual(board.activeFinger, 'LI');
+  assert.strictEqual(board.activeFinger, 'left-index');
+  assert.strictEqual(board.pose?.finger, 'left-index', 'tay đổi theo');
   added = await addedClasses(page);
   assert.ok(!added.added.some(entry => entry.className === 'is-wrong'), 'không có phím nào nháy đỏ');
   const state = await playerState(page);
@@ -172,7 +196,7 @@ test('3 gõ sai: phím sai nháy đỏ, lỗi tăng, highlight đứng yên', as
   // Ký tự sai vẫn chiếm chỗ (như typing.com), nên highlight đi tiếp tới ký tự kế — vẫn là j.
   const board = await boardState(page);
   assert.strictEqual(board.activeKey, 'j');
-  assert.strictEqual(board.activeFinger, 'RI');
+  assert.strictEqual(board.activeFinger, 'right-index');
   await sleep(300);
   const after = await page.evaluate(() => document.querySelectorAll('#board .key.is-wrong').length);
   assert.strictEqual(after, 0, 'is-wrong tự gỡ sau 250ms');
@@ -205,8 +229,9 @@ test('5 shift: chữ hoa sáng Shift tay đối diện (active-mod)', async page
   await openPlayer(page, 'u2-l09/2');   // "Aa Ss Dd Ff\nJj Kk Ll Hh…"
   let board = await boardState(page);
   assert.strictEqual(board.activeKey, 'a', 'A → phím a sáng');
-  assert.strictEqual(board.activeFinger, 'LP');
-  assert.deepStrictEqual(board.activeMod, ['shift:r'], 'chữ A (tay trái) → Shift PHẢI');
+  assert.strictEqual(board.activeFinger, 'left-pinky');
+  // Nhãn phím lấy thẳng từ layout: Shift trái là "Shift ⇧", Shift phải là "⇧ Shift".
+  assert.deepStrictEqual(board.activeMod, ['⇧ Shift:r'], 'chữ A (tay trái) → Shift PHẢI');
   await page.keyboard.type('Aa ');
   await sleep(40);
   board = await boardState(page);
@@ -215,7 +240,7 @@ test('5 shift: chữ hoa sáng Shift tay đối diện (active-mod)', async page
   await sleep(40);
   board = await boardState(page);
   assert.strictEqual(board.activeKey, 'j', 'J → phím j');
-  assert.deepStrictEqual(board.activeMod, ['shift:l'], 'chữ J (tay phải) → Shift TRÁI');
+  assert.deepStrictEqual(board.activeMod, ['Shift ⇧:l'], 'chữ J (tay phải) → Shift TRÁI');
   await page.keyboard.type('J');
   await sleep(40);
   board = await boardState(page);
@@ -241,7 +266,7 @@ test('6 telex: ký tự đang compose là pending, không nháy đỏ, highlight
   assert.ok(/\bpending\b/.test(states[1]), `a đang compose phải pending: ${states[1]}`);
   board = await boardState(page);
   assert.strictEqual(board.activeKey, 's', 'đang compose á → highlight phím dấu sắc S');
-  assert.strictEqual(board.activeFinger, 'LR');
+  assert.strictEqual(board.activeFinger, 'left-ring');
   await input.fill('má');
   await sleep(30);
   states = await page.evaluate(() => [...document.querySelectorAll('#prompt-lines .ch')].slice(0, 3).map(el => el.className));
@@ -267,7 +292,7 @@ const homeShape = page => page.evaluate(() => {
   const start = document.querySelector('#hero-start');
   return {
     returning: document.body.classList.contains('is-returning'),
-    widgets: document.querySelectorAll('#taster, .taster-line, .hand-layer, .keyboard, .kb-widget, .tc-board').length,
+    widgets: document.querySelectorAll('#taster, .taster-line, .keyboard, .nt-player-keyboard, .js-keyboard-holder, .hands').length,
     languagePickers: document.querySelectorAll('#language, .language-select').length,
     startVisible: Boolean(start && start.offsetParent !== null),
     startHref: document.querySelector('#hero-go')?.getAttribute('href') ?? null,
@@ -311,22 +336,21 @@ test('8a responsive 1024: bàn phím đầy đủ + tay', { viewport: { width: 1
   const board = await boardState(page);
   assert.strictEqual(board.keys, 60);
   assert.ok(board.hasNumberRow, 'còn hàng số');
-  // player.js: tay hiện khi (min-width: 900px) → 1024 vẫn có tay.
-  assert.ok(board.handLayer && board.fingers === 10, 'tay hiện ở 1024px');
-  const classes = await page.evaluate(() => document.querySelector('#board').className);
-  assert.ok(!/no-hands|is-compact/.test(classes), classes);
+  // player.js chỉ tắt tay ở ngưỡng điện thoại (620px) → 1024 vẫn có tay.
+  assert.ok(board.hands && !board.handsHidden, 'tay hiện ở 1024px');
   const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
   assert.ok(fits, 'không tràn ngang');
 });
 
-test('8b responsive 390 (phone): compact, không hàng số, không tay', { viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true }, async page => {
+// Bàn phím của typekute không có bản compact: cùng 60 phím, chỉ co lại theo khung nhìn
+// (keyboard/keyboard.css, khối max-width:700px). Điện thoại chỉ khác ở chỗ tắt bàn tay.
+test('8b responsive 390 (phone): vẫn đủ phím, không tay, không tràn ngang', { viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true }, async page => {
   await openPlayer(page, 'u1-l01/2');
   const board = await boardState(page);
-  assert.ok(!board.hasNumberRow, 'không có hàng số');
-  assert.ok(board.keys < 60 && board.keys >= 20, `bàn phím compact (${board.keys} phím)`);
-  assert.ok(!board.handLayer, 'không có .hand-layer');
-  const classes = await page.evaluate(() => document.querySelector('#board').className);
-  assert.ok(/is-compact/.test(classes) && /no-hands/.test(classes), classes);
+  assert.ok(board.hasNumberRow, 'vẫn có hàng số');
+  assert.strictEqual(board.keys, 60, 'vẫn đủ 60 phím');
+  assert.ok(!board.hands, 'không dựng canvas bàn tay');
+  assert.ok(board.handsHidden, 'board mang class nt-player-hands-hidden');
   assert.strictEqual(board.activeKey, 'j', 'phím đích vẫn sáng');
   const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
   assert.ok(fits, 'không tràn ngang');
@@ -340,170 +364,205 @@ test('9 reduced motion: highlight vẫn chạy, không lỗi', { reducedMotion: 
   await sleep(50);
   const board = await boardState(page);
   assert.strictEqual(board.activeKey, 'f');
-  assert.strictEqual(board.activeFinger, 'LI');
+  assert.strictEqual(board.activeFinger, 'left-index');
   const added = await addedClasses(page);
   assert.ok(added.added.some(entry => entry.className === 'is-animating'), 'class vẫn gắn (CSS tắt animation)');
-  const anim = await page.evaluate(() => {
-    const key = document.querySelector('#board .key.active-key');
+  const motion = await page.evaluate(() => {
+    const board = document.querySelector('#board .nt-player-keyboard');
+    const key = board.__ntActiveKeys[0];
     key.classList.add('is-animating');
     const name = getComputedStyle(key).animationName;
     key.classList.remove('is-animating');
-    return name;
+    return { name, peekFade: getComputedStyle(board).animationName, hands: board.__ntHands?.renderer?.leftHand?.frameTransitionDuration ?? null };
   });
-  assert.strictEqual(anim, 'none', `animation phải tắt khi reduced-motion, thấy "${anim}"`);
+  assert.strictEqual(motion.name, 'none', `nhún phím phải tắt khi reduced-motion, thấy "${motion.name}"`);
+  assert.strictEqual(motion.peekFade, 'none', `màu ngón không mờ dần khi reduced-motion, thấy "${motion.peekFade}"`);
+  assert.ok(motion.hands === null || motion.hands === 0, `tay phải nhảy thẳng tư thế, thấy ${motion.hands}`);
 });
 
-// --- chuyển động ngón (PLAN-ban-tay Phase C) --------------------------------------------------
-// Tư thế là `style.transform` trên `.finger` và `.ghost-hand`, chuyển bằng CSS transition
-// (--hand-speed, mặc định .275s) nên đo vị trí móng sau khi transition kết thúc.
-const SETTLE_MS = 700;
-const poseState = (page, board = '#board') => page.evaluate(selector => {
-  const root = document.querySelector(selector);
-  const origin = root.getBoundingClientRect();
-  const box = element => { const r = element.getBoundingClientRect(); return { x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height, cx: r.left + r.width / 2 - origin.left, cy: r.top + r.height / 2 - origin.top }; };
-  const fingers = {};
-  root.querySelectorAll('.hand-layer .finger').forEach(group => {
-    const nail = group.querySelector('.hand-nail');
-    fingers[group.dataset.finger] = {
-      key: group.dataset.key, transform: group.style.transform || '',
-      active: group.classList.contains('active-finger'), full: group.classList.contains('glow-full'),
-      nail: nail ? box(nail) : null
-    };
-  });
-  const hands = {};
-  root.querySelectorAll('.hand-layer .ghost-hand').forEach(hand => { hands[hand.classList.contains('left-hand') ? 'left' : 'right'] = hand.style.transform || ''; });
-  const keyBox = id => { const element = root.querySelector(`.key[data-pkey="${id}"]`); return element ? box(element) : null; };
-  const shifts = [...root.querySelectorAll('.key[data-pkey="shift"]')].map(box);
+// --- bàn tay 3D ---------------------------------------------------------------------------------
+// Tư thế nằm trong WebGL nên không có DOM để đo. Hai thứ quan sát được thay cho nó:
+//   1. `board.dataset.finger` + `board.__ntHands.pose` — đúng cái mà renderer nhận;
+//   2. `hands-pose-map.js` — bảng quyết định clip nào được phát và ngón nào sáng màu.
+// Cộng thêm `renderer.adaptiveDuration` cho phần tốc độ thích ứng.
+const SETTLE_MS = 500;
+const handSlots = (page, key, animated = true) => page.evaluate(async ({ key, animated }) => {
+  const { resolveHandSlots } = await import('/keyboard/hands-pose-map.js');
+  const slots = resolveHandSlots({ layout: window.NTKeyboard.layout(), key, animated });
+  const plain = slot => (slot ? { id: slot.fingerId, pose: slot.entry?.pose ?? null, highlight: slot.entry?.highlight ?? null } : null);
+  return { left: plain(slots.left), right: plain(slots.right) };
+}, { key, animated });
+
+const handsState = page => page.evaluate(() => {
+  const board = document.querySelector('#board .nt-player-keyboard');
+  const handle = board.__ntHands ?? null;
+  const canvas = board.querySelector('.hands canvas');
   return {
-    fingers, hands, speed: root.style.getPropertyValue('--hand-speed').trim(),
-    hostClass: root.className,
-    keys: { e: keyBox('e'), a: keyBox('a'), shiftLeft: shifts[0] || null, shiftRight: shifts[shifts.length - 1] || null }
+    pose: handle?.pose ?? null,
+    visible: handle?.visible ?? null,
+    duration: handle?.renderer?.adaptiveDuration ?? null,
+    canvas: canvas ? { w: canvas.width, h: canvas.height } : null
   };
-}, board);
-// Tâm móng nằm trong phím: ±8px theo X; theo Y móng nằm dưới đầu ngón nên cho lệch tới +14px.
-function assertNailOn(nail, key, label) {
-  assert.ok(nail && key, `${label}: thiếu móng hoặc phím`);
-  assert.ok(nail.cx >= key.x - 8 && nail.cx <= key.x + key.w + 8, `${label}: móng X ${nail.cx.toFixed(0)} ngoài phím [${key.x.toFixed(0)}, ${(key.x + key.w).toFixed(0)}]`);
-  assert.ok(nail.cy >= key.y - 8 && nail.cy <= key.y + key.h + 14, `${label}: móng Y ${nail.cy.toFixed(0)} ngoài phím [${key.y.toFixed(0)}, ${(key.y + key.h).toFixed(0)}]`);
-}
+});
 
 test('11 pose: ngón giữa trái với lên E rồi về D', async page => {
-  await openPlayer(page, 'u1-l07/2');   // "eeee dddd…": e hàng trên, d hàng cơ sở — cùng ngón LM
+  await openPlayer(page, 'u1-l07/2');   // "eeee dddd…": e hàng trên, d hàng cơ sở — cùng ngón
   await sleep(SETTLE_MS);
-  let pose = await poseState(page);
-  const lm = pose.fingers.LM;
-  assert.ok(lm.active, 'LM active');
-  assert.notStrictEqual(lm.transform, '', 'LM có transform khi với lên E');
-  assertNailOn(lm.nail, pose.keys.e, 'LM trên E');
-  assert.notStrictEqual(pose.hands.left, '', 'bàn tay trái dịch theo');
-  assert.strictEqual(pose.hands.right, '', 'bàn tay phải đứng yên');
-  for (const code of ['RI', 'RM', 'RR', 'RP', 'RT']) assert.strictEqual(pose.fingers[code].transform, '', `${code} không transform`);
-  await page.keyboard.type('eeee ', { delay: 20 });   // phím kế là d: hàng cơ sở của chính LM
+  let board = await boardState(page);
+  assert.strictEqual(board.activeKey, 'e');
+  assert.strictEqual(board.activeFinger, 'left-middle');
+  assert.strictEqual(board.pose?.key, 'e', 'renderer nhận phím e');
+  let slots = await handSlots(page, 'e');
+  assert.strictEqual(slots.left.id, 'left-top-row-3', 'tay trái với lên hàng trên');
+  assert.strictEqual(slots.left.highlight, 'middle', 'ngón giữa sáng');
+  assert.strictEqual(slots.right.id, 'right-resting-hand', 'tay phải nghỉ');
+
+  await page.keyboard.type('eeee ', { delay: 20 });   // phím kế là d: hàng cơ sở của chính ngón đó
   await sleep(SETTLE_MS);
-  pose = await poseState(page);
-  assert.strictEqual(await boardState(page).then(board => board.activeKey), 'd');
-  assert.ok(pose.fingers.LM.active);
-  assert.strictEqual(pose.fingers.LM.transform, '', 'về D thì transform rỗng lại');
-  assert.strictEqual(pose.hands.left, '', 'bàn tay trái về chỗ');
+  board = await boardState(page);
+  assert.strictEqual(board.activeKey, 'd');
+  assert.strictEqual(board.activeFinger, 'left-middle', 'vẫn ngón giữa trái');
+  slots = await handSlots(page, 'd');
+  assert.strictEqual(slots.left.id, 'left-home-row-3', 'về hàng cơ sở');
+  const hands = await handsState(page);
+  assert.strictEqual(hands.pose?.key, 'd', 'renderer đã nhận tư thế mới');
+  assert.ok(hands.canvas && hands.canvas.w > 0, 'canvas có kích thước');
 });
 
-test('12 pose Shift: chữ A → ngón út phải glow-full tới Shift phải', async page => {
+test('12 Shift: chữ A sáng cả phím a lẫn Shift tay kia', async page => {
   await openPlayer(page, 'u2-l09/2');   // "Aa Ss…"
   await sleep(SETTLE_MS);
-  const pose = await poseState(page);
-  const rp = pose.fingers.RP, lp = pose.fingers.LP;
-  assert.ok(rp.active && rp.full, 'RP active + glow-full');
-  assert.notStrictEqual(rp.transform, '', 'RP di chuyển');
-  assertNailOn(rp.nail, pose.keys.shiftRight, 'RP trên Shift phải');
-  assert.notStrictEqual(pose.hands.right, '', 'bàn tay phải dịch theo');
-  assert.ok(lp.active && !lp.full, 'LP active, không glow-full');
-  assert.strictEqual(lp.transform, '', 'LP đã nằm trên A nên không transform');
-  assertNailOn(lp.nail, pose.keys.a, 'LP trên A');
-  assert.strictEqual(pose.hands.left, '', 'bàn tay trái đứng yên');
-  const active = Object.entries(pose.fingers).filter(([, finger]) => finger.active).map(([code]) => code).sort();
-  assert.deepStrictEqual(active, ['LP', 'RP']);
+  const board = await boardState(page);
+  assert.strictEqual(board.activeKey, 'a');
+  assert.deepStrictEqual(board.activeMod, ['⇧ Shift:r'], 'Shift PHẢI sáng cho chữ của tay trái');
+  assert.strictEqual(board.activeFinger, 'left-pinky');
+  const slots = await handSlots(page, 'A');
+  assert.strictEqual(slots.left.id, 'left-home-row-5', 'tay trái ở A');
+  assert.strictEqual(slots.left.highlight, 'pinky', 'ngón út sáng');
+  // Khác bản cũ: bàn tay 3D của bản gốc KHÔNG đưa tay kia tới Shift, chỉ bàn phím chỉ ra điều đó.
+  assert.strictEqual(slots.right.id, 'right-resting-hand', 'tay phải giữ tư thế nghỉ');
 });
 
-test('13 pose Space: ngón cái phải active, không transform, tay trái nghỉ', async page => {
+test('13 Space: ngón cái phải, tay trái nghỉ', async page => {
   await openPlayer(page, 'u1-l01/6');   // "jjj fff…"
   await page.keyboard.type('jjj', { delay: 20 });
   await sleep(SETTLE_MS);
-  assert.strictEqual(await boardState(page).then(board => board.activeKey), ' ');
-  const pose = await poseState(page);
-  assert.ok(pose.fingers.RT.active, 'RT active');
-  assert.strictEqual(pose.fingers.RT.key, ' ', 'ngón cái phải nghỉ trên Space');
-  assert.strictEqual(pose.fingers.RT.transform, '', 'không transform');
-  for (const code of ['LP', 'LR', 'LM', 'LI', 'LT']) assert.ok(!pose.fingers[code].active, `${code} không active`);
-  assert.strictEqual(pose.hands.left, '');
-  assert.strictEqual(pose.hands.right, '');
+  const board = await boardState(page);
+  assert.strictEqual(board.activeKey, ' ');
+  assert.strictEqual(board.activeFinger, 'thumb');
+  const slots = await handSlots(page, ' ');
+  assert.strictEqual(slots.right.id, 'space', 'tay phải giữ phím cách');
+  assert.strictEqual(slots.right.highlight, 'thumb');
+  assert.strictEqual(slots.left.id, 'left-resting-hand', 'tay trái nghỉ');
 });
 
-test('14 tốc độ thích ứng: --hand-speed giảm khi gõ nhanh', async page => {
+test('14 tốc độ thích ứng: tween của tay ngắn lại khi gõ nhanh', async page => {
   await openPlayer(page, 'u1-l01/8');   // standard "jjf jjf fjj fjj…"
-  const before = (await poseState(page)).speed;
-  assert.ok(before === '' || parseFloat(before) === 0.275, `ban đầu "${before}"`);
+  await sleep(SETTLE_MS);
+  const before = (await handsState(page)).duration;
+  assert.ok(before === null || Math.abs(before - 0.275) < 0.001, `ban đầu ${before}`);
   const lesson = await lessonJson(page, 'u1-l01');
-  await page.keyboard.type(targetOf(lesson.screens[7]).slice(0, 8), { delay: 120 });
-  await sleep(50);
-  const after = parseFloat((await poseState(page)).speed);
+  await page.keyboard.type(targetOf(lesson.screens[7]).slice(0, 10), { delay: 60 });
+  await sleep(200);
+  const after = (await handsState(page)).duration;
   assert.ok(Number.isFinite(after), 'có giá trị');
-  assert.ok(after < 0.275 && after >= 0.09, `--hand-speed = ${after}s, cần trong [0.09, 0.275)`);
+  assert.ok(after < 0.275 && after >= 0.09, `tween = ${after}s, cần trong [0.09, 0.275)`);
   assert.strictEqual((await playerState(page)).run.errors, 0);
 });
 
-test('15 hands-static: animatedHands:false → active-finger nhưng không transform', async page => {
-  await openPlayer(page, 'u1-l01/2');
-  const result = await page.evaluate(() => {
-    const host = document.createElement('div');
-    host.style.width = '830px';
-    document.body.append(host);
-    const widget = window.TypingEaseKeyboard.create({ host, hands: true, animatedHands: false });
-    widget.highlight('e');
-    const lm = host.querySelector('.finger[data-finger="LM"]');
-    const out = {
-      hostClass: host.className, active: lm.classList.contains('active-finger'), transform: lm.style.transform || '',
-      computed: getComputedStyle(lm).transform, hand: host.querySelector('.ghost-hand.left-hand').style.transform || '',
-      activeKey: host.querySelector('.key.active-key')?.dataset.pkey
-    };
-    // layout() vẽ lại SVG nên phải truy vấn lại ngón sau mỗi lần gọi.
-    const finger = () => host.querySelector('.finger[data-finger="LM"]');
-    widget.layout({ animatedHands: true });
-    widget.highlight('e');
-    out.afterOn = finger().style.transform || '';
-    widget.layout({ animatedHands: false });
-    out.afterOffClass = host.className;
-    out.afterOff = finger().style.transform || '';
-    widget.destroy();
-    host.remove();
-    return out;
-  });
-  assert.ok(/hands-static/.test(result.hostClass), result.hostClass);
-  assert.ok(result.active, 'LM active');
-  assert.strictEqual(result.activeKey, 'e');
-  assert.strictEqual(result.transform, '', 'không style.transform');
-  assert.strictEqual(result.hand, '');
-  assert.ok(result.computed === 'none' || result.computed === '', `computed transform: ${result.computed}`);
-  assert.notStrictEqual(result.afterOn, '', 'bật animatedHands lại thì có pose');
-  assert.ok(/hands-static/.test(result.afterOffClass));
-  assert.strictEqual(result.afterOff, '', 'tắt lại thì pose bị xoá');
+test('15 animatedHands:false → tư thế đứng yên ở hàng cơ sở', async page => {
+  await openPlayer(page, 'u1-l07/2');   // phím đích là e (hàng trên)
+  const animated = await handSlots(page, 'e', true);
+  assert.strictEqual(animated.left.id, 'left-top-row-3');
+  const still = await handSlots(page, 'e', false);
+  assert.strictEqual(still.left.id, 'left-home-row-3', 'tắt chuyển động thì tay ở hàng cơ sở');
+  assert.strictEqual(still.left.highlight, 'middle', 'ngón vẫn sáng đúng ngón');
+
+  // Công tắc ✋ trên thanh trên cùng đổi tuỳ chọn và dựng lại bàn phím.
+  await page.click('#pt-hands');
+  await page.waitForFunction(() => !document.querySelector('#board .nt-player-keyboard').classList.contains('nt-player-hands-animated'));
+  const pressed = await page.getAttribute('#pt-hands', 'aria-pressed');
+  assert.strictEqual(pressed, 'false', 'nút ✋ đổi trạng thái');
+  const board = await boardState(page);
+  assert.strictEqual(board.activeKey, 'e', 'phím đích vẫn sáng sau khi dựng lại');
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('typingease-keyboard-v1')));
+  assert.strictEqual(stored.animatedHands, false, 'tuỳ chọn được ghi lại');
 });
 
-test('16 resize 1440→1024→1440 giữ pose, không lỗi JS', async page => {
-  await openPlayer(page, 'u2-l09/2');   // RP đang với tới Shift phải
+test('16 resize 1440→1024→1440: giữ phím đích, canvas vẽ lại', async page => {
+  await openPlayer(page, 'u2-l09/2');
   await sleep(SETTLE_MS);
-  const first = await poseState(page);
-  assert.notStrictEqual(first.fingers.RP.transform, '');
+  const first = await handsState(page);
+  assert.ok(first.canvas.w > 0, 'canvas ban đầu');
   for (const width of [1024, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
-    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
-    await sleep(300 + SETTLE_MS);   // debounce 120ms + transition
-    const pose = await poseState(page);
-    assert.ok(pose.fingers.RP.active && pose.fingers.RP.full, `${width}: RP vẫn active glow-full`);
-    assert.notStrictEqual(pose.fingers.RP.transform, '', `${width}: pose được áp lại`);
-    assertNailOn(pose.fingers.RP.nail, pose.keys.shiftRight, `${width}: RP trên Shift phải`);
-    assert.strictEqual(Object.keys(pose.fingers).length, 10, `${width}: vẫn 10 ngón`);
-    assert.strictEqual(await boardState(page).then(board => board.activeKey), 'a');
+    await sleep(400);
+    const board = await boardState(page);
+    const hands = await handsState(page);
+    assert.strictEqual(board.activeKey, 'a', `${width}: phím đích còn nguyên`);
+    assert.strictEqual(board.activeFinger, 'left-pinky', `${width}: ngón còn nguyên`);
+    assert.ok(hands.canvas.w > 0, `${width}: canvas có kích thước`);
+    assert.strictEqual(hands.pose?.key, 'A', `${width}: tư thế giữ nguyên`);
   }
+});
+
+test('17 cài đặt bàn phím: đổi bố cục và dựng lại board', async page => {
+  await openPlayer(page, 'u1-l01/2');
+  await page.click('#board .js-keyboard-settings a');
+  await page.waitForSelector('.kb-settings-card');
+  const options = await page.evaluate(() => document.querySelectorAll('select[name=keyboard_id] option').length);
+  assert.ok(options > 100, `catalog có ${options} bố cục`);
+  await page.selectOption('select[name=keyboard_id]', { label: 'British (PC)' });
+  await page.click('.kb-settings-footer .primary-button');
+  await page.waitForFunction(() => !document.querySelector('.kb-settings'));
+  await sleep(400);
+  const state = await page.evaluate(() => ({
+    layout: window.NTKeyboard.layout()?.name,
+    stored: JSON.parse(localStorage.getItem('typingease-keyboard-v1')).keyboardId
+  }));
+  assert.strictEqual(state.layout, 'British (PC)', 'layout đã đổi');
+  assert.ok(Number.isFinite(state.stored), 'bố cục được nhớ lại');
+  const board = await boardState(page);
+  assert.strictEqual(board.activeKey, 'j', 'phím đích được áp lại lên bàn phím mới');
+  assert.ok(board.hands, 'bàn tay dựng lại cùng board');
+});
+
+test('17b ẩn bàn phím: liên kết Cài đặt ở lại để còn bật lên được', async page => {
+  await openPlayer(page, 'u1-l01/2');
+  const setKeyboard = async on => {
+    await page.click('#board .js-keyboard-settings a');
+    await page.waitForSelector('.kb-settings-card');
+    // Ô checkbox cố tình vô hình (chỉ để bàn phím và trình đọc màn hình thấy); nhãn mới là thứ bấm.
+    const checked = await page.isChecked('#kb-show-keyboard');
+    if (checked !== on) await page.click('label[for="kb-show-keyboard"]');
+    await page.click('.kb-settings-footer .primary-button');
+    await page.waitForFunction(() => !document.querySelector('.kb-settings'));
+    await sleep(400);
+  };
+
+  await setKeyboard(false);
+  const hidden = await page.evaluate(() => {
+    const board = document.querySelector('#board .nt-player-keyboard');
+    const link = board.querySelector('.js-keyboard-settings a').getBoundingClientRect();
+    return {
+      hide: board.classList.contains('hide'),
+      rows: board.querySelector('.keyboard-row').getBoundingClientRect().height,
+      hands: Boolean(board.querySelector('.hands canvas')),
+      link: { w: Math.round(link.width), h: Math.round(link.height) }
+    };
+  });
+  assert.ok(hidden.hide, 'board mang class hide');
+  assert.strictEqual(hidden.rows, 0, 'hàng phím biến mất');
+  assert.ok(!hidden.hands, 'bàn tay cũng tắt theo');
+  assert.ok(hidden.link.w > 0 && hidden.link.h > 0, `liên kết Cài đặt PHẢI còn thấy được: ${JSON.stringify(hidden.link)}`);
+
+  // Và nó phải thật sự mở lại được bàn phím — đây là cửa duy nhất.
+  await setKeyboard(true);
+  const board = await boardState(page);
+  assert.strictEqual(board.keys, 60, 'phím trở lại');
+  assert.strictEqual(board.activeKey, 'j', 'phím đích được áp lại');
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('typingease-keyboard-v1')).showKeyboard);
+  assert.strictEqual(stored, true, 'tuỳ chọn được ghi lại');
 });
 
 for (const route of ['/tien-do/', '/luyen-tu-do/', '/bai-hoc/', '/kiem-tra-toc-do-go/', '/luyen-phim-yeu/']) {
@@ -603,8 +662,9 @@ test('18 công tắc: âm click tắt sẵn, bàn tay bật sẵn, Alt+S/Alt+H �
   const toggles = () => page.evaluate(() => ({
     sound: document.querySelector('#pt-sound').getAttribute('aria-pressed'),
     hands: document.querySelector('#pt-hands').getAttribute('aria-pressed'),
-    stored: [localStorage.getItem('typingease-sound-v1'), localStorage.getItem('typingease-hands-v1')],
-    static: document.querySelector('#board').classList.contains('hands-static')
+    stored: [localStorage.getItem('typingease-sound-v1'),
+      JSON.parse(localStorage.getItem('typingease-keyboard-v1') || 'null')?.animatedHands ?? null],
+    static: !document.querySelector('#board .nt-player-keyboard').classList.contains('nt-player-hands-animated')
   }));
   const start = await toggles();
   assert.strictEqual(start.sound, 'false', 'âm click PHẢI tắt mặc định');
@@ -615,8 +675,8 @@ test('18 công tắc: âm click tắt sẵn, bàn tay bật sẵn, Alt+S/Alt+H �
   await page.click('#pt-hands');
   const clicked = await toggles();
   assert.deepStrictEqual([clicked.sound, clicked.hands], ['true', 'false'], 'bấm nút đổi trạng thái');
-  assert.deepStrictEqual(clicked.stored, ['on', 'off'], 'ghi vào localStorage');
-  assert.strictEqual(clicked.static, true, 'tắt tay động → board có .hands-static');
+  assert.deepStrictEqual(clicked.stored, ['on', false], 'ghi vào localStorage');
+  assert.strictEqual(clicked.static, true, 'tắt tay động → board bỏ class nt-player-hands-animated');
 
   await page.keyboard.press('Alt+s');
   await page.keyboard.press('Alt+h');
@@ -704,7 +764,13 @@ test('20 topbar: logo trái, nav giữa, phần tử cuối sát mép phải tr�
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   const started = Date.now();
-  const browser = await chromium.launch({ executablePath: CHROME, headless: true });
+  // Bàn tay là WebGL: headless không có GPU thật nên phải chỉ định rõ trình vẽ phần mềm, nếu
+  // không `mountTypingHands` ném lỗi và mọi phép kiểm về tay đều xanh giả.
+  const browser = await chromium.launch({
+    executablePath: CHROME,
+    headless: true,
+    args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+  });
   const results = [];
   for (const { name, fn, options } of tests) {
     if (ONLY && !name.includes(ONLY)) continue;

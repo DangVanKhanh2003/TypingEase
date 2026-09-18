@@ -1,8 +1,8 @@
 (function (global) {
   // Luyện tự do — engine chuyển nguyên từ tab "Tự do" của script.js, giữ đúng hành vi:
   // dán/chọn đoạn văn → gõ lại → WPM + độ chính xác + đồng hồ, ghi attempt kind:'free' vào
-  // profile và tính phút luyện vào mục tiêu ngày. Bàn phím dẫn ngón dùng keyboard-widget
-  // (`data-pkey`) nên không đụng vào bất cứ bàn phím nào khác trên site.
+  // profile và tính phút luyện vào mục tiêu ngày. Bàn phím dẫn ngón là bàn phím của typekute
+  // (window.NTKeyboard, xem keyboard/boot.js) — cùng một board với trang bài học.
   const profile = global.TypingEaseProfile;
   const store = global.TypingEaseProgress;
 
@@ -23,15 +23,45 @@
   let target = '', startedAt = null, timer = null, recorded = false;
   let keyStart = null, observed = 0;
 
-  const board = document.querySelector('#free-board');
-  const keyboard = board && global.TypingEaseKeyboard
-    ? global.TypingEaseKeyboard.create({ host: board, compact: global.innerWidth < 700, hands: global.innerWidth >= 900 })
-    : null;
+  let NT = null;
+  const host = document.querySelector('#free-board');
+  let board = null;
+  let preferences = null;
+
+  // Dưới 900px trang này hết chỗ cho bàn tay; tuỳ chọn của người học vẫn được giữ nguyên trong
+  // kho, chỉ riêng lần hiển thị này bị tắt.
+  const boardPreferences = () => ({ ...preferences, showHands: preferences.showHands && global.innerWidth >= 900 });
+
+  async function mountKeyboard() {
+    if (!host) return;
+    NT = await global.NTKeyboardReady;
+    if (!NT) return;
+    preferences = NT.loadKeyboardPreferences();
+    const layout = await NT.ready.catch(error => { console.warn('[luyện tự do] bàn phím không tải được', error); return null; });
+    if (!layout) return;
+    const holder = document.createElement('div');
+    holder.className = 'cell js-keyboard-holder well';
+    board = NT.createKeyboard({
+      activeKey: '',
+      preferences: boardPreferences(),
+      layout,
+      onSettings: () => NT.openSettingsFor(board, {
+        root: host,
+        restoreFocus: () => input.focus(),
+        onSave: (next) => { preferences = next; NT.applyKeyboardPreferences(board, boardPreferences()); }
+      })
+    });
+    holder.append(board);
+    host.replaceChildren(holder);
+    draw();
+  }
+
   let resizeTimer = null;
   global.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => keyboard?.layout({ compact: global.innerWidth < 700, hands: global.innerWidth >= 900 }), 150);
+    resizeTimer = setTimeout(() => { if (board) NT.applyKeyboardPreferences(board, boardPreferences()); }, 150);
   });
+  global.addEventListener('pagehide', () => board?.__ntHands?.destroy());
 
   const escapeHtml = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const pad = value => String(value).padStart(2, '0');
@@ -78,7 +108,7 @@
       const minutes = Math.max((Date.now() - startedAt) / 60000, 1 / 60);
       document.querySelector('#free-wpm').textContent = `${Math.round(correct / 5 / minutes)} WPM`;
     }
-    keyboard?.highlight(target[typed.length] || '');
+    if (board) NT.setKeyboardState(board, target[typed.length] || '');
     const feedback = document.querySelector('#free-feedback');
     if (typed === target && target) {
       clearInterval(timer);
@@ -102,7 +132,7 @@
     reset();
     if (!target) {
       sampleEl.textContent = 'Hãy chọn một đoạn văn để bắt đầu luyện gõ.';
-      keyboard?.highlight('');
+      if (board) NT.setKeyboardState(board, '');
       return;
     }
     draw();
@@ -122,10 +152,13 @@
     if (!startedAt && input.value) { startedAt = Date.now(); timer = setInterval(tick, 1000); }
     if (startedAt || input.value) store?.recordPracticeActivity();
     trackKeystrokes(input.value);
-    keyboard?.press();
+    if (board) {
+      board.classList.add('nt-keyboard-peek-started');
+      NT.pressKey(board);
+    }
     draw();
   });
 
   global.addEventListener('pagehide', () => profile?.save());
-  keyboard?.highlight('');
+  mountKeyboard();
 })(window);

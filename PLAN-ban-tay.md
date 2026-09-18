@@ -1,5 +1,12 @@
 # Kế hoạch clone bàn phím + bàn tay theo typing.com (lập 2026-09-15)
 
+> **HẾT HIỆU LỰC 18/09/2026.** Kế hoạch này (tự vẽ lại bàn tay bằng SVG, không copy asset của
+> Teaching.com, giữ API `TypingEaseKeyboard`) đã bị thay bằng bản port thẳng từ `../typekute`:
+> bàn phím + bàn tay 3D thật, catalog 119 bố cục, API của typekute. Xem mục cuối DECISIONS.md
+> ("Thay bàn phím + bàn tay bằng bản port từ typekute"). Giữ file lại vì phần đo đạc tỉ lệ bàn tay
+> và các thông số hiệu ứng gốc vẫn là tư liệu tốt nếu có ngày phải tự vẽ lại.
+
+
 Nguồn đối chiếu: `../typing-clone` (mirror typing.com, cacheId 745) và ảnh `Capture.PNG` (bài học, phím `a`,
 tay trái ngón út xanh). Phân tích cơ chế gốc: bàn phím là HTML/CSS sinh từ `data/keyboards.json`; bàn tay là
 mô hình glTF vẽ bằng three.js vào canvas (camera orthographic nhìn từ trên), 159 tư thế tĩnh, tween 0,275 s,

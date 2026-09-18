@@ -1,8 +1,8 @@
 /* Lesson player — focus mode (PLAN.md B5/B6/B8).
    Nothing on this page competes with the line being typed: a thin topbar, the text, the
    keyboard. No nav, no marketing, no footer. Brand tokens come from tokens.css (nạp đầu tiên),
-   layout/typography chung từ base.css — kể cả --key-bg/--star/--danger/--ok, bốn biến trước đây
-   khai báo ngay trong file này. */
+   layout/typography chung từ base.css — kể cả --star/--danger/--ok, ba biến trước đây khai báo
+   ngay trong file này. Bàn phím và bàn tay ở keyboard/keyboard.css, không ở đây. */
 html,body{height:100%}
 body.player-page{background:var(--cream);overflow-x:hidden}
 
@@ -149,11 +149,10 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 .error-card code{font:12px "DM Mono",monospace;color:var(--ink);background:var(--surface-soft);padding:2px 5px;border-radius:4px}
 
 /* --- keyboard + hands -------------------------------------------------------------------- */
-/* Bottom room for the ghost hands: the shorthand above used to reset the 104px that
-   hands.css reserves on .keyboard-demo, which clipped the palms at the viewport edge.
-   .player-board.no-hands and the mobile block below still zero it out. */
-.player-board{width:100%;max-width:830px;margin:0 auto;padding:0 15px 210px}
-.player-board.no-hands{padding-bottom:0}
+/* Chỗ trống cho bàn tay 3D do CHÍNH bàn phím giữ: `.keyboard--hands{margin-bottom:33%}` trong
+   keyboard/keyboard.css, tỉ lệ theo bề ngang board đúng như bản gốc. Ở đây chỉ còn bề rộng và
+   lề ngang; thêm padding đáy ở đây nữa là cộng dồn hai lần. */
+.player-board{width:100%;max-width:830px;margin:0 auto;padding:0 15px}
 .player-live{min-height:20px;margin:10px 0 0;padding:0 20px 18px;text-align:center;color:var(--muted);font-size:12px;font-weight:700}
 
 /* the hidden input: focused at all times on desktop, never visible */
@@ -166,12 +165,8 @@ body.player-page{background:var(--cream);overflow-x:hidden}
 .menu-card{max-width:320px;display:flex;flex-direction:column;gap:9px;text-align:center}
 .menu-card h2{margin:0 0 6px;font-size:20px;letter-spacing:-.6px}
 
-/* --- 900px: keyboard stays, hands go ------------------------------------------------------ */
-/* Ngưỡng ở đây phải khớp CHÍNH XÁC với player.js: JS bật bàn tay ở min-width 901px, nên block này
-   dừng ở 900px. Lệch một pixel thôi là có dải bề rộng mà JS vẽ tay còn CSS đã kéo padding đáy về 0
-   → lòng bàn tay bị cắt mất. */
+/* --- 900px ---------------------------------------------------------------------------------- */
 @media(max-width:900px){
-  .player-board{padding-bottom:0}
   .prompt-lines{font-size:22px}
   .is-block .prompt-lines{font-size:28px}
   .burst-token{font-size:44px}
@@ -197,10 +192,9 @@ body.player-page{background:var(--cream);overflow-x:hidden}
   .result-headline{font-size:21px}
   .star-row{font-size:30px}
   .player-board{padding:0 8px}
-  .player-board .keyboard{padding:8px;gap:4px}
-  .player-board .key-row{min-width:0}
-  .player-board .key{max-height:34px;font-size:var(--fs-xs)}
-  .player-board .key.space{flex:1 1 336px}
+  /* Bàn phím tự co theo khung nhìn trong keyboard/keyboard.css (khối max-width:700px); ở đây chỉ
+     bỏ nốt padding đáy vì điện thoại không bật bàn tay. */
+  .player-board .keyboard--hands{margin-bottom:0}
   .player-live{margin:8px 0 0;padding:0 12px 8px}
   .result-actions{flex-direction:column}
   .result-actions>*{width:100%}

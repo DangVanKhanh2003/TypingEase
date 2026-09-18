@@ -12,10 +12,10 @@
   --surface:#fff; --surface-soft:#f6faf7; --surface-tint:#eef8f1;
   --border-soft:#cfe1d8;
 
-  /* Trạng thái. Bốn biến này trước đây chỉ khai báo trong player.css, mà keyboard.css lại gọi
-     var(--key-bg) — nên trên /tien-do/ và /luyen-tu-do/ (hai trang nạp keyboard.css nhưng KHÔNG
-     nạp player.css) biến là undefined. Đưa lên đây là sửa luôn lỗi đó. */
-  --key-bg:#dfe8e3; --star:#f4b400; --danger:#d35757; --ok:#2f8f68;
+  /* Trạng thái. Ba biến này trước đây chỉ khai báo trong player.css nên các trang không nạp
+     player.css thấy undefined. (--key-bg của bàn phím cũ đã bỏ cùng keyboard.css cũ: bàn phím
+     bây giờ mang bảng màu riêng trong keyboard/keyboard.css.) */
+  --star:#f4b400; --danger:#d35757; --ok:#2f8f68;
 
   /* Độ rộng — --w-page cho khối full-width, --w-read cho cột chữ dài dễ đọc. */
   --w-page:1120px; --w-read:760px; --pad-x:24px;

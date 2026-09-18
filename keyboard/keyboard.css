@@ -1,0 +1,500 @@
+/* keyboard/keyboard.css — bàn phím + bàn tay, cổng sang từ typekute.
+ *
+ * Nguồn: stylesheet vendor của typing.com (`app.min.745.css`) mà typekute nạp nguyên cả 745 KB,
+ * cộng khối `finger-theme` họ viết thêm ở cuối file đó. Ở đây chỉ giữ lại đúng những luật mà
+ * bàn phím và lớp tay cần — kiểm chứng bằng cách dựng lại DOM mà `keyboard/keyboard.js` sinh ra.
+ *
+ * Ba tầng, đúng thứ tự của bản gốc:
+ *   1. cấu trúc (.keyboard, .keyboard-row, .key) — kích thước, tỉ lệ phím, nhãn;
+ *   2. màu ngón (--fng-*, .key-<mã> → --fk) — NƠI DUY NHẤT quyết định phím nào màu gì;
+ *   3. trạng thái (.is-active/.is-wrong/.is-animating) khai báo LẠI sau tầng 2 để luôn thắng.
+ *
+ * Bàn tay 3D không có CSS tạo hình: WebGL vẽ vào canvas trong `.hands`, CSS chỉ đặt chỗ, làm mờ
+ * và đổ bóng. Màu vệt sáng trên ngón do shader đọc từ cùng bảng màu ở tầng 2 (hands-3d.js).
+ */
+
+/* ===== 1. Cấu trúc ============================================================================ */
+.keyboard {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  font-family: "Roboto Mono", ui-monospace, Menlo, Consolas, "Courier New", monospace;
+}
+/* Tắt "Hiện bàn phím" thì giấu phím và tay, NHƯNG giữ lại liên kết Cài đặt — nó là cửa duy nhất
+   để bật bàn phím trở lại, mà nó lại nằm bên trong chính cái board bị ẩn. Bản gốc cho cả board
+   `display:none` nên người học tự khoá mình ra ngoài; stylesheet vendor có sẵn một lớp
+   `.keyboard-link--hidden` (link về position tĩnh, căn giữa, rộng hết hàng) cho đúng tình huống
+   này — ở đây dùng lại chính hình dạng đó. */
+/* `.keyboard--a.keyboard--full` (nền, viền, bóng) khai báo ở tầng 2, tức là SAU khối này và cùng
+   độ đặc hiệu — nên chỗ này phải nêu đủ cả ba class, nếu không vẫn còn một dải nền trống. */
+.keyboard.keyboard--a.keyboard--full.hide {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+.keyboard.hide .keyboard-row,
+.keyboard.hide .hands { display: none; }
+.keyboard.hide .keyboard-link {
+  position: static;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.keyboard.hide .keyboard-link-action {
+  padding: 10px 14px;
+  border: 1px solid var(--border-soft, #cfe1d8);
+  border-radius: var(--r-pill, 999px);
+  background: var(--surface, #fff);
+}
+.keyboard--full { border-radius: 20px; padding: 15px 15px 10px; }
+.keyboard--c { margin-left: auto; margin-right: auto; }
+/* Chỗ trống dưới bàn phím cho lớp tay: tay được vẽ tràn ra ngoài khung bàn phím. */
+.keyboard--hands { margin-bottom: 33%; }
+.keyboard--hasSettings { padding-top: 20px; }
+.keyboard--numpad { width: 214px; }
+
+.keyboard-row { display: flex; flex: 1; justify-content: space-between; margin-bottom: 5px; max-height: 50px; }
+.keyboard-row:last-child { margin-bottom: 0; }
+.keyboard-key { flex: 1; flex-basis: 40px; margin-right: 5px; }
+.keyboard-key:last-child { margin-right: 0; }
+
+.key {
+  border-radius: 5px;
+  box-sizing: border-box;
+  line-height: 1;
+  max-height: 40px;
+  position: relative;
+  text-transform: uppercase;
+  font-family: "Roboto Mono", ui-monospace, Menlo, Consolas, "Courier New", monospace;
+}
+/* Phím vuông: `:after` đẩy chiều cao bằng đúng chiều rộng — vì thế landmark F/J phải dùng
+   `:before` (xem tầng 2). */
+.key--rspnsv { font-size: 11px; }
+.key--rspnsv:after { content: ""; display: block; margin-top: 100%; }
+.key-label {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  white-space: nowrap;
+  width: 100%;
+  font-weight: 700;
+}
+/* Phím hai tầng (ký tự shift ở trên): dưới 500px chỉ còn ký tự chính. */
+.key--duo { flex-direction: column; font-size: 12px; }
+.key--duo .key-label:first-child { height: 0; overflow: hidden; }
+/* Phím chức năng: nhãn nhỏ, nằm ở góc, và ẩn hẳn trên màn hình hẹp. */
+.key--special.key { text-transform: lowercase; }
+.key--special .key-label {
+  align-items: flex-end;
+  bottom: 5px;
+  color: #a9a9a9;
+  display: none;
+  height: calc(100% - 5px);
+  font-size: 6px;
+  width: calc(100% - 5px);
+}
+.key--special-l .key-label { justify-content: flex-start; left: 5px; }
+.key--special-r .key-label { justify-content: flex-end; right: 5px; }
+.key--twoWords .key-label--1, .key--twoWords .key-label--2 { margin-left: 2px; }
+.key--twoWords.key-20 .key-label--1 { display: none; }
+.keyboard--letter-case-lowercase .key--letter .key-label { font-size: 20px; }
+
+@media screen and (min-width: 500px) {
+  .key--rspnsv { font-size: 12px; }
+  .key--duo .key-label:first-child { height: 50%; }
+  .key--duo .key-label:last-child { height: 50%; top: 50%; }
+  .key--special .key-label { display: flex; }
+}
+@media screen and (min-width: 650px) {
+  .key--rspnsv { font-size: 16px; }
+  .key--special .key-label { color: #2b3444; font-size: 10px; }
+  .keyboard--hasSettings { padding-top: 30px; }
+}
+@media screen and (min-width: 800px) { .key--twoWords.key-20 .key-label--1 { display: block; } }
+@media screen and (min-width: 1024px) { .key--special .key-label { font-size: 12px; } }
+@media screen and (min-height: 690px) {
+  .key { max-height: 50px; }
+  .keyboard-key { flex-basis: 50px; }
+}
+@media screen and (min-height: 690px) and (min-width: 650px) { .keyboard-row { margin-bottom: 10px; } }
+
+/* Nhãn "Caps Lock ⇪" dài hơn mặt phím trên bàn phím đầy đủ (vá của typekute). */
+.keyboard--full .key-20 .key-label--1 { display: none !important; }
+.keyboard--full .key-20 .key-label--2,
+.keyboard--full .key-20 .key-label { font-size: 9px; }
+
+/* ===== 2. Màu ngón ============================================================================
+   Năm màu, một màu một ngón, soi gương sang hai bàn tay: phím phải bấm và ngón sáng lên trên
+   bàn tay 3D mang CÙNG một màu. Texture tay là xám-trắng trung tính nên màu chỉ sống ở đây. */
+.keyboard {
+  --fng-pinky: #b8b8f0;  --fng-pinky-line: #5b5bcc;  --fng-pinky-ink: #2c2c93;
+  --fng-ring: #a8e0b8;   --fng-ring-line: #5bcc7b;   --fng-ring-ink: #2c9349;
+  --fng-middle: #f6df72; --fng-middle-line: #d3ad22; --fng-middle-ink: #806500;
+  --fng-index: #98d8d8;  --fng-index-line: #5bcccc;  --fng-index-ink: #2c9393;
+  --fng-thumb: #8cc8ff;  --fng-thumb-line: #4595e6;  --fng-thumb-ink: #205c9a;
+}
+
+.keyboard--a.keyboard--full {
+  background-color: #eef1f7;
+  background-image: none;
+  border: 1px solid rgba(43, 52, 68, .05);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(43, 52, 68, .04), 0 20px 38px -26px rgba(43, 52, 68, .45);
+}
+
+/* Phân ngón theo lối gõ mười ngón kiểu Mỹ (trỏ trái giữ 4/5/6, trỏ phải bắt đầu từ 7).
+   Selector là `key-<mã ký tự>` mà keyboard.js gắn cho từng phím. */
+.keyboard:not(.keyboard--numpad) .key-96,
+.keyboard:not(.keyboard--numpad) .key-49,
+.keyboard:not(.keyboard--numpad) .key-113,
+.keyboard:not(.keyboard--numpad) .key-97,
+.keyboard:not(.keyboard--numpad) .key-122,
+.keyboard:not(.keyboard--numpad) .key-9,
+.keyboard:not(.keyboard--numpad) .key-20,
+.keyboard:not(.keyboard--numpad) .key-16,
+.keyboard:not(.keyboard--numpad) .key-48,
+.keyboard:not(.keyboard--numpad) .key-45,
+.keyboard:not(.keyboard--numpad) .key-61,
+.keyboard:not(.keyboard--numpad) .key-8,
+.keyboard:not(.keyboard--numpad) .key-112,
+.keyboard:not(.keyboard--numpad) .key-91,
+.keyboard:not(.keyboard--numpad) .key-93,
+.keyboard:not(.keyboard--numpad) .key-92,
+.keyboard:not(.keyboard--numpad) .key-59,
+.keyboard:not(.keyboard--numpad) .key-39,
+.keyboard:not(.keyboard--numpad) .key-13,
+.keyboard:not(.keyboard--numpad) .key-47 {
+  --fk: var(--fng-pinky); --fk-line: var(--fng-pinky-line); --fk-ink: var(--fng-pinky-ink);
+}
+.keyboard:not(.keyboard--numpad) .key-50,
+.keyboard:not(.keyboard--numpad) .key-119,
+.keyboard:not(.keyboard--numpad) .key-115,
+.keyboard:not(.keyboard--numpad) .key-120,
+.keyboard:not(.keyboard--numpad) .key-57,
+.keyboard:not(.keyboard--numpad) .key-111,
+.keyboard:not(.keyboard--numpad) .key-108,
+.keyboard:not(.keyboard--numpad) .key-46 {
+  --fk: var(--fng-ring); --fk-line: var(--fng-ring-line); --fk-ink: var(--fng-ring-ink);
+}
+.keyboard:not(.keyboard--numpad) .key-51,
+.keyboard:not(.keyboard--numpad) .key-101,
+.keyboard:not(.keyboard--numpad) .key-100,
+.keyboard:not(.keyboard--numpad) .key-99,
+.keyboard:not(.keyboard--numpad) .key-56,
+.keyboard:not(.keyboard--numpad) .key-105,
+.keyboard:not(.keyboard--numpad) .key-107,
+.keyboard:not(.keyboard--numpad) .key-44 {
+  --fk: var(--fng-middle); --fk-line: var(--fng-middle-line); --fk-ink: var(--fng-middle-ink);
+}
+.keyboard:not(.keyboard--numpad) .key-52,
+.keyboard:not(.keyboard--numpad) .key-53,
+.keyboard:not(.keyboard--numpad) .key-54,
+.keyboard:not(.keyboard--numpad) .key-114,
+.keyboard:not(.keyboard--numpad) .key-116,
+.keyboard:not(.keyboard--numpad) .key-102,
+.keyboard:not(.keyboard--numpad) .key-103,
+.keyboard:not(.keyboard--numpad) .key-118,
+.keyboard:not(.keyboard--numpad) .key-98,
+.keyboard:not(.keyboard--numpad) .key-55,
+.keyboard:not(.keyboard--numpad) .key-121,
+.keyboard:not(.keyboard--numpad) .key-117,
+.keyboard:not(.keyboard--numpad) .key-104,
+.keyboard:not(.keyboard--numpad) .key-106,
+.keyboard:not(.keyboard--numpad) .key-110,
+.keyboard:not(.keyboard--numpad) .key-109 {
+  --fk: var(--fng-index); --fk-line: var(--fng-index-line); --fk-ink: var(--fng-index-ink);
+}
+.keyboard:not(.keyboard--numpad) .key-32 {
+  --fk: var(--fng-thumb); --fk-line: var(--fng-thumb-line); --fk-ink: var(--fng-thumb-ink);
+}
+
+/* Lúc nghỉ mọi phím đều trắng trơn: màu ở trên mới chỉ được GÁN, chưa được tô. Màu chỉ hiện ra
+   trên phím đang phải bấm — và trong hai giây "nhá màu" lúc mở màn. */
+.keyboard--full .key--a {
+  background-color: #fff;
+  border-top: 1px solid hsla(0, 0%, 100%, .9);
+  border-bottom: 1px solid #cdd4e0;
+  border-radius: 7px;
+  color: #2b3444;
+  transition: background-color .12s ease, color .12s ease, box-shadow .12s ease;
+}
+.keyboard--full .key--a .key-label { font-weight: 600; }
+/* Gờ định vị dưới F và J — `:after` đã bị tỉ lệ vuông chiếm chỗ. */
+.keyboard--full .key-102:before,
+.keyboard--full .key-106:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 12px;
+  height: 2px;
+  margin-left: -6px;
+  border-radius: 2px;
+  background: #aeb7c6;
+}
+
+/* ===== 3. Trạng thái ==========================================================================
+   Khai báo sau tầng 2 để thắng, đúng như bản gốc. */
+.keyboard--full .key--a.is-active,
+.keyboard--full .key--a.is-confirmed {
+  background-color: var(--fk, #cfe0fb);
+  border-top-color: var(--fk, #cfe0fb);
+  border-bottom-color: var(--fk-line, #71a4f4);
+  color: var(--fk-ink, #2560b8);
+  /* Bản gốc còn kẻ thêm `0 0 0 2px var(--fk-line)` quanh phím đích cho dễ thấy giữa lúc cả bàn
+     phím đang nhá cùng tông màu. Vòng viền đó rối mắt đúng ở chỗ người học phải nhìn nhất, nên
+     bỏ: phím đích đã đậm màu hơn hẳn hàng xóm (100% so với 62% pha trắng) và còn bóng đổ. */
+  box-shadow: 0 2px 10px -3px var(--fk-line, #71a4f4);
+}
+.keyboard--full .key--a.is-active .key-label,
+.keyboard--full .key--a.is-confirmed .key-label { color: var(--fk-ink, #2560b8); }
+.keyboard--full .key--a.is-active:before,
+.keyboard--full .key--a.is-confirmed:before { background: var(--fk-ink, #2560b8); opacity: .5; }
+
+.keyboard--full .key--a.is-wrong {
+  background-color: #e5484d;
+  border-color: #e5484d;
+  color: #fff;
+  box-shadow: 0 2px 8px -2px #e5484d;
+  animation: keyPressWrong .25s;
+}
+.keyboard--full .key--a.is-right {
+  background-color: #6cc47a;
+  border-color: #6cc47a;
+  color: #fff;
+  box-shadow: 0 2px 8px -2px #6cc47a;
+}
+.keyboard--full .key--a.is-right .key-label,
+.keyboard--full .key--a.is-wrong .key-label { color: #fff; }
+
+/* Phím mới của bài học: không có trong bản gốc (nguồn dạy phím mới bằng màn hình riêng), nhưng
+   giáo trình ở đây có chip "phím mới" trỏ vào bàn phím. Chỉ là một mảng màu ngón nhạt — bản đầu
+   vẽ viền nét đứt quanh phím và nó chỉ làm rối đúng cái phím người học đang phải nhìn. */
+.keyboard--full .key--a.is-new:not(.is-active):not(.is-wrong) {
+  background-color: color-mix(in srgb, var(--fk, #fff) 45%, #fff);
+}
+
+/* Nhún phím khi gõ đúng. Keyframe gốc gán cứng màu xanh thương hiệu cũ, mà animation thì
+   thắng mọi khai báo thường — nên phím vừa bấm nháy xanh 250 ms rồi mới về màu ngón. Viết lại
+   theo chính màu ngón của phím. */
+@keyframes fngKeyPress {
+  0%, to {
+    background-color: var(--fk, #cfe0fb);
+    border-color: var(--fk, #cfe0fb) var(--fk, #cfe0fb) var(--fk-line, #71a4f4);
+    color: var(--fk-ink, #2560b8);
+  }
+  50% {
+    background-color: var(--fk-line, #71a4f4);
+    border-bottom-width: 0;
+    color: #fff;
+    transform: translateY(1px);
+  }
+}
+@keyframes keyPressWrong {
+  0%, to { background-color: #e5484d; border-color: #d35157 #e5484d #cc3d42; color: #fff; }
+  50% { background-color: #cc3d42; border-bottom-width: 0; transform: translateY(1px); }
+}
+.keyboard--full .key--a.is-animating { animation: fngKeyPress .25s; }
+
+/* ===== 4. Nhá màu ngón hai giây ===============================================================
+   Cả bàn phím mặc màu ngón cho tới khi người học gõ phím đầu tiên, rồi mờ dần về trắng — nhắc
+   ngón nào giữ phím nào mà không để bàn phím sặc sỡ suốt buổi.
+
+   Chạy bằng custom property ĐÃ ĐĂNG KÝ nên animation nằm trên board, từng phím chỉ đọc giá trị
+   thừa kế; để animation trên phím thì nó sẽ đè lên chính màu `is-active`. Cùng giá trị này được
+   hands-3d.js đọc lại để làm mờ vệt màu trên các ngón tay 3D. */
+@property --fng-peek {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@keyframes ntFingerGuideFade {
+  from { --fng-peek: 1; }
+  to { --fng-peek: 0; }
+}
+/* Chỉ ở nơi người ta thật sự gõ chữ. Bản gốc lọc theo loại màn hình (`standard`, `vocab`);
+   ở đây tương đương là hai trang có ô gõ — /hoc/ và /luyen-tu-do/. Bàn phím heatmap ở /tien-do/
+   tự tô màu theo độ chính xác nên phải đứng ngoài. */
+:is(.player-page, .free-page) .js-keyboard-holder .keyboard--full:not(.keyboard--numpad) { --fng-peek: 1; }
+:is(.player-page, .free-page) .js-keyboard-holder .keyboard--full:not(.keyboard--numpad).nt-keyboard-peek-started {
+  animation: ntFingerGuideFade 1.5s linear 2s both;
+}
+:is(.player-page, .free-page) .js-keyboard-holder .keyboard--full:not(.keyboard--numpad) .key--a:not(.is-active):not(.is-confirmed):not(.is-right):not(.is-wrong) {
+  background-color: color-mix(in srgb, var(--fk, #fff) calc(var(--fng-peek) * 62%), #fff);
+  border-bottom-color: color-mix(in srgb, var(--fk-line, #cdd4e0) calc(var(--fng-peek) * 55%), #cdd4e0);
+  color: color-mix(in srgb, var(--fk-ink, #2b3444) calc(var(--fng-peek) * 100%), #2b3444);
+}
+
+/* ===== 4b. Giảm chuyển động ===================================================================
+   Người bật "reduce motion" vẫn cần biết phím nào phải bấm và ngón nào đang sáng — chỉ bỏ phần
+   chuyển động: phím không nhún, màu ngón không mờ dần mà tắt ngay khi bắt đầu gõ. Bàn tay 3D
+   nhảy thẳng sang tư thế mới (hands-3d.js đọc cùng media query này). */
+@media (prefers-reduced-motion: reduce) {
+  .keyboard--full .key--a { transition: none; }
+  .keyboard--full .key--a.is-animating,
+  .keyboard--full .key--a.is-wrong { animation: none; }
+  :is(.player-page, .free-page) .js-keyboard-holder .keyboard--full:not(.keyboard--numpad).nt-keyboard-peek-started {
+    animation: none;
+    --fng-peek: 0;
+  }
+}
+
+/* ===== 5. Bàn tay =============================================================================
+   `.hands` được keyboard.js đặt inline `left:-100px; right:-100px; height:800px` để giữ đúng
+   phép chiếu của cảnh 3D so với bàn phím; ở đây chỉ còn vị trí theo chiều dọc và lớp phủ. */
+.hands { position: absolute; pointer-events: none; height: 100%; left: 0; top: 3%; width: 100%; }
+.hand { position: absolute; }
+.hand--left { left: -20.5%; top: -3%; width: 74.3%; }
+.hand--right { left: 33.3%; width: 84.2%; }
+@media screen and (min-width: 450px) { .hands { top: -2%; } }
+@media screen and (min-width: 500px) { .hands { top: -6%; } }
+@media screen and (min-width: 650px) { .hands { top: -20%; } }
+@media screen and (min-height: 690px) { .hands { top: 3%; } }
+@media screen and (min-height: 690px) and (min-width: 450px) { .hands { top: -3%; } }
+@media screen and (min-height: 690px) and (min-width: 500px) { .hands { top: -6%; } }
+@media screen and (min-height: 690px) and (min-width: 650px) { .hands { top: -1%; } }
+
+/* Tay như thuỷ tinh hơn là như da: đủ để thấy phím dưới ngón. */
+.hands.js-hands canvas {
+  opacity: .70;
+  filter: drop-shadow(0 -1px 1px rgba(43, 52, 68, .55));
+}
+
+/* Ba tuỳ chọn trong hộp thoại Cài đặt; JS cũng tắt renderer, đây là phần nhìn thấy được. */
+.nt-player-keyboard { position: relative; }
+.nt-player-hands-hidden .hands { display: none !important; }
+.nt-player-left-hand-only .hand--right,
+.nt-player-right-hand-only .hand--left { display: none !important; }
+
+/* ===== 6. Liên kết Cài đặt ==================================================================== */
+.keyboard-link { position: absolute; top: 2px; right: 20px; white-space: nowrap; z-index: 3; }
+@media screen and (min-width: 650px) { .keyboard-link { top: 7px; } }
+.keyboard-link-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #6b7488;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.keyboard-link-action:hover,
+.keyboard-link-action:focus-visible { color: #2b3444; }
+.keyboard-link-icon { height: 14px; width: 14px; position: relative; top: 1px; }
+
+/* ===== 7. Điện thoại ==========================================================================
+   Bàn phím lấy trọn bề ngang khung nhìn, và lớp tay phải co theo board: JS ghi `left/right/height`
+   bằng px cố định (bleed 100px), trên màn 300px thì 100px mỗi bên là một phần ba — tay phình to,
+   trùm cả hàng cơ sở. Viết lại bleed thành đúng tỉ lệ nó vốn có trên desktop, nên cần !important. */
+@media screen and (max-width: 700px) {
+  .js-keyboard-holder .keyboard--full:not(.keyboard--numpad) {
+    box-sizing: border-box;
+    width: calc(100vw - 12px);
+    max-width: calc(100vw - 12px);
+    margin-inline: calc(50% - 50vw + 6px);
+  }
+  .keyboard .hands.js-hands {
+    left: -12.5% !important;
+    right: -12.5% !important;
+    height: auto !important;
+  }
+  .keyboard--full:not(.keyboard--numpad) .key--rspnsv { font-size: clamp(8px, 2.5vw, 16px); }
+  .keyboard--full:not(.keyboard--numpad).keyboard--letter-case-lowercase .key--letter .key-label {
+    font-size: clamp(9px, 3vw, 20px);
+  }
+}
+
+/* ===== 8. Hộp thoại Cài đặt bàn phím ==========================================================
+   Bản gốc dùng bộ modal/switch của vendor; ở đây dựng lại bằng `.card` + nút của player.css để
+   khỏi kéo theo 500 KB CSS chỉ vì bảy dòng tuỳ chọn. */
+.kb-settings {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(19, 26, 38, .45);
+}
+.kb-settings-card {
+  position: relative;
+  width: min(460px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  text-align: left;
+}
+.kb-settings-card h2 { margin: 0 0 4px; font-size: var(--fs-h3, 18px); }
+.kb-settings-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-soft, #f1f4f9);
+  color: var(--muted, #6b7488);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.kb-settings-close:hover { color: var(--ink, #2b3444); }
+.kb-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-soft, rgba(43, 52, 68, .08));
+  cursor: pointer;
+}
+.kb-settings-row:last-of-type { border-bottom: 0; }
+.kb-settings-label { flex: 1; font-weight: 600; }
+.kb-settings-row:has(:disabled) { opacity: .45; cursor: default; }
+/* Công tắc: ô checkbox thật nằm dưới, `.kb-settings-knob` là phần nhìn thấy, nên bàn phím và
+   trình đọc màn hình vẫn thấy một checkbox bình thường. */
+.kb-settings-switch { position: absolute; opacity: 0; width: 0; height: 0; }
+.kb-settings-knob {
+  flex: 0 0 auto;
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--border-soft, #d6dbe5);
+  transition: background .15s ease;
+}
+.kb-settings-knob:after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(19, 26, 38, .3);
+  transition: transform .15s ease;
+}
+.kb-settings-switch:checked + .kb-settings-knob { background: var(--green, #6cc47a); }
+.kb-settings-switch:checked + .kb-settings-knob:after { transform: translateX(18px); }
+.kb-settings-switch:focus-visible + .kb-settings-knob { outline: 2px solid var(--green, #6cc47a); outline-offset: 2px; }
+.kb-settings-select {
+  flex: 0 1 auto;
+  max-width: 55%;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--surface-soft, #f1f4f9);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+}
+.kb-settings-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.kb-settings-footer .ghost-button,
+.kb-settings-footer .primary-button { min-width: 104px; }

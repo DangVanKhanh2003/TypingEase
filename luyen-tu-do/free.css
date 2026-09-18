@@ -17,10 +17,10 @@
 
 .free-page .keyboard-lab{margin:0 0 22px}
 .free-board{min-width:0}
-/* Ban phim gon lai vua du be rong cac phim, canh giua — de toa do tay khop voi phim thuc. */
-.free-board .keyboard{width:max-content;max-width:100%;margin:0 auto;background:var(--key-bg)}
-.free-board .key{height:32px;min-width:30px}
-@media(max-width:900px){.free-board{padding-bottom:0}.free-board .hand-layer{display:none}}
+/* Ban phim tu lo kich thuoc, nen va khoang trong cho ban tay trong keyboard/keyboard.css. */
+.free-board .keyboard--full{max-width:100%;margin:0 auto}
+/* Duoi 900px trang nay tat ban tay (free-page.js), nen bo luon cho trong danh cho chung. */
+@media(max-width:900px){.free-board .keyboard--hands{margin-bottom:0}}
 
 .free-main .explore{max-width:none;margin:0;padding:6px 0 var(--gap-section)}
 

@@ -131,18 +131,51 @@
   }
 
   // --- heatmap ---------------------------------------------------------------------------------
-  // Widget dùng `data-pkey` (không phải `data-key`) nên không đụng vào bàn phím nào khác.
-  let keyboard = null;
-  function renderHeat() {
+  // Bàn phím của typekute (window.NTKeyboard). Trang này KHÔNG bật bàn tay: tay che đúng những
+  // phím mà người xem đang muốn đọc màu, và KHÔNG có lớp nhá màu ngón — màu ở đây là độ chính
+  // xác, hai thứ màu chồng lên nhau thì không đọc được cái nào.
+  let NT = null;
+  let board = null;
+  let heatPending = null;
+
+  function mountHeatKeyboard() {
+    if (heatPending) return heatPending;
     const host = document.querySelector('#heat-board');
-    if (!host || !global.TypingEaseKeyboard) return;
-    // Không vẽ ghost hands ở đây: bàn tay che đúng những phím mà trang này muốn cho xem màu.
-    if (!keyboard) keyboard = global.TypingEaseKeyboard.create({ host, compact: global.innerWidth <= 900, hands: false });
-    const stats = new Map(profile.getKeyStats().map(item => [item.key, item]));
+    if (!host) return null;
+    heatPending = global.NTKeyboardReady.then(api => {
+      NT = api;
+      if (!NT) throw new Error('module bàn phím không nạp được');
+      return NT.ready;
+    }).then(layout => {
+      const holder = document.createElement('div');
+      holder.className = 'cell js-keyboard-holder well';
+      board = NT.createKeyboard({
+        activeKey: '',
+        preferences: { ...NT.loadKeyboardPreferences(), showHands: false, showKeyboard: true },
+        layout,
+        onSettings: () => NT.openSettingsFor(board, {
+          root: host,
+          // Người học có thể bật bàn tay trong Cài đặt; trang này vẫn giữ tay tắt (xem ghi chú
+          // ở trên), lựa chọn của họ có hiệu lực ở /hoc/ và /luyen-tu-do/.
+          onSave: (next) => { NT.applyKeyboardPreferences(board, { ...next, showHands: false }); renderHeat(); }
+        })
+      });
+      holder.append(board);
+      host.replaceChildren(holder);
+      renderHeat();
+    }).catch(error => { console.warn('[tiến độ] bàn phím không tải được', error); });
+    return heatPending;
+  }
+
+  function renderHeat() {
+    if (!board) { mountHeatKeyboard(); return; }
+    const stats = profile.getKeyStats();
     let measured = false;
-    host.querySelectorAll('.key[data-pkey]').forEach(key => {
-      const stat = stats.get(key.dataset.pkey);
-      if (!stat || stat.attempts < profile.HEAT_SAMPLE_FLOOR) { delete key.dataset.heat; key.removeAttribute('title'); return; }
+    board.querySelectorAll('.key[data-heat]').forEach(key => { delete key.dataset.heat; key.removeAttribute('title'); });
+    stats.forEach(stat => {
+      if (stat.attempts < profile.HEAT_SAMPLE_FLOOR) return;
+      const key = NT.keyElementFor(board, stat.key);
+      if (!key) return;
       key.dataset.heat = stat.accuracy >= 97 ? 'strong' : stat.accuracy >= 90 ? 'fair' : 'weak';
       key.title = `${stat.accuracy}%${stat.meanMs ? ` · ${stat.meanMs}ms` : ''}`;
       measured = true;
@@ -229,7 +262,6 @@
   global.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      keyboard?.layout({ compact: global.innerWidth <= 900, hands: false });
       renderHeat();
     }, 150);
   });

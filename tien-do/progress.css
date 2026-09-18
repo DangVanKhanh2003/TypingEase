@@ -100,9 +100,10 @@
 
 /* ---------- heatmap ---------- */
 /* Ba mức nhiệt (mạnh/khá/yếu) là màu ngữ nghĩa xanh-vàng-đỏ, không quy về token thương hiệu. */
-.key[data-heat=strong]{border-color:#9fd3ba;background:#eefaf2;color:#14624a}
-.key[data-heat=fair]{border-color:#f0dcae;background:#fdf8e9;color:#8a6a1f}
-.key[data-heat=weak]{border-color:#efbfae;background:#fdeee8;color:#a9452b}
+.heat-board .key[data-heat=strong]{border-color:#9fd3ba;background:#eefaf2;color:#14624a}
+.heat-board .key[data-heat=fair]{border-color:#f0dcae;background:#fdf8e9;color:#8a6a1f}
+.heat-board .key[data-heat=weak]{border-color:#efbfae;background:#fdeee8;color:#a9452b}
+.heat-board .key[data-heat] .key-label{color:inherit}
 .heat-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;color:var(--muted);font-size:10px}
 .heat-legend span{display:inline-flex;align-items:center;gap:5px}
 .heat-legend i{width:11px;height:11px;border:1px solid #d0dfd7;border-radius:3px}
@@ -111,8 +112,10 @@
 .heat-legend i[data-heat=weak]{border-color:#efbfae;background:#fdeee8}
 .keyboard-lab{margin:0 0 22px}
 .heat-board{min-width:0;padding-bottom:0}
-.heat-board .keyboard{width:100%;max-width:100%;margin:0 auto}
-.heat-board .key-row{min-width:0}
+.heat-board .keyboard--full{width:100%;max-width:100%;margin:0 auto}
+/* Trang nay khong bat ban tay nen khong can cho trong duoi ban phim. */
+.heat-board .keyboard--hands{margin-bottom:0}
+.heat-board .keyboard-row{min-width:0}
 .heat-board .key{max-height:34px;font-size:12px}
 .heat-board .key--duo{font-size:9px}
 .heat-board .key--special .key-label{font-size:8px}
