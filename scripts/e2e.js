@@ -353,155 +353,145 @@ test('9 reduced motion: highlight vẫn chạy, không lỗi', { reducedMotion: 
   assert.strictEqual(anim, 'none', `animation phải tắt khi reduced-motion, thấy "${anim}"`);
 });
 
-// --- chuyển động ngón (PLAN-ban-tay Phase C) --------------------------------------------------
-// Tư thế là `style.transform` trên `.finger` và `.ghost-hand`, chuyển bằng CSS transition
-// (--hand-speed, mặc định .275s) nên đo vị trí móng sau khi transition kết thúc.
-const SETTLE_MS = 700;
-const poseState = (page, board = '#board') => page.evaluate(selector => {
+// --- bàn tay ảnh + đường chỉ phím (19/09) -----------------------------------------------------
+// Tay là hai <img> đứng yên, đặt bằng phép đồng dạng khớp 4 đầu ngón vào 4 phím cơ sở; mỗi ngón
+// là một <g class="finger"> trong SVG .hand-pointers với vệt sáng ở đầu ngón (data-rx/ry) và một
+// đường .finger-line tới phím đích khi phím đích ≠ phím cơ sở (class is-pointing).
+const handState = (page, board = '#board') => page.evaluate(selector => {
   const root = document.querySelector(selector);
   const origin = root.getBoundingClientRect();
   const box = element => { const r = element.getBoundingClientRect(); return { x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height, cx: r.left + r.width / 2 - origin.left, cy: r.top + r.height / 2 - origin.top }; };
   const fingers = {};
   root.querySelectorAll('.hand-layer .finger').forEach(group => {
-    const nail = group.querySelector('.hand-nail');
+    const line = group.querySelector('.finger-line');
     fingers[group.dataset.finger] = {
-      key: group.dataset.key, transform: group.style.transform || '',
+      key: group.dataset.key, tip: [Number(group.dataset.rx), Number(group.dataset.ry)],
       active: group.classList.contains('active-finger'), full: group.classList.contains('glow-full'),
-      nail: nail ? box(nail) : null
+      pointing: group.classList.contains('is-pointing'),
+      lineTo: line ? [Number(line.getAttribute('x2')), Number(line.getAttribute('y2'))] : null,
+      lineOpacity: line ? parseFloat(getComputedStyle(line).opacity) : null
     };
   });
-  const hands = {};
-  root.querySelectorAll('.hand-layer .ghost-hand').forEach(hand => { hands[hand.classList.contains('left-hand') ? 'left' : 'right'] = hand.style.transform || ''; });
+  const photos = [...root.querySelectorAll('.hand-photo')].map(img => ({
+    side: img.classList.contains('hand-photo--left') ? 'left' : 'right', loaded: img.complete && img.naturalWidth > 0,
+    transform: img.style.transform, box: box(img)
+  }));
   const keyBox = id => { const element = root.querySelector(`.key[data-pkey="${id}"]`); return element ? box(element) : null; };
   const shifts = [...root.querySelectorAll('.key[data-pkey="shift"]')].map(box);
   return {
-    fingers, hands, speed: root.style.getPropertyValue('--hand-speed').trim(),
-    hostClass: root.className,
-    keys: { e: keyBox('e'), a: keyBox('a'), shiftLeft: shifts[0] || null, shiftRight: shifts[shifts.length - 1] || null }
+    fingers, photos, hostClass: root.className, layer: Boolean(root.querySelector('.hand-layer')),
+    keys: { a: keyBox('a'), s: keyBox('s'), d: keyBox('d'), f: keyBox('f'), j: keyBox('j'), k: keyBox('k'), l: keyBox('l'), ';': keyBox(';'), e: keyBox('e'), space: keyBox(' '), shiftLeft: shifts[0] || null, shiftRight: shifts[shifts.length - 1] || null }
   };
 }, board);
-// Tâm móng nằm trong phím: ±8px theo X; theo Y móng nằm dưới đầu ngón nên cho lệch tới +14px.
-function assertNailOn(nail, key, label) {
-  assert.ok(nail && key, `${label}: thiếu móng hoặc phím`);
-  assert.ok(nail.cx >= key.x - 8 && nail.cx <= key.x + key.w + 8, `${label}: móng X ${nail.cx.toFixed(0)} ngoài phím [${key.x.toFixed(0)}, ${(key.x + key.w).toFixed(0)}]`);
-  assert.ok(nail.cy >= key.y - 8 && nail.cy <= key.y + key.h + 14, `${label}: móng Y ${nail.cy.toFixed(0)} ngoài phím [${key.y.toFixed(0)}, ${(key.y + key.h).toFixed(0)}]`);
+// Đầu ngón nghỉ nằm trong phím cơ sở của nó: ±8px theo X, theo Y cho lệch lên tới 12px (TIP_LIFT).
+function assertTipOn(tip, key, label) {
+  assert.ok(tip && key, `${label}: thiếu đầu ngón hoặc phím`);
+  assert.ok(tip[0] >= key.x - 8 && tip[0] <= key.x + key.w + 8, `${label}: đầu ngón X ${tip[0].toFixed(0)} ngoài phím [${key.x.toFixed(0)}, ${(key.x + key.w).toFixed(0)}]`);
+  assert.ok(tip[1] >= key.y - 12 && tip[1] <= key.y + key.h + 8, `${label}: đầu ngón Y ${tip[1].toFixed(0)} ngoài phím [${key.y.toFixed(0)}, ${(key.y + key.h).toFixed(0)}]`);
 }
+const near = (a, b, tolerance) => Math.abs(a[0] - b[0]) <= tolerance && Math.abs(a[1] - b[1]) <= tolerance;
 
-test('11 pose: ngón giữa trái với lên E rồi về D', async page => {
-  await openPlayer(page, 'u1-l07/2');   // "eeee dddd…": e hàng trên, d hàng cơ sở — cùng ngón LM
-  await sleep(SETTLE_MS);
-  let pose = await poseState(page);
-  const lm = pose.fingers.LM;
-  assert.ok(lm.active, 'LM active');
-  assert.notStrictEqual(lm.transform, '', 'LM có transform khi với lên E');
-  assertNailOn(lm.nail, pose.keys.e, 'LM trên E');
-  assert.notStrictEqual(pose.hands.left, '', 'bàn tay trái dịch theo');
-  assert.strictEqual(pose.hands.right, '', 'bàn tay phải đứng yên');
-  for (const code of ['RI', 'RM', 'RR', 'RP', 'RT']) assert.strictEqual(pose.fingers[code].transform, '', `${code} không transform`);
-  await page.keyboard.type('eeee ', { delay: 20 });   // phím kế là d: hàng cơ sở của chính LM
-  await sleep(SETTLE_MS);
-  pose = await poseState(page);
-  assert.strictEqual(await boardState(page).then(board => board.activeKey), 'd');
-  assert.ok(pose.fingers.LM.active);
-  assert.strictEqual(pose.fingers.LM.transform, '', 'về D thì transform rỗng lại');
-  assert.strictEqual(pose.hands.left, '', 'bàn tay trái về chỗ');
+test('11 tay ảnh: hai ảnh tải được, 8 đầu ngón ghim đúng 8 phím cơ sở, ngón cái trên Space', async page => {
+  await openPlayer(page, 'u1-l01/2');
+  const hands = await handState(page);
+  assert.strictEqual(hands.photos.length, 2, 'hai ảnh tay');
+  assert.ok(hands.photos.every(photo => photo.loaded), `ảnh tay phải tải được: ${JSON.stringify(hands.photos.map(p => p.loaded))}`);
+  assert.ok(hands.photos.every(photo => /translate\(.+\) rotate\(.+\) scale\(.+\)/.test(photo.transform)), 'ảnh đặt bằng translate/rotate/scale');
+  for (const [code, key] of [['LP', 'a'], ['LR', 's'], ['LM', 'd'], ['LI', 'f'], ['RI', 'j'], ['RM', 'k'], ['RR', 'l'], ['RP', ';']]) {
+    assert.strictEqual(hands.fingers[code].key, key, `${code} nghỉ trên ${key}`);
+    assertTipOn(hands.fingers[code].tip, hands.keys[key], `${code} trên ${key}`);
+  }
+  for (const code of ['LT', 'RT']) {
+    assert.strictEqual(hands.fingers[code].key, ' ', `${code} nghỉ trên Space`);
+    const tip = hands.fingers[code].tip, space = hands.keys.space;
+    assert.ok(tip[1] >= space.y - 16 && tip[1] <= space.y + space.h + 16, `${code} Y ${tip[1].toFixed(0)} không ở hàng Space [${space.y.toFixed(0)}, ${(space.y + space.h).toFixed(0)}]`);
+  }
+  // Ảnh tay không đè lên hàng số: mép trên của ảnh nằm dưới hàng phím số.
+  const numberRowBottom = await page.evaluate(() => { const k = document.querySelector('#board .key[data-pkey="1"]'); const b = document.querySelector('#board').getBoundingClientRect(); return k.getBoundingClientRect().bottom - b.top; });
+  hands.photos.forEach(photo => assert.ok(photo.box.y >= numberRowBottom - 20, `${photo.side}: mép trên ảnh ${photo.box.y.toFixed(0)} đè lên hàng số (đáy hàng số ${numberRowBottom.toFixed(0)})`));
 });
 
-test('12 pose Shift: chữ A → ngón út phải glow-full tới Shift phải', async page => {
+test('12 chỉ phím: ngón giữa trái với E → đường kẻ từ đầu ngón tới tâm E; về D thì tắt', async page => {
+  await openPlayer(page, 'u1-l07/2');   // "eeee dddd…"
+  let hands = await handState(page);
+  const lm = hands.fingers.LM;
+  assert.ok(lm.active, 'LM active');
+  assert.ok(lm.pointing, 'LM is-pointing');
+  assert.ok(near(lm.lineTo, [hands.keys.e.cx, hands.keys.e.cy], 1.5), `đầu đường kẻ ${lm.lineTo} phải là tâm E ${[hands.keys.e.cx, hands.keys.e.cy]}`);
+  assert.ok(lm.lineOpacity > 0.5, `đường kẻ phải thấy được, opacity ${lm.lineOpacity}`);
+  for (const code of ['LP', 'LR', 'LI', 'LT', 'RI', 'RM', 'RR', 'RP', 'RT']) assert.ok(!hands.fingers[code].pointing, `${code} không chỉ`);
+  await page.keyboard.type('eeee ', { delay: 20 });   // phím kế là d: phím cơ sở của LM
+  await sleep(120);
+  hands = await handState(page);
+  assert.strictEqual(await boardState(page).then(board => board.activeKey), 'd');
+  assert.ok(hands.fingers.LM.active && !hands.fingers.LM.pointing, 'về D: active nhưng không kẻ đường');
+  assert.ok(hands.fingers.LM.lineOpacity < 0.05, `đường kẻ phải ẩn, opacity ${hands.fingers.LM.lineOpacity}`);
+});
+
+test('13 chỉ phím Shift: chữ A → ngón út phải glow-full kẻ tới Shift phải, út trái sáng tại A', async page => {
   await openPlayer(page, 'u2-l09/2');   // "Aa Ss…"
-  await sleep(SETTLE_MS);
-  const pose = await poseState(page);
-  const rp = pose.fingers.RP, lp = pose.fingers.LP;
-  assert.ok(rp.active && rp.full, 'RP active + glow-full');
-  assert.notStrictEqual(rp.transform, '', 'RP di chuyển');
-  assertNailOn(rp.nail, pose.keys.shiftRight, 'RP trên Shift phải');
-  assert.notStrictEqual(pose.hands.right, '', 'bàn tay phải dịch theo');
-  assert.ok(lp.active && !lp.full, 'LP active, không glow-full');
-  assert.strictEqual(lp.transform, '', 'LP đã nằm trên A nên không transform');
-  assertNailOn(lp.nail, pose.keys.a, 'LP trên A');
-  assert.strictEqual(pose.hands.left, '', 'bàn tay trái đứng yên');
-  const active = Object.entries(pose.fingers).filter(([, finger]) => finger.active).map(([code]) => code).sort();
+  const hands = await handState(page);
+  const rp = hands.fingers.RP, lp = hands.fingers.LP;
+  assert.ok(rp.active && rp.full && rp.pointing, 'RP active + glow-full + is-pointing');
+  assert.ok(near(rp.lineTo, [hands.keys.shiftRight.cx, hands.keys.shiftRight.cy], 1.5), `RP kẻ tới Shift phải, thấy ${rp.lineTo}`);
+  assert.ok(lp.active && !lp.full && !lp.pointing, 'LP active, không glow-full, không kẻ (đã nằm trên A)');
+  assertTipOn(lp.tip, hands.keys.a, 'LP trên A');
+  const active = Object.entries(hands.fingers).filter(([, finger]) => finger.active).map(([code]) => code).sort();
   assert.deepStrictEqual(active, ['LP', 'RP']);
 });
 
-test('13 pose Space: ngón cái phải active, không transform, tay trái nghỉ', async page => {
+test('14 Space: ngón cái phải sáng, không kẻ đường, tay trái nghỉ', async page => {
   await openPlayer(page, 'u1-l01/6');   // "jjj fff…"
   await page.keyboard.type('jjj', { delay: 20 });
-  await sleep(SETTLE_MS);
+  await sleep(120);
   assert.strictEqual(await boardState(page).then(board => board.activeKey), ' ');
-  const pose = await poseState(page);
-  assert.ok(pose.fingers.RT.active, 'RT active');
-  assert.strictEqual(pose.fingers.RT.key, ' ', 'ngón cái phải nghỉ trên Space');
-  assert.strictEqual(pose.fingers.RT.transform, '', 'không transform');
-  for (const code of ['LP', 'LR', 'LM', 'LI', 'LT']) assert.ok(!pose.fingers[code].active, `${code} không active`);
-  assert.strictEqual(pose.hands.left, '');
-  assert.strictEqual(pose.hands.right, '');
+  const hands = await handState(page);
+  assert.ok(hands.fingers.RT.active, 'RT active');
+  assert.ok(!hands.fingers.RT.pointing, 'ngón cái đã nằm trên Space → không kẻ');
+  for (const code of ['LP', 'LR', 'LM', 'LI', 'LT']) assert.ok(!hands.fingers[code].active, `${code} không active`);
+  assert.ok(Object.values(hands.fingers).every(finger => !finger.pointing), 'không ngón nào kẻ đường');
 });
 
-test('14 tốc độ thích ứng: --hand-speed giảm khi gõ nhanh', async page => {
-  await openPlayer(page, 'u1-l01/8');   // standard "jjf jjf fjj fjj…"
-  const before = (await poseState(page)).speed;
-  assert.ok(before === '' || parseFloat(before) === 0.275, `ban đầu "${before}"`);
-  const lesson = await lessonJson(page, 'u1-l01');
-  await page.keyboard.type(targetOf(lesson.screens[7]).slice(0, 8), { delay: 120 });
-  await sleep(50);
-  const after = parseFloat((await poseState(page)).speed);
-  assert.ok(Number.isFinite(after), 'có giá trị');
-  assert.ok(after < 0.275 && after >= 0.09, `--hand-speed = ${after}s, cần trong [0.09, 0.275)`);
-  assert.strictEqual((await playerState(page)).run.errors, 0);
-});
-
-test('15 hands-static: animatedHands:false → active-finger nhưng không transform', async page => {
+test('15 hands:false → không có lớp tay; layout({hands}) bật/tắt được và giữ highlight', async page => {
   await openPlayer(page, 'u1-l01/2');
   const result = await page.evaluate(() => {
     const host = document.createElement('div');
     host.style.width = '830px';
     document.body.append(host);
-    const widget = window.TypingEaseKeyboard.create({ host, hands: true, animatedHands: false });
+    const widget = window.TypingEaseKeyboard.create({ host, hands: false });
     widget.highlight('e');
-    const lm = host.querySelector('.finger[data-finger="LM"]');
-    const out = {
-      hostClass: host.className, active: lm.classList.contains('active-finger'), transform: lm.style.transform || '',
-      computed: getComputedStyle(lm).transform, hand: host.querySelector('.ghost-hand.left-hand').style.transform || '',
-      activeKey: host.querySelector('.key.active-key')?.dataset.pkey
-    };
-    // layout() vẽ lại SVG nên phải truy vấn lại ngón sau mỗi lần gọi.
-    const finger = () => host.querySelector('.finger[data-finger="LM"]');
-    widget.layout({ animatedHands: true });
-    widget.highlight('e');
-    out.afterOn = finger().style.transform || '';
-    widget.layout({ animatedHands: false });
-    out.afterOffClass = host.className;
-    out.afterOff = finger().style.transform || '';
+    const out = { off: { hostClass: host.className, layer: Boolean(host.querySelector('.hand-layer')), activeKey: host.querySelector('.key.active-key')?.dataset.pkey } };
+    widget.layout({ hands: true });
+    out.on = { hostClass: host.className, layer: Boolean(host.querySelector('.hand-layer')), photos: host.querySelectorAll('.hand-photo').length,
+      fingers: host.querySelectorAll('.hand-layer .finger').length, pointing: host.querySelector('.finger.is-pointing')?.dataset.finger, activeKey: host.querySelector('.key.active-key')?.dataset.pkey };
+    widget.layout({ hands: false });
+    out.offAgain = { hostClass: host.className, layer: Boolean(host.querySelector('.hand-layer')) };
     widget.destroy();
     host.remove();
     return out;
   });
-  assert.ok(/hands-static/.test(result.hostClass), result.hostClass);
-  assert.ok(result.active, 'LM active');
-  assert.strictEqual(result.activeKey, 'e');
-  assert.strictEqual(result.transform, '', 'không style.transform');
-  assert.strictEqual(result.hand, '');
-  assert.ok(result.computed === 'none' || result.computed === '', `computed transform: ${result.computed}`);
-  assert.notStrictEqual(result.afterOn, '', 'bật animatedHands lại thì có pose');
-  assert.ok(/hands-static/.test(result.afterOffClass));
-  assert.strictEqual(result.afterOff, '', 'tắt lại thì pose bị xoá');
+  assert.ok(/no-hands/.test(result.off.hostClass) && !result.off.layer, 'tắt: có .no-hands, không .hand-layer');
+  assert.strictEqual(result.off.activeKey, 'e', 'phím vẫn sáng khi không có tay');
+  assert.ok(!/no-hands/.test(result.on.hostClass) && result.on.layer, 'bật: bỏ .no-hands, có .hand-layer');
+  assert.strictEqual(result.on.photos, 2);
+  assert.strictEqual(result.on.fingers, 10);
+  assert.strictEqual(result.on.pointing, 'LM', 'highlight đang giữ được áp lại: LM kẻ tới E');
+  assert.strictEqual(result.on.activeKey, 'e');
+  assert.ok(/no-hands/.test(result.offAgain.hostClass) && !result.offAgain.layer, 'tắt lại: lớp tay gỡ đi');
 });
 
-test('16 resize 1440→1024→1440 giữ pose, không lỗi JS', async page => {
-  await openPlayer(page, 'u2-l09/2');   // RP đang với tới Shift phải
-  await sleep(SETTLE_MS);
-  const first = await poseState(page);
-  assert.notStrictEqual(first.fingers.RP.transform, '');
+test('16 resize 1440→1024→1440: ảnh đặt lại, đầu ngón vẫn trên phím cơ sở, đường kẻ theo phím', async page => {
+  await openPlayer(page, 'u2-l09/2');   // RP đang kẻ tới Shift phải
   for (const width of [1024, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.evaluate(() => window.dispatchEvent(new Event('resize')));
-    await sleep(300 + SETTLE_MS);   // debounce 120ms + transition
-    const pose = await poseState(page);
-    assert.ok(pose.fingers.RP.active && pose.fingers.RP.full, `${width}: RP vẫn active glow-full`);
-    assert.notStrictEqual(pose.fingers.RP.transform, '', `${width}: pose được áp lại`);
-    assertNailOn(pose.fingers.RP.nail, pose.keys.shiftRight, `${width}: RP trên Shift phải`);
-    assert.strictEqual(Object.keys(pose.fingers).length, 10, `${width}: vẫn 10 ngón`);
+    await sleep(400);   // debounce 120ms + vẽ lại
+    const hands = await handState(page);
+    assert.ok(hands.photos.every(photo => photo.loaded), `${width}: ảnh tay tải được`);
+    assert.ok(hands.fingers.RP.active && hands.fingers.RP.full && hands.fingers.RP.pointing, `${width}: RP vẫn active glow-full và kẻ`);
+    assert.ok(near(hands.fingers.RP.lineTo, [hands.keys.shiftRight.cx, hands.keys.shiftRight.cy], 1.5), `${width}: đường kẻ tới Shift phải`);
+    for (const [code, key] of [['LP', 'a'], ['LI', 'f'], ['RI', 'j'], ['RP', ';']]) assertTipOn(hands.fingers[code].tip, hands.keys[key], `${width}: ${code} trên ${key}`);
+    assert.strictEqual(Object.keys(hands.fingers).length, 10, `${width}: vẫn 10 ngón`);
     assert.strictEqual(await boardState(page).then(board => board.activeKey), 'a');
   }
 });
@@ -598,17 +588,19 @@ test('17 huy hiệu: rỗng thì 0/10, có tiến độ thì mở đúng 5 cái'
   assert.deepStrictEqual(cleared.store, {}, 'mốc mở khoá cũng bị dọn');
 });
 
-test('18 công tắc: âm click tắt sẵn, bàn tay bật sẵn, Alt+S/Alt+H đổi và nhớ', async page => {
+test('18 công tắc: âm click tắt sẵn, bàn tay hiện sẵn, Alt+S/Alt+H đổi và nhớ', async page => {
   await openPlayer(page, 'u1-l01/2');
   const toggles = () => page.evaluate(() => ({
     sound: document.querySelector('#pt-sound').getAttribute('aria-pressed'),
     hands: document.querySelector('#pt-hands').getAttribute('aria-pressed'),
     stored: [localStorage.getItem('typingease-sound-v1'), localStorage.getItem('typingease-hands-v1')],
-    static: document.querySelector('#board').classList.contains('hands-static')
+    noHands: document.querySelector('#board').classList.contains('no-hands'),
+    layer: Boolean(document.querySelector('#board .hand-layer'))
   }));
   const start = await toggles();
   assert.strictEqual(start.sound, 'false', 'âm click PHẢI tắt mặc định');
-  assert.strictEqual(start.hands, 'true', 'bàn tay động bật mặc định');
+  assert.strictEqual(start.hands, 'true', 'bàn tay hiện mặc định');
+  assert.ok(start.layer && !start.noHands, 'có lớp tay lúc đầu');
   assert.deepStrictEqual(start.stored, [null, null], 'chưa động vào thì không ghi gì');
 
   await page.click('#pt-sound');
@@ -616,13 +608,13 @@ test('18 công tắc: âm click tắt sẵn, bàn tay bật sẵn, Alt+S/Alt+H �
   const clicked = await toggles();
   assert.deepStrictEqual([clicked.sound, clicked.hands], ['true', 'false'], 'bấm nút đổi trạng thái');
   assert.deepStrictEqual(clicked.stored, ['on', 'off'], 'ghi vào localStorage');
-  assert.strictEqual(clicked.static, true, 'tắt tay động → board có .hands-static');
+  assert.ok(clicked.noHands && !clicked.layer, 'ẩn tay → board có .no-hands và không còn .hand-layer');
 
   await page.keyboard.press('Alt+s');
   await page.keyboard.press('Alt+h');
   const afterAlt = await toggles();
   assert.deepStrictEqual([afterAlt.sound, afterAlt.hands], ['false', 'true'], 'Alt+S / Alt+H đảo lại');
-  assert.strictEqual(afterAlt.static, false);
+  assert.ok(!afterAlt.noHands && afterAlt.layer, 'Alt+H hiện tay lại');
 
   // Với âm BẬT, vòng gõ phải sống sót: cạm bẫy 8 (hiệu ứng phụ ném lỗi làm player chết sau 1 phím).
   await page.keyboard.press('Alt+s');
@@ -698,6 +690,111 @@ test('20 topbar: logo trái, nav giữa, phần tử cuối sát mép phải tr�
     if (!bar.cuốiLàNav)
       assert.ok(Math.abs(bar.cuốiLệchPhải) <= 1, `${path}: phần tử phải cùng cách mép phải ${bar.cuốiLệchPhải}px`);
   }
+});
+
+// Huy hiệu phải báo NGAY trong player, đúng một lần, ở bảng kết quả screen hoặc bài. Ở đây gieo
+// 4.990 phím vào profile để screen kế tiếp (≥10 ký tự) vượt mốc 5.000 — mốc duy nhất mà một
+// screen đơn lẻ với kho trống có thể chạm tới.
+test('21 huy hiệu trong player: báo "5.000 phím" ở bảng kết quả, làm lại không báo nữa', async page => {
+  // Gieo ở trang chủ rồi mới mở player: /hoc/ → /hoc/#u1-l01/2 chỉ đổi hash, profile không nạp lại.
+  await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => localStorage.setItem('typingease-profile-v1', JSON.stringify({
+    attempts: [], keys: { a: { hits: 4990, misses: 0, ms: 0, samples: 0 } }
+  })));
+  await openPlayer(page, 'u1-l01/2');
+  const lesson = await lessonJson(page, 'u1-l01');
+  const target = targetOf(lesson.screens[1]);
+  assert.ok(target.length >= 10, 'screen 2 phải dài ≥ 10 ký tự để vượt mốc');
+  assert.strictEqual(await page.locator('#stage .badge-notice').count(), 0, 'chưa gõ thì chưa có thông báo');
+
+  await page.keyboard.type(target, { delay: 10 });
+  await page.waitForFunction(() => window.TypingEasePlayer.getState().state === 'screen-result');
+  const notice = await page.evaluate(() => ({
+    items: [...document.querySelectorAll('#stage .badge-notice-item')].map(el => el.dataset.badge),
+    text: document.querySelector('#stage .badge-notice')?.textContent.replace(/\s+/g, ' ').trim() || '',
+    link: document.querySelector('#stage .badge-notice-link')?.getAttribute('href'),
+    stored: Object.keys(JSON.parse(localStorage.getItem('typingease-badges-v1') || '{}'))
+  }));
+  assert.deepStrictEqual(notice.items, ['typed-5000'], 'đúng một huy hiệu vừa mở');
+  assert.ok(/Huy hiệu mới/.test(notice.text) && /5\.000 phím/.test(notice.text), `nội dung: ${notice.text}`);
+  assert.strictEqual(notice.link, '../tien-do/#badges', 'liên kết tới trang huy hiệu');
+  assert.deepStrictEqual(notice.stored, ['typed-5000'], 'mốc mở khoá đã ghi');
+
+  // Làm lại screen rồi xong lần nữa: huy hiệu đã báo thì không báo lại.
+  await page.click('#stage [data-act="redo"]');
+  await page.waitForFunction(() => window.TypingEasePlayer.getState().state === 'typing');
+  await page.click('.player-stage');
+  await page.keyboard.type(target, { delay: 10 });
+  await page.waitForFunction(() => window.TypingEasePlayer.getState().state === 'screen-result');
+  assert.strictEqual(await page.locator('#stage .badge-notice').count(), 0, 'lần hai không báo lại');
+});
+
+// Âm click ở hai trang ngoài player: cùng công tắc localStorage, đúng nhịp (kêu khi ô dài ra,
+// im khi xoá lùi), đúng "giọng" (ok/bad). Không nghe được trong headless nên bọc `click()` lại
+// và đếm lời gọi — đủ để biết vòng gõ đã nối vào đúng chỗ.
+for (const { route, input, prepare } of [
+  { route: '/luyen-tu-do/', input: '#free-input', prepare: async page => { await page.click('#random-text'); } },
+  { route: '/kiem-tra-toc-do-go/', input: '#typing-input', prepare: async () => {} }
+]) {
+  test(`22 âm click ${route}: công tắc dùng chung, kêu đúng ok/bad, xoá lùi im`, async page => {
+    await page.goto(`${BASE}${route}`, { waitUntil: 'networkidle' });
+    const toggle = page.locator('#sound-toggle');
+    assert.strictEqual(await toggle.getAttribute('aria-pressed'), 'false', 'mặc định tắt');
+    await page.evaluate(() => {
+      window.__clicks = [];
+      const real = window.TypingEaseSound.click;
+      window.TypingEaseSound.click = verdict => { window.__clicks.push(verdict); return real(verdict); };
+    });
+    await prepare(page);
+    await toggle.click();
+    assert.strictEqual(await toggle.getAttribute('aria-pressed'), 'true');
+    assert.strictEqual(await page.evaluate(() => localStorage.getItem('typingease-sound-v1')), 'on', 'ghi cùng khoá với player');
+    await page.evaluate(() => { window.__clicks = []; });   // bỏ tiếng "nghe thử" lúc bật
+
+    const target = await page.evaluate(selector => {
+      const el = document.querySelector(selector);
+      return el.textContent;
+    }, route === '/luyen-tu-do/' ? '#free-sample' : '#test-prompt');
+    await page.focus(input);
+    await page.keyboard.type(target.slice(0, 2), { delay: 20 });
+    await page.keyboard.type('§', { delay: 20 });                 // chắc chắn sai
+    await page.keyboard.press('Backspace');
+    const clicks = await page.evaluate(() => window.__clicks);
+    assert.deepStrictEqual(clicks, ['ok', 'ok', 'bad'], `chuỗi tiếng: ${clicks.join(',')}`);
+
+    // `click()` tự kiểm tra công tắc bên trong (nên bọc ngoài vẫn đếm) — ở đây chỉ kiểm công tắc.
+    await page.keyboard.press('Alt+s');
+    assert.strictEqual(await toggle.getAttribute('aria-pressed'), 'false', 'Alt+S tắt lại');
+    assert.deepStrictEqual(await page.evaluate(() => [window.TypingEaseSound.isOn(), localStorage.getItem('typingease-sound-v1')]),
+      [false, 'off'], 'tắt thật và ghi lại');
+  });
+}
+
+// Thanh "có bản mới": không thể tạo một lần deploy trong test, nên chỉ kiểm phần đo được — lần
+// nạp bình thường KHÔNG hiện (kể cả khi service worker vừa cài), và khi hiện thì có đủ hai nút,
+// "Để sau" gỡ đi. Điều kiện hiện (controller cũ + quá 10 s + statechange) nằm trong sw-register.js.
+test('23 thanh bản mới: không hiện lúc nạp, TypingEaseUpdate.show() hiện, "Để sau" gỡ', async page => {
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload({ waitUntil: 'networkidle' });
+  await sleep(400);
+  assert.strictEqual(await page.locator('#update-bar').count(), 0, 'nạp lại bình thường không được hiện thanh');
+  await page.evaluate(() => window.TypingEaseUpdate.show());
+  const bar = await page.evaluate(() => {
+    const el = document.querySelector('#update-bar');
+    const box = el.getBoundingClientRect();
+    return {
+      text: el.textContent, buttons: [...el.querySelectorAll('button')].map(b => b.dataset.act),
+      inView: box.bottom <= innerHeight && box.left >= 0 && box.right <= innerWidth,
+      focused: document.activeElement === document.body
+    };
+  });
+  assert.ok(/có bản mới/.test(bar.text));
+  assert.deepStrictEqual(bar.buttons, ['reload', 'later']);
+  assert.ok(bar.inView, 'thanh nằm trong khung nhìn');
+  assert.ok(bar.focused, 'không cướp focus');
+  await page.click('#update-bar [data-act="later"]');
+  assert.strictEqual(await page.locator('#update-bar').count(), 0, '"Để sau" gỡ thanh');
 });
 
 // --- runner ------------------------------------------------------------------------------------

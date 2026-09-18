@@ -1,40 +1,29 @@
-/* hands.css — bàn tay phủ lên bàn phím, theo cách typing.com xử lý lớp tay 3D của họ: trong
-   suốt, mờ dần ở cổ tay, bóng mỏng, ngón đang gõ nhuộm xanh. Hình vẽ là SVG của mình (hands.js),
-   không dùng mô hình/texture của Teaching.com. Khối "3D" là giả: gradient ống trên từng ngón, dải
-   sáng-tối dọc theo khớp, bóng đổ của ngón lên ngón cạnh và lên mu bàn tay, gân mu bàn tay.
-   Bảng màu da nằm trong hands.js (hằng SKIN); ở đây chỉ còn màu nét, và cả hai CỐ Ý nằm ngoài
-   tokens.css — đây là màu minh hoạ, kéo về màu thương hiệu thì tay hỏng.
+/* hands.css — bàn tay ẢNH phủ lên bàn phím (hands.js). Hai ảnh tay đứng yên, trong suốt một
+   phần để phím dưới tay vẫn đọc được, tan dần về cổ tay; ngón đang gõ có vệt sáng ở đầu ngón và
+   một đường kẻ tới phím đích khi phím đích không phải phím cơ sở của ngón đó.
+   Vị trí + tỉ lệ ảnh là inline style do hands.js tính; ở đây chỉ có diện mạo.
    Ngưỡng 620px dưới đây đã trùng chuẩn site và trùng @media của keyboard.css. */
 .keyboard-demo{position:relative;padding-bottom:104px}
-.hand-layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2;
-  opacity:.6;
-  filter:drop-shadow(0 -1px 1px rgba(0,0,0,.8)) drop-shadow(0 0 1px rgba(0,0,0,.5))}
-.hand-body{stroke:#8a5546;stroke-width:.6;stroke-opacity:.3}
-.hand-body-edge,.hand-bands,.hand-spec,.hand-knuckle{stroke:none}
-.hand-web{fill:#6d4235;fill-opacity:.2}
-/* Gân mu bàn tay: gần như không thấy khi nhìn thẳng, nhưng bỏ đi thì mu bàn tay thành mảng phẳng. */
-.hand-tendon{fill:none;stroke:#fff;stroke-width:1.6;stroke-opacity:.12;stroke-linecap:round}
-.hand-digit{stroke:#8a5546;stroke-width:.5;stroke-opacity:.4}
-.hand-crease{fill:none;stroke:#8a5546;stroke-width:.7;stroke-opacity:.22}
-.hand-nail{stroke:#a9736a;stroke-width:.6;stroke-opacity:.55}
-.hand-nail-shine{fill:#fff;fill-opacity:.35}
-.hand-layer .finger{transform-box:view-box}
-/* Ngón với tới phím đích, bàn tay nhích theo (keyboard-widget.js poseHands). Tốc độ do widget đo
-   theo nhịp gõ và gán vào --hand-speed (0,09–0,45 s), mặc định 0,275 s như typing.com. */
-.hand-layer .finger,.hand-layer .ghost-hand{transition:transform var(--hand-speed,.275s) cubic-bezier(.65,0,.35,1)}
-.hands-static .hand-layer .finger,.hands-static .hand-layer .ghost-hand{transform:none!important}
-.finger-glow{opacity:0;transition:opacity .12s ease}
-.finger.active-finger .finger-glow{opacity:.95}
-/* Cả ngón nhuộm xanh (ngón út giữ Shift) thay cho vệt từ đầu ngón. */
-.finger.active-finger.glow-full .finger-glow{fill:#37b3d6;opacity:.85}
-.finger.active-finger .hand-nail{fill:#a9e6f4;stroke:#1f7f99}
-.finger.active-finger .hand-nail-shine{fill-opacity:.6}
-.finger.active-finger .hand-digit{stroke:#1f7f99;stroke-opacity:.7}
-.finger.active-finger .hand-crease{stroke:#0f5d73}
+.hand-layer{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:2;
+  -webkit-mask-image:linear-gradient(to bottom,#000 var(--hand-fade-from,75%),transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 var(--hand-fade-from,75%),transparent 100%)}
+.hand-photo{position:absolute;left:0;top:0;transform-origin:0 0;opacity:.62;user-select:none;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.hand-pointers{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+/* Vệt sáng ở đầu ngón phụ trách; ngón út giữ Shift (glow-full) đậm hơn để phân biệt với ngón gõ. */
+.finger-glow{fill:#37b3d6;opacity:0;transition:opacity .12s ease;transform-box:fill-box;transform-origin:center}
+.finger.active-finger .finger-glow{opacity:.5}
+.finger.active-finger.glow-full .finger-glow{opacity:.72}
+.finger-dot{fill:#0f7fa3;stroke:#fff;stroke-width:1.5;opacity:0;transition:opacity .12s ease}
+.finger.active-finger .finger-dot{opacity:.95}
+/* Đường từ đầu ngón tới phím đích (keyboard-widget.js pointHands). Chỉ hiện khi ngón phải với
+   ra khỏi phím cơ sở — nằm sẵn trên phím thì vệt sáng là đủ. */
+.finger-line{fill:none;stroke:#0f7fa3;stroke-width:3;stroke-linecap:round;opacity:0;
+  transition:opacity .12s ease,x2 .18s ease,y2 .18s ease}
+.finger.is-pointing .finger-line{opacity:.85}
 .keyboard-demo .keyboard{position:relative;z-index:1}
 @media(max-width:620px){.keyboard-demo{padding-bottom:74px}}
-/* A short dip on the finger that just struck a key. */
-.hand-layer .digit-press{transform-box:view-box;transform-origin:center}
-.hand-layer .finger.pressing .digit-press{animation:finger-press .2s ease-out}
-@keyframes finger-press{0%{transform:translateY(0)}40%{transform:translateY(2.5px)}100%{transform:translateY(0)}}
-@media(prefers-reduced-motion:reduce){.hand-layer .finger.pressing .digit-press{animation:none}.finger-glow{transition:none}.hand-layer .finger,.hand-layer .ghost-hand{transition:none}}
+/* Nhịp nhún ngắn ở đầu ngón vừa gõ đúng (press). */
+.finger.pressing .finger-glow{animation:finger-press .24s ease-out}
+@keyframes finger-press{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.finger.pressing .finger-glow{animation:none}.finger-glow,.finger-dot,.finger-line{transition:none}}

@@ -526,3 +526,132 @@ không, vì đầu ngón vẫn ghim vào đúng phím cơ sở như cũ.
 - Ngón vẫn hơi "xúc xích" ở đoạn giữa; muốn hơn nữa thì phải có phối cảnh thật (ngón ngắn lại theo
   chiều nhìn), tức là đổi cả mô hình chứ không chỉ đường nét.
 - Tông da ấm hơn bản cũ nhưng vẫn là một tông duy nhất cho mọi người dùng.
+
+---
+
+# 2026-09-18 (đêm) — DỌN MỤC "CÒN LẠI" CỦA PHASE 5
+
+Bốn việc nhỏ đứng ở mục "Còn lại" của Phase 5, gom lại làm một lần. Không đụng bàn tay.
+
+## 1. Huy hiệu báo ngay trong player (`badges.js`, `player.js`, `player.css`, `hoc/index.html`)
+- `TypingEaseBadges.earnedIds()` trả về những id ĐÃ CÓ mốc mở khoá trong localStorage. Player chụp
+  ảnh này lúc mở trang (`knownBadges`); sau mỗi bảng kết quả gọi `evaluate()` và chỉ báo cái nào
+  `earned` mà chưa có trong ảnh, rồi thêm vào ảnh → mỗi huy hiệu báo đúng MỘT lần. Huy hiệu đạt ở
+  phiên trước mà chưa ghé /tien-do/ (mốc chưa ghi) cũng được báo ở lượt gõ kế — đúng ý.
+- Báo ở cả bảng kết quả screen và bảng tổng kết bài, NHƯNG screen cuối thì nhường cho bảng bài:
+  "Bước đầu tiên" thuộc khoảnh khắc xong bài, và bảng bài có chỗ hơn.
+- `evaluate()` ở bảng bài phải gọi SAU `completeLesson()` + `unlock()` vì hai cái đó đổi số liệu.
+- Markup: `.badge-notice` (role=status) chứa `.badge-notice-item[data-badge]` + link `../tien-do/#badges`.
+
+## 2. Âm click ở `/luyen-tu-do/` và `/kiem-tra-toc-do-go/`
+- Nạp `sound.js`, thêm nút `#sound-toggle` (class `.sound-toggle`, style ở `base.css`) cạnh nhãn ô gõ,
+  bọc trong `.input-head` — nút nằm NGOÀI `<label>` vì bấm trong label là focus nhảy sang textarea.
+- Cùng khoá `typingease-sound-v1` với player: bật một nơi là bật khắp site. Alt+S cũng hoạt động.
+- Chỉ kêu khi ô nhập DÀI RA (so với `observed` / `heardLength`); xoá lùi thì im.
+
+## 3. Thanh "có bản mới" (`sw-register.js`, `.update-bar` ở `base.css`)
+- Vì sw.js đi mạng-trước, trang vừa nạp đã là bản mới; bản mới của chính service worker tìm thấy
+  lúc nạp thì KHÔNG báo (bỏ qua 10 s đầu + lần cài đầu chưa có controller). Nếu báo, sau mỗi deploy
+  mọi người vào site đều thấy một thanh vô nghĩa.
+- Chỉ đáng báo khi tab mở lâu và có deploy trong lúc đó: `registration.update()` được gọi khi tab
+  hiện trở lại (`visibilitychange`), cách nhau ≥ 15 phút; worker mới `activated` → hiện thanh với
+  hai nút Tải lại / Để sau. Không tự reload, không cướp focus.
+- `TypingEaseUpdate.show()/hide()` để e2e và để xem thanh mà không cần deploy.
+
+## 4. `tien-do/progress.css`
+- `#e5f5df` → `var(--surface-active)` (2 chỗ), `#0f6244` → `var(--green-dark)`. `#4c6b5f` và `#8ba396`
+  giữ literal vì token gần nhất (`--ink-soft`, `--muted-soft`) KHÁC giá trị — đổi là đổi màu.
+
+## Kiểm định
+- `scripts/e2e.js` **31/31 PASS** (thêm 21 huy hiệu trong player, 22 âm click ×2 trang, 23 thanh bản
+  mới); `scripts/offline-check.js` 3/3 + 1; validate-lessons PASS; test-telex PASS.
+- Ảnh chụp: bảng kết quả screen + bài có khung huy hiệu, nút âm ở hai trang (desktop + 390px),
+  thanh bản mới ở trang chủ. Console sạch.
+
+## Cạm bẫy mới
+14. **`page.goto('/hoc/')` rồi `goto('/hoc/#u1-l01/2')` là đổi hash, KHÔNG nạp lại trang** — profile
+    gieo vào localStorage giữa hai lần không được đọc. Gieo ở trang khác (`/`) rồi mới mở player.
+15. **Bọc `TypingEaseSound.click` từ ngoài thì đếm cả lúc công tắc tắt**, vì `enabled` kiểm bên trong.
+    Muốn kiểm "tắt là im" thì kiểm `isOn()` + localStorage, đừng đếm lời gọi.
+16. **Một số file dùng CRLF** (free-page.js, index.html của hai trang, …) nên script vá bằng chuỗi
+    `
+` không khớp. Chuẩn hoá về LF trước khi thay, ghi lại đúng kiểu cũ.
+
+## Còn lại
+- Tông da bàn tay vẫn một tông duy nhất (từ 16/09).
+- Commit `2477dbf` (vẽ lại bàn tay) đang ở local, chưa push → live vẫn là `70a7ff4`.
+
+---
+
+# 2026-09-19 — BÀN TAY ẢNH ĐỨNG YÊN + ĐƯỜNG CHỈ PHÍM (thay bàn tay SVG động)
+
+Chủ site đưa một ảnh minh hoạ kiểu "tay chụp thật đặt lên bàn phím, kẻ đường từ ngón tới phím" và
+hỏi làm được không. Ba đường: (1) ảnh thật, tay đứng yên, đánh dấu ngón bằng vệt sáng + đường kẻ;
+(2) ảnh thật cắt rời 10 ngón để cử động (lộ mép cắt, không khuyên); (3) giữ SVG động, vẽ tả thực
+hơn (không tới mức ảnh). **Chốt cách 1.** Bàn tay SVV động (16/09–18/09) ngừng ở `2477dbf`.
+
+## Mô hình mới (`hands.js`, `hands.css`, `keyboard-widget.js`)
+- Hai `<img class="hand-photo">` đặt bằng **phép đồng dạng bình phương tối thiểu** (Umeyama, không
+  lật, xoay kẹp ±8°) khớp 4 đầu ngón trong ảnh → 4 phím cơ sở đo trên trang. Vì vậy tay vẫn vừa
+  mọi cỡ bàn phím và không cần sửa tay khi đổi ảnh: chỉ cần toạ độ đầu ngón.
+- Mỗi ngón là `<g class="finger" data-finger data-key data-rx data-ry>` trong SVG `.hand-pointers`:
+  `.finger-glow` (vệt sáng đầu ngón khi active), `.finger-line` (đường tới tâm phím đích, chỉ khi
+  phím đích ≠ phím cơ sở của ngón → class `is-pointing`), `.finger-dot`. `press()` vẫn pulse
+  `pressing` — nay là nhịp phóng to vệt sáng. Móc `active-finger`/`glow-full` giữ nguyên.
+- `pointHands(moves)` thay `poseHands()`; bỏ hẳn `animatedHands`, `hands-static`, `--hand-speed`,
+  bộ đo tốc độ thích ứng. `create()`/`layout()` chỉ còn `{compact, hands}`.
+- Lớp tay `overflow:hidden` + `mask-image` tan dần từ `--hand-fade-from` (do hands.js đặt = hàng
+  Space + 0,9 phím) tới đáy lớp, nên lòng bàn tay không tràn ra ngoài `padding-bottom` của board.
+- Công tắc `#pt-hands` (Alt+H) của player đổi nghĩa: **hiện/ẩn bàn tay** (trước là bật/tắt chuyển
+  động). Giữ khoá `typingease-hands-v1`; `applyViewport()` = `wideQuery && showHands`.
+
+## Ảnh tay: VẼ, không phải ảnh chụp (`scripts/draw-hands.html` + `render-hands.js`)
+- Tạo ảnh bằng AI không được: ElevenLabs gói miễn phí đã hết hạn mức ảnh trong NGÀY (chặn cứng, một
+  biến thể cũng không qua). Không mất tiền. Kho stock (Unsplash/Pexels/Pngtree) toàn ảnh tay đang
+  đặt trên bàn phím thật, không tách nền sạch được.
+- Thử **vẽ lại từ đầu với phối cảnh thật** (ngón ngắn lại theo chiều nhìn, ba đốt rõ, móng bị nén):
+  kết quả TỆ HƠN hẳn bản `2477dbf` — ngón hoá mập như găng cao su, lòng bàn tay hoá quả bóng. Bỏ.
+  Bài học: bản vẽ ở `2477dbf` đã qua nhiều vòng chỉnh, muốn hơn nó thì phải là ảnh chụp thật, chứ
+  vẽ tiếp thì công sức bỏ ra không đổi được gì.
+- **Chốt**: ảnh giữ chỗ = chính bộ vẽ SVG đã dùng trên site 16/09–18/09, đóng gói lại thành
+  `scripts/draw-hands.html` (tự chứa, mở bằng trình duyệt là xem được), chỉ đổi bảng da cho bớt nâu
+  (việc "còn lại" từ 16/09). `scripts/render-hands.js` chụp nó ra ảnh và tự ghi khối HAND_PHOTOS.
+- **WebP** chứ không PNG: cùng một bàn tay, PNG 292 KB → WebP 40 KB. Có kênh trong suốt, và trình
+  duyệt nào chạy nổi site này cũng đọc được. `hand-photo.py` cũng xuất WebP.
+- Ảnh ở khoá phím 104px nên rộng ~490px, đúng quãng gấp đôi cỡ hiển thị thường gặp (bàn phím 830px
+  → phím ~52px): nét trên màn dày điểm ảnh mà không phải phóng to.
+
+## Đường thay ảnh chụp thật (`scripts/hand-photo.py`, chỉ cần Pillow)
+- `cut anh.jpg` tách nền trắng bằng flood-fill TỪ VIỀN (nên điểm sáng trên móng, trong lòng tay
+  không bị thủng), cắt hai tay ở khe giữa, thu về 460px, kèm ảnh lưới 20px để đọc toạ độ đầu ngón.
+- `anchors tips.json` ghi khối HAND_PHOTOS. Hướng dẫn chụp nằm ở docstring: tay trên nền trắng
+  trơn, máy ảnh thẳng phía trên, cổ tay ở mép dưới, KHÔNG có bàn phím trong ảnh.
+- Ảnh phải chụp **thẳng từ trên xuống** vì bàn phím của mình vẽ phẳng; ảnh mẫu chủ site gửi nhìn
+  nghiêng, muốn góc đó thì phải vẽ lại cả bàn phím có mặt bên.
+
+## Kiểm định
+- `scripts/e2e.js` **31/31 PASS**: test 11–16 viết lại cho mô hình mới (ảnh tải được, 8 đầu ngón
+  ghim đúng phím cơ sở ±8px, ngón cái ở hàng Space, đường kẻ trúng tâm E / Shift phải ±1,5px, tắt
+  khi về phím cơ sở, `hands:false` gỡ lớp tay, resize đặt lại). Test 18 đổi theo nghĩa mới của
+  công tắc. `offline-check.js` 3/3.
+- Ảnh chụp thật ở 1280px: hai tư thế (E, Shift phải) đúng như thiết kế.
+
+## Cạm bẫy mới
+17. **Lấy bản cũ của một file để render thì `git show HEAD:file > tmp`, KHÔNG `git checkout -- file`**
+    — lần này checkout đã ghi đè bản hands.js mới đang làm, phải viết lại từ ngữ cảnh phiên.
+18. **Render lại SVG cũ sau khi đã thay hands.css** thì móng/gân đen kịt (path không có fill mặc
+    định đen). Tiêm hands.js + hands.css bản cũ vào trang bằng addScriptTag/addStyleTag.
+19. **`metrics.space.x` mà widget truyền là MÉP TRÁI của phím cách**, không phải tâm — đưa tâm vào
+    là ngón cái lệch cả hai phím.
+
+## Cạm bẫy mới (tiếp)
+20. **`omitBackground` của Playwright chỉ bỏ nền của TRANG**, không bỏ `background` mà CSS đặt cho
+    `<body>` hay cho phần tử nằm sau vật thể. Ảnh chụp ra alpha đặc kín 255 và phép cắt sát mép
+    thành vô dụng. Phải tự tắt nền bằng `addStyleTag` trước khi chụp.
+21. **Mọi phép `zoom`/`transform: scale` để xem cho vừa màn hình đều lọt vào ảnh**, vì Playwright
+    chụp theo khung thật trên màn hình. Trang dựng ảnh thì đừng thu nhỏ gì cả.
+
+## Còn lại
+- Ảnh tay vẫn là hình VẼ. Muốn đẹp hơn thì chụp tay thật theo hướng dẫn ở `hand-photo.py`; sau khi
+  thay nhớ chạy lại e2e (test 11 kiểm đầu ngón, 16 kiểm resize).
+- Ngón cái trong hình vẽ nhìn vẫn như một cục tròn — điểm yếu cố hữu của bản vẽ, ảnh thật sẽ xong.

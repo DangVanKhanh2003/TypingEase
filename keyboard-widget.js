@@ -72,16 +72,12 @@
   // Attribute selector for a key id; only the backslash needs escaping inside the quotes.
   const selectorFor = id => `.key[data-pkey="${id === BS ? BS + BS : id}"]`;
 
-  // Adaptive hand speed, typing.com's numbers: the gap between highlight requests is clamped to
-  // 70–1200 ms, averaged over the last 8, and mapped onto a 0.09–0.45 s transition.
-  const SPEED_SAMPLES = 8, GAP_MIN = 70, GAP_MAX = 1200, SPEED_DEFAULT = 0.275;
-  const speedFor = averageGap => 0.09 + 0.36 * Math.min(1, Math.max(0, (averageGap - 90) / 610));
 
-  function create({ host, compact = false, hands = true, animatedHands = true } = {}) {
+  // `animatedHands` was the moving-finger option of the drawn hands (16/09–18/09); the photo hands
+  // (19/09) stand still and point instead, so the option is accepted and ignored for old callers.
+  function create({ host, compact = false, hands = true } = {}) {
     if (!host) return null;
-    let showHands = hands, isCompact = compact, animated = animatedHands, target = '', lastCharacter = '', resizeTimer = null;
-    let keySize = { w: 50, h: 50 }, lastHighlightAt = null;
-    const gaps = [];
+    let showHands = hands, isCompact = compact, target = '', lastCharacter = '', resizeTimer = null;
 
     host.classList.add('keyboard-demo', 'kb-widget');
     host.innerHTML = '<div class="keyboard kb-keys"></div>';
@@ -129,7 +125,7 @@
     }
 
     // The hands are drawn resting on the home row and redrawn from the measured key boxes
-    // whenever the layout changes; poseHands() then moves the working digit with a transform.
+    // whenever the layout changes; pointHands() then draws the pointer from fingertip to key.
     function drawHands() {
       host.querySelector('.hand-layer')?.remove();
       const origin = host.getBoundingClientRect();
@@ -142,7 +138,6 @@
       }
       const space = box(origin, ' ');
       if (!space) return;
-      keySize = { w: home.f.w, h: home.f.h };
       host.insertAdjacentHTML('beforeend', global.TypingEaseHands.markup({
         width: origin.width, height: origin.height, keyW: home.f.w, keyH: home.f.h, home,
         space: { x: space.x - space.w / 2, y: space.y, w: space.w }
@@ -166,58 +161,33 @@
       return { element: shift, finger: onLeft ? 'RP' : 'LP' };
     }
 
-    // Move the hands into position for the current target (typing.com's animated_hands): the
-    // working digit reaches its key and the hand drifts after it, the other hand rests. Only
-    // `style.transform` changes; the SVG is not rebuilt. A move list entry is a finger code and
-    // the key element it should sit on.
-    function poseHands(moves) {
+    // The photo hands stand still: for each move (a finger code and the key element it should
+    // reach) draw the finger's pointer line from its fingertip to that key's centre. A digit that
+    // already rests on the key (home row, thumb on Space) gets the fingertip glow only.
+    function pointHands(moves) {
       const layer = host.querySelector('.hand-layer');
       if (!layer) return;
-      layer.querySelectorAll('.finger, .ghost-hand').forEach(element => { element.style.transform = ''; });
-      if (!animated || !global.TypingEaseHands?.reach) return;
+      layer.querySelectorAll('.finger.is-pointing').forEach(element => element.classList.remove('is-pointing'));
       const origin = host.getBoundingClientRect();
       moves.forEach(({ finger, element }) => {
         const group = layer.querySelector(`.finger[data-finger="${finger}"]`);
         if (!group || !element) return;
-        // a digit already resting on its key (home row, thumb on Space) stays put
         if (group.dataset.key === element.dataset.pkey) return;
         const rect = element.getBoundingClientRect();
-        const to = [rect.left + rect.width / 2 - origin.left, rect.top + rect.height / 2 - origin.top];
-        const pose = global.TypingEaseHands.reach({
-          base: [Number(group.dataset.kx), Number(group.dataset.ky)],
-          tip: [Number(group.dataset.rx), Number(group.dataset.ry)],
-          to, keyW: keySize.w, keyH: keySize.h
-        });
-        group.style.transform = pose.finger;
-        const hand = group.closest('.ghost-hand');
-        if (hand) hand.style.transform = pose.hand;
+        const line = group.querySelector('.finger-line');
+        if (!line) return;
+        line.setAttribute('x2', (rect.left + rect.width / 2 - origin.left).toFixed(1));
+        line.setAttribute('y2', (rect.top + rect.height / 2 - origin.top).toFixed(1));
+        group.classList.add('is-pointing');
       });
     }
 
-    // Each highlight request is a keystroke's worth of progress: measure the gap between them and
-    // shorten the hand transition as the typist speeds up.
-    function recordPace() {
-      const now = performance.now();
-      if (lastHighlightAt !== null) {
-        const gap = now - lastHighlightAt;
-        if (Number.isFinite(gap) && gap > 0) {
-          gaps.push(Math.min(GAP_MAX, Math.max(GAP_MIN, gap)));
-          if (gaps.length > SPEED_SAMPLES) gaps.shift();
-        }
-      }
-      lastHighlightAt = now;
-      const speed = gaps.length ? speedFor(gaps.reduce((total, gap) => total + gap, 0) / gaps.length) : SPEED_DEFAULT;
-      host.style.setProperty('--hand-speed', `${speed.toFixed(3)}s`);
-    }
-
-    // `paced` is false when the same target is re-applied after a redraw (resize, layout change).
-    function apply(character, paced) {
+    function apply(character) {
       lastCharacter = character;
       target = normalize(character);
       host.querySelectorAll('.active-key,.active-finger').forEach(element => element.classList.remove('active-key', 'active-finger', 'glow-full'));
       const shift = markShift(character);
-      if (!target) { poseHands([]); return; }
-      if (paced) recordPace();
+      if (!target) { pointHands([]); return; }
       const keyElement = keys.querySelector(selectorFor(target));
       keyElement?.classList.add('active-key');
       const finger = FINGERS[target];
@@ -230,10 +200,10 @@
         host.querySelector(`[data-finger="${shift.finger}"]`)?.classList.add('active-finger', 'glow-full');
         moves.push(shift);
       }
-      poseHands(moves);
+      pointHands(moves);
     }
 
-    function highlight(character) { apply(character, true); }
+    function highlight(character) { apply(character); }
 
     // Mark one key — or a group of them, for a lesson that teaches the number row two keys at a
     // time — without lighting a finger; this is what the "new key" chip points at.
@@ -275,23 +245,21 @@
       pulse(keys.querySelector(selectorFor(id)), 'is-wrong', 250);
     }
 
-    function layout({ compact: nextCompact = isCompact, hands: nextHands = showHands, animatedHands: nextAnimated = animated } = {}) {
+    function layout({ compact: nextCompact = isCompact, hands: nextHands = showHands } = {}) {
       const rebuild = nextCompact !== isCompact;
       isCompact = nextCompact;
       showHands = nextHands;
-      animated = nextAnimated;
       host.classList.toggle('is-compact', isCompact);
       host.classList.toggle('no-hands', !showHands);
-      host.classList.toggle('hands-static', !animated);
       if (rebuild) build();
       drawHands();
-      apply(lastCharacter, false);
+      apply(lastCharacter);
     }
 
     build();
-    layout({ compact: isCompact, hands: showHands, animatedHands: animated });
+    layout({ compact: isCompact, hands: showHands });
 
-    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { drawHands(); apply(lastCharacter, false); }, 120); };
+    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { drawHands(); apply(lastCharacter); }, 120); };
     global.addEventListener('resize', onResize);
 
     return {
